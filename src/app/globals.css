@@ -1,0 +1,309 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Orlean Font Family */
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-regularitalic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-mediumitalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-semibolditalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Orlean';
+  src: url('/fonts/orlean/orlean-bolditalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Aventa Font Family */
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/EllenLuff - Aventa Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Aventa';
+  src: url('/fonts/aventa/EllenLuff - Aventa Light Itallic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Aventa', sans-serif;
+  font-weight: 300;
+}
+
+/* Apply Orlean font to all headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Orlean', sans-serif;
+  font-weight: 700;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Hide scrollbar across browsers */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.preloader-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preloader-logo {
+  animation: preloaderPulse 1.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes preloaderPulse {
+  0% {
+    transform: scale(0.94);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.94);
+    opacity: 0.6;
+  }
+}
+
+/* tsParticles Canvas Styles */
+#tsparticles-bg,
+[id^="tsparticles"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+#tsparticles-bg canvas,
+[id^="tsparticles"] canvas {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Hero Image Rotation Animation */
+@keyframes rotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-slow {
+  animation: rotateClockwise 20s linear infinite;
+}
+
+/* Glow Pulse and Rotate Animation */
+@keyframes glowPulseRotate {
+  0% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(180deg) scale(1.1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+  }
+}
+
+@keyframes heroAmbientPulse {
+  0% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.95);
+    filter: blur(80px);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.08);
+    filter: blur(110px);
+  }
+  100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.95);
+    filter: blur(80px);
+  }
+}
+
+@keyframes heroOvalPulse {
+  0% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+  45% {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+}
+
+/* Video Continuous Rotation */
+@keyframes videoRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hover Effects for Hero Elements - Triggered by video hover */
+.hero-glow {
+  transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+  animation:
+    glowPulseRotate 24s linear infinite,
+    heroAmbientPulse 8s ease-in-out infinite;
+}
+
+.hero-oval {
+  transition: transform 0.5s ease-out;
+  opacity: 1;
+}
+
+.hero-video {
+  transition: transform 0.5s ease-out;
+}
+
+@keyframes smokeFadeOut {
+  0% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes smokeFadeIn {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+.animate-smoke-out {
+  animation: smokeFadeOut 0.8s ease-out forwards;
+}
+
+.animate-smoke-in {
+  animation: smokeFadeIn 0.9s ease-out forwards;
+}
