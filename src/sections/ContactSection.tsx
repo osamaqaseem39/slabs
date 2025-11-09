@@ -1,13 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import type { SectionScrollDirection } from "@/hooks/useSectionScrollSteps";
-import {
-  smoothScrollIntoView,
-  smoothScrollTo,
-  DEFAULT_SCROLL_DURATION,
-} from "@/lib/smoothScroll";
 
 const CONTACT_POINTS = [
   {
@@ -36,10 +30,6 @@ export default function ContactSection() {
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const formRef = useRef<HTMLFormElement | null>(null);
-  const isNavigatingRef = useRef(false);
-  const touchStartYRef = useRef<number | null>(null);
-  const boundaryIntentRef = useRef<SectionScrollDirection | null>(null);
-  const boundaryTimerRef = useRef<number | null>(null);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
@@ -95,82 +85,11 @@ export default function ContactSection() {
     };
   }, []);
 
-  const clearBoundaryIntent = useCallback(() => {
-    if (boundaryTimerRef.current != null) {
-      window.clearTimeout(boundaryTimerRef.current);
-      boundaryTimerRef.current = null;
-    }
-    boundaryIntentRef.current = null;
-  }, []);
 
-  const navigateToSection = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (typeof window === "undefined") {
-        return;
-      }
 
-      if (isNavigatingRef.current) {
-        return;
-      }
 
-      let targetElement: HTMLElement | null = null;
 
-      if (direction === "forward") {
-        const sectionEl = sectionRef.current;
-        const nextElement = sectionEl?.nextElementSibling;
-        if (nextElement instanceof HTMLElement) {
-          targetElement = nextElement;
-        } else if (sectionEl) {
-          isNavigatingRef.current = true;
-          smoothScrollTo(sectionEl.offsetTop + sectionEl.offsetHeight, {
-            duration: DEFAULT_SCROLL_DURATION,
-          });
-          window.setTimeout(() => {
-            isNavigatingRef.current = false;
-          }, DEFAULT_SCROLL_DURATION + 150);
-          return;
-        }
-      } else {
-        targetElement = document.getElementById("about");
-      }
 
-      if (!targetElement) {
-        return;
-      }
-
-      isNavigatingRef.current = true;
-      smoothScrollIntoView(targetElement, { duration: DEFAULT_SCROLL_DURATION });
-
-      window.setTimeout(() => {
-        isNavigatingRef.current = false;
-      }, DEFAULT_SCROLL_DURATION + 150);
-    },
-    []
-  );
-
-  const requestSectionChange = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (boundaryIntentRef.current === direction) {
-        if (boundaryTimerRef.current != null) {
-          window.clearTimeout(boundaryTimerRef.current);
-          boundaryTimerRef.current = null;
-        }
-        clearBoundaryIntent();
-        navigateToSection(direction);
-        return;
-      }
-
-      boundaryIntentRef.current = direction;
-      if (boundaryTimerRef.current != null) {
-        window.clearTimeout(boundaryTimerRef.current);
-      }
-      boundaryTimerRef.current = window.setTimeout(() => {
-        boundaryIntentRef.current = null;
-        boundaryTimerRef.current = null;
-      }, 1800);
-    },
-    [clearBoundaryIntent, navigateToSection]
-  );
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
@@ -180,102 +99,22 @@ export default function ContactSection() {
 
     const handleWheel = (event: WheelEvent) => {
       const el = sectionRef.current;
-      if (!el || isNavigatingRef.current) {
+      if (!el) {
         return;
       }
 
-      const deltaY =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE ? event.deltaY * 40 : event.deltaY;
-      if (Math.abs(deltaY) < 1) {
-        return;
+      const isScrollable = el.scrollHeight - el.clientHeight > 1;
+      if (!isScrollable && event.cancelable) {
+        event.preventDefault();
       }
-
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (deltaY > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-        return;
-      }
-
-      if (deltaY < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-    };
-
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      touchStartYRef.current = touch?.clientY ?? null;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const el = sectionRef.current;
-      const startY = touchStartYRef.current;
-      const touch = event.touches[0];
-
-      if (!el || !touch || startY == null || isNavigatingRef.current) {
-        return;
-      }
-
-      const delta = startY - touch.clientY;
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (delta > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-      } else if (delta < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-
-      touchStartYRef.current = touch.clientY;
-    };
-
-    const handleTouchEnd = () => {
-      touchStartYRef.current = null;
-      clearBoundaryIntent();
     };
 
     sectionEl.addEventListener("wheel", handleWheel, { passive: false });
-    sectionEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-    sectionEl.addEventListener("touchmove", handleTouchMove, { passive: false });
-    sectionEl.addEventListener("touchend", handleTouchEnd, { passive: true });
 
     return () => {
       sectionEl.removeEventListener("wheel", handleWheel);
-      sectionEl.removeEventListener("touchstart", handleTouchStart);
-      sectionEl.removeEventListener("touchmove", handleTouchMove);
-      sectionEl.removeEventListener("touchend", handleTouchEnd);
-      clearBoundaryIntent();
     };
-  }, [clearBoundaryIntent, requestSectionChange]);
+  }, []);
 
   cardRefs.current.length = CONTACT_POINTS.length;
 
@@ -283,7 +122,7 @@ export default function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative min-h-[100vh] max-h-screen overflow-y-auto bg-gray-950 py-24 md:py-32"
+      className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">

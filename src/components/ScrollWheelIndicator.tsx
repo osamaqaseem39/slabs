@@ -24,6 +24,7 @@ const SECTION_CONFIG: SectionConfig[] = [
 export default function ScrollWheelIndicator() {
   const [activeSection, setActiveSection] = useState<string>(SECTION_CONFIG[0]?.id ?? "");
   const [hasMounted, setHasMounted] = useState(false);
+  const sectionIds = useMemo(() => SECTION_CONFIG.map((section) => section.id), []);
 
   useEffect(() => {
     setHasMounted(true);
@@ -129,7 +130,7 @@ export default function ScrollWheelIndicator() {
   }, []);
 
   useUnifiedSectionScroll({
-    sections: SECTION_CONFIG.map((section) => section.id),
+    sections: sectionIds,
     activeId: activeSectionMeta.id,
     navigate: handleScrollTo,
     enabled: hasMounted,

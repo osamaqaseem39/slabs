@@ -1,11 +1,7 @@
- "use client";
+"use client";
 
-import { motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
-import useSectionScrollSteps, {
-  type SectionScrollDirection,
-} from "@/hooks/useSectionScrollSteps";
-import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 const PROCESS_STEPS = [
   {
@@ -54,94 +50,45 @@ const PROCESS_STEPS = [
   },
 ];
 
-const clamp = (value: number, min: number, max: number) => {
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
+const GROUP_SIZE = 2;
+type ProcessStep = (typeof PROCESS_STEPS)[number];
+type ProcessStepGroup = ProcessStep[];
+
+const createStepGroups = (): ProcessStepGroup[] => {
+  const groups: ProcessStepGroup[] = [];
+
+  for (let index = 0; index < PROCESS_STEPS.length; index += GROUP_SIZE) {
+    groups.push(PROCESS_STEPS.slice(index, index + GROUP_SIZE));
+  }
+
+  return groups;
 };
 
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.9, y: 24 },
-  visible: { opacity: 1, scale: 1, y: 0 },
-};
+const INITIAL_STEP_GROUPS = createStepGroups();
 
 export default function HowItWorksSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const stepRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const transitionTimerRef = useRef<number | null>(null);
-  const isTransitioningRef = useRef(false);
-  const activeStepRef = useRef(0);
   const [activeStep, setActiveStep] = useState(0);
-  const hoveredStepRef = useRef<number | null>(null);
+  const activeStepRef = useRef(0);
   const [hoveredStep, setHoveredStep] = useState<number | null>(null);
-  const [stepGroups, setStepGroups] = useState(() => [
-    PROCESS_STEPS.slice(0, 2),
-    PROCESS_STEPS.slice(2, 4),
-  ]);
-  const totalSteps = PROCESS_STEPS.length;
-
-  const clearTransitionTimer = useCallback(() => {
-    if (transitionTimerRef.current != null) {
-      window.clearTimeout(transitionTimerRef.current);
-      transitionTimerRef.current = null;
-    }
-  }, []);
-
-  const focusStep = useCallback(
-    (targetIndex: number) => {
-      const index = clamp(targetIndex, 0, totalSteps - 1);
-      const groupIndex = Math.floor(index / 2);
-      const target = stepRefs.current[groupIndex];
-
-      if (!target) {
-        return false;
-      }
-
-      isTransitioningRef.current = true;
-      setActiveStep(index);
-      activeStepRef.current = index;
-
-      smoothScrollIntoView(target, { duration: DEFAULT_SCROLL_DURATION, offset: 120 });
-
-      clearTransitionTimer();
-      transitionTimerRef.current = window.setTimeout(() => {
-        isTransitioningRef.current = false;
-        transitionTimerRef.current = null;
-      }, DEFAULT_SCROLL_DURATION + 120);
-
-      return true;
-    },
-    [clearTransitionTimer, totalSteps]
-  );
-
-  const handleSectionScroll = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (isTransitioningRef.current) {
-        return true;
-      }
-
-      const currentGroupIndex = Math.floor(activeStepRef.current / 2);
-      const nextGroupIndex =
-        direction === "forward"
-          ? currentGroupIndex + 1
-          : currentGroupIndex - 1;
-
-      if (nextGroupIndex < 0 || nextGroupIndex >= stepGroups.length) {
-        return false;
-      }
-
-      const nextStepIndex = nextGroupIndex * 2;
-      focusStep(nextStepIndex);
-      return true;
-    },
-    [focusStep, stepGroups.length]
-  );
-
-  useSectionScrollSteps("how-it-works", handleSectionScroll);
+  const [stepGroups, setStepGroups] = useState<ProcessStepGroup[]>(INITIAL_STEP_GROUPS);
+  const [visibleGroupCount, setVisibleGroupCount] = useState(INITIAL_STEP_GROUPS.length);
 
   useEffect(() => {
-    setStepGroups([PROCESS_STEPS.slice(0, 2), PROCESS_STEPS.slice(2, 4)]);
+    activeStepRef.current = activeStep;
+  }, [activeStep]);
+
+  useEffect(() => {
+    const groups = createStepGroups();
+    setStepGroups(groups);
+    setVisibleGroupCount(groups.length);
   }, []);
+
+  useEffect(() => {
+    const activeGroup = Math.floor(activeStep / GROUP_SIZE);
+    setVisibleGroupCount((prev) => Math.max(prev, activeGroup + 1));
+  }, [activeStep]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -162,9 +109,9 @@ export default function HowItWorksSection() {
           return;
         }
 
-        const firstStepIndex = groupIndex * 2;
+        const firstStepIndex = groupIndex * GROUP_SIZE;
 
-        if (!isTransitioningRef.current && firstStepIndex !== activeStepRef.current) {
+        if (firstStepIndex !== activeStepRef.current) {
           activeStepRef.current = firstStepIndex;
           setActiveStep(firstStepIndex);
         }
@@ -184,22 +131,13 @@ export default function HowItWorksSection() {
     return () => observer.disconnect();
   }, []);
 
-  useEffect(
-    () => () => {
-      clearTransitionTimer();
-    },
-    [clearTransitionTimer]
-  );
-
-  const handleCardEnter = useCallback((stepIndex: number) => {
-    hoveredStepRef.current = stepIndex;
+  const handleCardEnter = (stepIndex: number) => {
     setHoveredStep(stepIndex);
-  }, []);
+  };
 
-  const handleCardLeave = useCallback(() => {
-    hoveredStepRef.current = null;
+  const handleCardLeave = () => {
     setHoveredStep(null);
-  }, []);
+  };
 
   stepRefs.current.length = stepGroups.length;
 
@@ -224,7 +162,12 @@ export default function HowItWorksSection() {
         </div>
 
         <div className="mt-16 space-y-16 md:space-y-20">
-          {stepGroups.map((group, groupIndex) => {
+          <AnimatePresence initial={false} mode="popLayout">
+            {stepGroups.map((group, groupIndex) => {
+              if (groupIndex >= visibleGroupCount) {
+                return null;
+              }
+
             const groupRefIndex = groupIndex;
 
             return (
@@ -234,16 +177,15 @@ export default function HowItWorksSection() {
                   stepRefs.current[groupRefIndex] = el;
                 }}
                 className="grid gap-8 lg:grid-cols-2"
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.4 }}
+                initial={{ opacity: 0, y: 48 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -48 }}
                 transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay: groupIndex * 0.1 }}
               >
                 {group.map((step, stepOffset) => {
-                  const stepIndex = groupIndex * 2 + stepOffset;
+                  const stepIndex = groupIndex * GROUP_SIZE + stepOffset;
                   const isGroupActive =
-                    Math.floor(stepIndex / 2) === Math.floor(activeStep / 2);
+                    Math.floor(stepIndex / GROUP_SIZE) === Math.floor(activeStep / GROUP_SIZE);
                   const isHovered = hoveredStep === stepIndex;
 
                   return (
@@ -254,6 +196,12 @@ export default function HowItWorksSection() {
                           ? "border-[#00BDFF]/60 bg-white/[0.05] shadow-[0_24px_58px_rgba(16,64,198,0.28)] backdrop-blur"
                           : "border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm opacity-85 hover:opacity-100 hover:border-[#00BDFF]/35"
                       } scroll-mt-36 perspective-[1600px]`}
+                      initial={{ opacity: 0, y: 32 }}
+                      animate={{
+                        opacity: isGroupActive ? 1 : 0.6,
+                        y: 0,
+                      }}
+                      exit={{ opacity: 0, y: -32 }}
                       whileHover={{ scale: isGroupActive ? 1.02 : 1.04 }}
                       data-active={isGroupActive}
                       data-flipped={isHovered}
@@ -358,6 +306,7 @@ export default function HowItWorksSection() {
               </motion.div>
             );
           })}
+          </AnimatePresence>
         </div>
       </div>
     </section>

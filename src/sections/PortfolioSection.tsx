@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
-import type { SectionScrollDirection } from "@/hooks/useSectionScrollSteps";
-import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 const FEATURED_PROJECTS = [
   {
@@ -51,6 +49,28 @@ const FEATURED_PROJECTS = [
     highlight:
       "Delivered a component library and playbook that let the internal team ship 2x faster post-launch.",
   },
+  {
+    name: "Summit Labs",
+    industry: "Climate Tech",
+    summary:
+      "Unified demand-gen and customer onboarding with a composable site, headless CMS, and real-time emissions dashboards.",
+    metrics: ["↑ 2.4x qualified pipeline", "↓ 35% onboarding questions"],
+    image: "/hero1.png",
+    scope: ["Headless marketing", "CMS architecture", "Data visualization"],
+    highlight:
+      "Wove lifecycle data into product storytelling with embedded analytics that update as prospects explore use cases.",
+  },
+  {
+    name: "Atlas Freight",
+    industry: "Logistics",
+    summary:
+      "Digitized a broker network with self-serve quoting, automated compliance, and ops playbooks teams can launch in any region.",
+    metrics: ["↑ 61% conversion to quote", "↓ 48% manual paperwork"],
+    image: "/hero2.png",
+    scope: ["Product modernization", "Workflow automation", "Platform enablement"],
+    highlight:
+      "Stitched together TMS, CRM, and finance tooling so new corridors spin up with pre-built dashboards and compliance guards.",
+  },
 ];
 
 export default function PortfolioSection() {
@@ -65,11 +85,6 @@ export default function PortfolioSection() {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
 
-  const isNavigatingRef = useRef(false);
-  const touchStartYRef = useRef<number | null>(null);
-  const boundaryIntentRef = useRef<SectionScrollDirection | null>(null);
-  const boundaryTimerRef = useRef<number | null>(null);
-
   const projectGroups = useMemo(() => {
     const midpoint = Math.max(1, Math.ceil(FEATURED_PROJECTS.length / 2));
     return [
@@ -77,170 +92,6 @@ export default function PortfolioSection() {
       FEATURED_PROJECTS.slice(midpoint),
     ];
   }, []);
-
-  const clearBoundaryIntent = useCallback(() => {
-    if (boundaryTimerRef.current != null) {
-      window.clearTimeout(boundaryTimerRef.current);
-      boundaryTimerRef.current = null;
-    }
-    boundaryIntentRef.current = null;
-  }, []);
-
-  const navigateToSection = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (typeof window === "undefined") {
-        return;
-      }
-
-      if (isNavigatingRef.current) {
-        return;
-      }
-
-      const targetId = direction === "forward" ? "about" : "why-choose-us";
-      const targetElement = document.getElementById(targetId);
-
-      if (!targetElement) {
-        return;
-      }
-
-      isNavigatingRef.current = true;
-      smoothScrollIntoView(targetElement, { duration: DEFAULT_SCROLL_DURATION });
-
-      window.setTimeout(() => {
-        isNavigatingRef.current = false;
-      }, DEFAULT_SCROLL_DURATION + 150);
-    },
-    []
-  );
-
-  const requestSectionChange = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (boundaryIntentRef.current === direction) {
-        if (boundaryTimerRef.current != null) {
-          window.clearTimeout(boundaryTimerRef.current);
-          boundaryTimerRef.current = null;
-        }
-        clearBoundaryIntent();
-        navigateToSection(direction);
-        return;
-      }
-
-      boundaryIntentRef.current = direction;
-      if (boundaryTimerRef.current != null) {
-        window.clearTimeout(boundaryTimerRef.current);
-      }
-      boundaryTimerRef.current = window.setTimeout(() => {
-        boundaryIntentRef.current = null;
-        boundaryTimerRef.current = null;
-      }, 1800);
-    },
-    [clearBoundaryIntent, navigateToSection]
-  );
-
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
-
-    const handleWheel = (event: WheelEvent) => {
-      const el = sectionRef.current;
-      if (!el || isNavigatingRef.current) {
-        return;
-      }
-
-      const deltaY =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE ? event.deltaY * 40 : event.deltaY;
-      if (Math.abs(deltaY) < 1) {
-        return;
-      }
-
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (deltaY > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-        return;
-      }
-
-      if (deltaY < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-    };
-
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      touchStartYRef.current = touch?.clientY ?? null;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const el = sectionRef.current;
-      const startY = touchStartYRef.current;
-      const touch = event.touches[0];
-
-      if (!el || !touch || startY == null || isNavigatingRef.current) {
-        return;
-      }
-
-      const delta = startY - touch.clientY;
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (delta > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-      } else if (delta < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-
-      touchStartYRef.current = touch.clientY;
-    };
-
-    const handleTouchEnd = () => {
-      touchStartYRef.current = null;
-      clearBoundaryIntent();
-    };
-
-    sectionEl.addEventListener("wheel", handleWheel, { passive: false });
-    sectionEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-    sectionEl.addEventListener("touchmove", handleTouchMove, { passive: false });
-    sectionEl.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    return () => {
-      sectionEl.removeEventListener("wheel", handleWheel);
-      sectionEl.removeEventListener("touchstart", handleTouchStart);
-      sectionEl.removeEventListener("touchmove", handleTouchMove);
-      sectionEl.removeEventListener("touchend", handleTouchEnd);
-      clearBoundaryIntent();
-    };
-  }, [clearBoundaryIntent, projectGroups, requestSectionChange]);
 
   useEffect(() => {
     const eyebrowEl = eyebrowRef.current;

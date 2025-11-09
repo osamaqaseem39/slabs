@@ -1,12 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { MutableRefObject } from "react";
 import gsap from "gsap";
-import useSectionScrollSteps, {
-  type SectionScrollDirection,
-} from "@/hooks/useSectionScrollSteps";
-import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 const DIFFERENTIATORS = [
   {
@@ -57,190 +53,6 @@ export default function WhyChooseUsSection() {
   const quoteRef = useRef<HTMLDivElement | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
-  const boundaryLockRef = useRef(false);
-
-  const isNavigatingRef = useRef(false);
-  const touchStartYRef = useRef<number | null>(null);
-  const boundaryIntentRef = useRef<SectionScrollDirection | null>(null);
-  const boundaryTimerRef = useRef<number | null>(null);
-
-  const clearBoundaryIntent = useCallback(() => {
-    if (boundaryTimerRef.current != null) {
-      window.clearTimeout(boundaryTimerRef.current);
-      boundaryTimerRef.current = null;
-    }
-    boundaryIntentRef.current = null;
-  }, []);
-
-  const navigateToSection = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (typeof window === "undefined") {
-        return;
-      }
-
-      if (isNavigatingRef.current) {
-        return;
-      }
-
-      const targetId = direction === "forward" ? "portfolio" : "how-it-works";
-      const targetElement = document.getElementById(targetId);
-
-      if (!targetElement) {
-        return;
-      }
-
-      isNavigatingRef.current = true;
-      smoothScrollIntoView(targetElement, { duration: DEFAULT_SCROLL_DURATION });
-
-      window.setTimeout(() => {
-        isNavigatingRef.current = false;
-      }, DEFAULT_SCROLL_DURATION + 150);
-    },
-    []
-  );
-
-  const requestSectionChange = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (boundaryIntentRef.current === direction) {
-        if (boundaryTimerRef.current != null) {
-          window.clearTimeout(boundaryTimerRef.current);
-          boundaryTimerRef.current = null;
-        }
-        clearBoundaryIntent();
-        navigateToSection(direction);
-        return;
-      }
-
-      boundaryIntentRef.current = direction;
-      if (boundaryTimerRef.current != null) {
-        window.clearTimeout(boundaryTimerRef.current);
-      }
-      boundaryTimerRef.current = window.setTimeout(() => {
-        boundaryIntentRef.current = null;
-        boundaryTimerRef.current = null;
-      }, 1800);
-    },
-    [clearBoundaryIntent, navigateToSection]
-  );
-
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
-
-    const handleWheel = (event: WheelEvent) => {
-      const el = sectionRef.current;
-      if (!el || isNavigatingRef.current) {
-        return;
-      }
-
-      if (boundaryLockRef.current) {
-        if (event.cancelable) {
-          event.preventDefault();
-        }
-        return;
-      }
-
-      const deltaY =
-        event.deltaMode === WheelEvent.DOM_DELTA_LINE ? event.deltaY * 40 : event.deltaY;
-      if (Math.abs(deltaY) < 1) {
-        return;
-      }
-
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (deltaY > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-        return;
-      }
-
-      if (deltaY < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-    };
-
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      touchStartYRef.current = touch?.clientY ?? null;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const el = sectionRef.current;
-      const startY = touchStartYRef.current;
-      const touch = event.touches[0];
-
-      if (
-        !el ||
-        !touch ||
-        startY == null ||
-        isNavigatingRef.current ||
-        boundaryLockRef.current
-      ) {
-        return;
-      }
-
-      const delta = startY - touch.clientY;
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (delta > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-      } else if (delta < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-
-      touchStartYRef.current = touch.clientY;
-    };
-
-    const handleTouchEnd = () => {
-      touchStartYRef.current = null;
-      clearBoundaryIntent();
-    };
-
-    sectionEl.addEventListener("wheel", handleWheel, { passive: false });
-    sectionEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-    sectionEl.addEventListener("touchmove", handleTouchMove, { passive: false });
-    sectionEl.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    return () => {
-      sectionEl.removeEventListener("wheel", handleWheel);
-      sectionEl.removeEventListener("touchstart", handleTouchStart);
-      sectionEl.removeEventListener("touchmove", handleTouchMove);
-      sectionEl.removeEventListener("touchend", handleTouchEnd);
-      clearBoundaryIntent();
-    };
-  }, [clearBoundaryIntent, navigateToSection, requestSectionChange]);
-
   useEffect(() => {
     const eyebrowEl = eyebrowRef.current;
     const headingEl = headingRef.current;
@@ -393,54 +205,6 @@ export default function WhyChooseUsSection() {
   secondaryCardRefs.current.length = secondaryDifferentiators.length;
   badgeRefs.current.length = TRUST_BADGES.length;
 
-  useSectionScrollSteps(
-    "why-choose-us",
-    useCallback(
-      (direction: SectionScrollDirection) => {
-        if (boundaryLockRef.current || isNavigatingRef.current) {
-          return true;
-        }
-        const sectionEl = sectionRef.current;
-        if (!sectionEl) {
-          return false;
-        }
-
-        const atTop = sectionEl.scrollTop <= 0;
-        const atBottom =
-          sectionEl.scrollTop + sectionEl.clientHeight >= sectionEl.scrollHeight - 1;
-
-        if (direction === "forward" && !atBottom) {
-          boundaryLockRef.current = true;
-          sectionEl.scrollTo({
-            top: sectionEl.scrollHeight - sectionEl.clientHeight,
-            behavior: "smooth",
-          });
-          clearBoundaryIntent();
-          window.setTimeout(() => {
-            boundaryLockRef.current = false;
-          }, DEFAULT_SCROLL_DURATION);
-          return true;
-        }
-
-        if (direction === "backward" && !atTop) {
-          boundaryLockRef.current = true;
-          sectionEl.scrollTo({
-            top: 0,
-            behavior: "smooth",
-          });
-          clearBoundaryIntent();
-          window.setTimeout(() => {
-            boundaryLockRef.current = false;
-          }, DEFAULT_SCROLL_DURATION);
-          return true;
-        }
-
-        return false;
-      },
-      []
-    )
-  );
-
   const renderDifferentiator = (
     item: (typeof DIFFERENTIATORS)[number],
     index: number,
@@ -464,12 +228,11 @@ export default function WhyChooseUsSection() {
       <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-[#00BDFF]/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-90" />
     </div>
   );
-
   return (
     <section
       id="why-choose-us"
       ref={sectionRef}
-      className="relative min-h-[100vh] overflow-hidden bg-gray-950 py-24 md:py-32"
+      className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
     >
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(120deg,rgba(15,23,42,0.95),rgba(2,6,23,0.98))]" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(0,189,255,0.12),transparent_60%)]" />

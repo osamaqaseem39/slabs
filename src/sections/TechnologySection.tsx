@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
-import type { SectionScrollDirection } from "@/hooks/useSectionScrollSteps";
-import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 type TechnologyStack = {
   title: string;
@@ -34,8 +32,6 @@ const technologyStacks: TechnologyStack[] = [
 
 export default function TechnologySection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const isNavigatingRef = useRef(false);
-  const touchStartYRef = useRef<number | null>(null);
   const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
@@ -44,173 +40,6 @@ export default function TechnologySection() {
 
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
-  const boundaryIntentRef = useRef<SectionScrollDirection | null>(null);
-  const boundaryTimerRef = useRef<number | null>(null);
-
-  const clearBoundaryIntent = useCallback(() => {
-    if (boundaryTimerRef.current != null) {
-      window.clearTimeout(boundaryTimerRef.current);
-      boundaryTimerRef.current = null;
-    }
-    boundaryIntentRef.current = null;
-  }, []);
-
-  const navigateToSection = useCallback(
-    (direction: "forward" | "backward") => {
-      if (typeof window === "undefined") {
-        return;
-      }
-
-      if (isNavigatingRef.current) {
-        return;
-      }
-
-      clearBoundaryIntent();
-
-      const targetId = direction === "forward" ? "how-it-works" : "services";
-      const targetElement = document.getElementById(targetId);
-
-      if (!targetElement) {
-        return;
-      }
-
-      isNavigatingRef.current = true;
-      smoothScrollIntoView(targetElement, { duration: DEFAULT_SCROLL_DURATION });
-
-      window.setTimeout(() => {
-        isNavigatingRef.current = false;
-      }, DEFAULT_SCROLL_DURATION + 150);
-    },
-    [clearBoundaryIntent]
-  );
-
-  const requestSectionChange = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (boundaryIntentRef.current === direction) {
-        if (boundaryTimerRef.current != null) {
-          window.clearTimeout(boundaryTimerRef.current);
-          boundaryTimerRef.current = null;
-        }
-        clearBoundaryIntent();
-        navigateToSection(direction);
-        return;
-      }
-
-      boundaryIntentRef.current = direction;
-      if (boundaryTimerRef.current != null) {
-        window.clearTimeout(boundaryTimerRef.current);
-      }
-      boundaryTimerRef.current = window.setTimeout(() => {
-        boundaryIntentRef.current = null;
-        boundaryTimerRef.current = null;
-      }, 2000);
-    },
-    [clearBoundaryIntent, navigateToSection]
-  );
-
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
-
-    const handleWheel = (event: WheelEvent) => {
-      const el = sectionRef.current;
-      if (!el || isNavigatingRef.current) {
-        return;
-      }
-
-      const deltaY = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? event.deltaY * 40 : event.deltaY;
-      if (Math.abs(deltaY) < 1) {
-        return;
-      }
-
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (deltaY > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-        return;
-      }
-
-      if (deltaY < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-    };
-
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0];
-      touchStartYRef.current = touch?.clientY ?? null;
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const el = sectionRef.current;
-      const startY = touchStartYRef.current;
-      const touch = event.touches[0];
-
-      if (!el || !touch || startY == null || isNavigatingRef.current) {
-        return;
-      }
-
-      const delta = startY - touch.clientY;
-      const atTop = el.scrollTop <= 0;
-      const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-
-      if (delta > 0) {
-        if (atBottom) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("forward");
-        } else {
-          clearBoundaryIntent();
-        }
-      } else if (delta < 0) {
-        if (atTop) {
-          if (event.cancelable) {
-            event.preventDefault();
-          }
-          requestSectionChange("backward");
-        } else {
-          clearBoundaryIntent();
-        }
-      }
-
-      touchStartYRef.current = touch.clientY;
-    };
-
-    const handleTouchEnd = () => {
-      touchStartYRef.current = null;
-      clearBoundaryIntent();
-    };
-
-    sectionEl.addEventListener("wheel", handleWheel, { passive: false });
-    sectionEl.addEventListener("touchstart", handleTouchStart, { passive: true });
-    sectionEl.addEventListener("touchmove", handleTouchMove, { passive: false });
-    sectionEl.addEventListener("touchend", handleTouchEnd, { passive: true });
-
-    return () => {
-      sectionEl.removeEventListener("wheel", handleWheel);
-      sectionEl.removeEventListener("touchstart", handleTouchStart);
-      sectionEl.removeEventListener("touchmove", handleTouchMove);
-      sectionEl.removeEventListener("touchend", handleTouchEnd);
-      clearBoundaryIntent();
-    };
-  }, [clearBoundaryIntent, navigateToSection, requestSectionChange]);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
@@ -323,7 +152,7 @@ export default function TechnologySection() {
     <section
       id="technology"
       ref={sectionRef}
-      className="relative min-h-[100vh] bg-gray-900 py-16 md:py-24 lg:py-32 lg:max-h-screen lg:overflow-y-auto"
+      className="relative min-h-[100vh] bg-gray-900 py-16 md:py-24 lg:py-32"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="max-w-3xl">

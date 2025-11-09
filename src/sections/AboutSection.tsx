@@ -1,9 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useCallback, useRef } from "react";
-import useSectionScrollSteps from "@/hooks/useSectionScrollSteps";
-import { smoothScrollTo, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
+import { useRef } from "react";
 
 const CORE_VALUES = [
   {
@@ -35,70 +33,7 @@ const CAPABILITIES = [
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const eyebrowRef = useRef<HTMLParagraphElement>(null);
-  const isAligningRef = useRef(false);
 
-  const alignSection = useCallback((position: "top" | "bottom") => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
-
-    const targetTop =
-      position === "top"
-        ? Math.max(sectionEl.offsetTop - 12, 0)
-        : Math.max(sectionEl.offsetTop + sectionEl.offsetHeight - window.innerHeight, 0);
-
-    isAligningRef.current = true;
-    smoothScrollTo(targetTop, { duration: DEFAULT_SCROLL_DURATION });
-    window.setTimeout(() => {
-      isAligningRef.current = false;
-    }, DEFAULT_SCROLL_DURATION + 80);
-  }, []);
-
-  const handleSectionScroll = useCallback(
-    (direction: "forward" | "backward") => {
-      if (typeof window === "undefined") {
-        return false;
-      }
-
-      const sectionEl = sectionRef.current;
-      if (!sectionEl) {
-        return false;
-      }
-
-      if (isAligningRef.current) {
-        return true;
-      }
-
-      const rect = sectionEl.getBoundingClientRect();
-      const forwardOverflow = rect.bottom - window.innerHeight;
-      const backwardOverflow = rect.top;
-
-      if (direction === "forward") {
-        if (forwardOverflow > 48) {
-          alignSection("bottom");
-          return true;
-        }
-        return false;
-      }
-
-      if (direction === "backward") {
-        if (backwardOverflow < -48) {
-          alignSection("top");
-          return true;
-        }
-        return false;
-      }
-
-      return false;
-    },
-    [alignSection]
-  );
-
-  useSectionScrollSteps("about", handleSectionScroll);
   return (
     <section
       ref={sectionRef}
