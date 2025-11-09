@@ -5,6 +5,7 @@ import gsap from "gsap";
 import useSectionScrollSteps, {
   type SectionScrollDirection,
 } from "@/hooks/useSectionScrollSteps";
+import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 const FIRST_PHASE_DELAY = 2200;
 const SECOND_PHASE_DELAY = 2400;
@@ -35,7 +36,7 @@ export default function HeroSection() {
     if (typeof window === "undefined") return;
     const el = document.querySelector(target);
     if (el instanceof HTMLElement) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      smoothScrollIntoView(el, { duration: DEFAULT_SCROLL_DURATION });
     }
   };
 
@@ -515,7 +516,7 @@ export default function HeroSection() {
             </button>
             <button
               className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition-colors duration-300"
-              onClick={() => scrollToTarget("#about")}
+              onClick={() => scrollToTarget("#technology")}
             >
               Learn More
             </button>

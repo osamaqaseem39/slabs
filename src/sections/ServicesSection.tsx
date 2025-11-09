@@ -267,7 +267,16 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
   const animationStartedRef = useRef(false);
   const isAnimatingGroupsRef = useRef(false);
   const activeGroupRef = useRef(0);
+  const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
   const containerHeightRef = useRef<number | null>(null);
+
+  const clearHoveredCard = useCallback(() => {
+    setHoveredCardIndex((prev) => (prev === null ? prev : null));
+  }, []);
+
+  const handleCardEnter = useCallback((index: number) => {
+    setHoveredCardIndex(index);
+  }, []);
 
   const getGroupCardArticles = useCallback((groupIndex: number) => {
     const groupEl = groupRefs.current[groupIndex];
@@ -282,6 +291,24 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
   useEffect(() => {
     activeGroupRef.current = activeGroup;
   }, [activeGroup]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const handleScrollLike = () => {
+      clearHoveredCard();
+    };
+
+    window.addEventListener("scroll", handleScrollLike, { passive: true });
+    window.addEventListener("touchstart", clearHoveredCard, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollLike);
+      window.removeEventListener("touchstart", clearHoveredCard);
+    };
+  }, [clearHoveredCard]);
 
   const updateContainerHeight = useCallback(() => {
     const activeGroupEl = groupRefs.current[activeGroupRef.current];
@@ -320,6 +347,8 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
         groupTransitionRef.current = null;
       }
 
+      clearHoveredCard();
+
       groups.forEach((group, index) => {
         if (!group) {
           return;
@@ -350,7 +379,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
       isAnimatingGroupsRef.current = false;
       updateContainerHeight();
     },
-    [getGroupCardArticles, updateContainerHeight]
+    [clearHoveredCard, getGroupCardArticles, updateContainerHeight]
   );
 
   useEffect(() => {
@@ -408,6 +437,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
         return;
       }
 
+      clearHoveredCard();
       isAnimatingGroupsRef.current = true;
 
       if (groupTransitionRef.current) {
@@ -500,7 +530,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
           "-=0.25"
         );
     },
-    [getGroupCardArticles, updateContainerHeight]
+    [clearHoveredCard, getGroupCardArticles, updateContainerHeight]
   );
 
   const handleSectionScroll = useCallback(
@@ -741,12 +771,19 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
                     ref={(el) => {
                       cardsRef.current[cardIndex] = el;
                     }}
-                    className="group relative h-full [perspective:1600px]"
+                className="group relative h-full [perspective:1600px]"
+                data-flipped={hoveredCardIndex === cardIndex}
+                onMouseEnter={() => handleCardEnter(cardIndex)}
+                onMouseLeave={clearHoveredCard}
+                onFocus={() => handleCardEnter(cardIndex)}
+                onBlur={clearHoveredCard}
                   >
                     <article
-                      className="relative h-full min-h-[380px] rounded-3xl border border-white/10 bg-white/[0.02] shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition-[transform,box-shadow,border-color,background] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-style:preserve-3d] hover:border-[#00BDFF]/70 hover:bg-white/[0.04] group-hover:[transform:rotateY(180deg)]"
+                  tabIndex={0}
+                  data-flipped={hoveredCardIndex === cardIndex}
+                  className="relative h-full min-h-[380px] rounded-3xl border border-white/10 bg-white/[0.02] shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition-[transform,box-shadow,border-color,background] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-style:preserve-3d] group-hover:border-[#00BDFF]/70 group-hover:bg-white/[0.04] focus-visible:border-[#00BDFF]/70 focus-visible:bg-white/[0.04] data-[flipped=true]:border-[#00BDFF]/70 data-[flipped=true]:bg-white/[0.04] data-[flipped=true]:[transform:rotateY(180deg)]"
                     >
-                      <div className="absolute inset-px rounded-[22px] bg-gradient-to-br from-white/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute inset-px rounded-[22px] bg-gradient-to-br from-white/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-data-[flipped=true]:opacity-100 data-[flipped=true]:opacity-100" />
 
                       <div className="relative flex h-full flex-col items-center justify-center gap-6 px-8 py-10 text-center [backface-visibility:hidden]">
                         <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.06] text-[#00BDFF] ring-1 ring-inset ring-white/10 shadow-[0_12px_24px_rgba(15,23,42,0.32)]">

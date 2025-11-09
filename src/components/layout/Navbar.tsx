@@ -4,6 +4,7 @@ import { MouseEvent, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import Image from "next/image";
+import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 export default function Navbar() {
   const navRef = useRef<HTMLElement>(null);
@@ -18,7 +19,7 @@ export default function Navbar() {
 
     const el = document.querySelector(target);
     if (el instanceof HTMLElement) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      smoothScrollIntoView(el, { duration: DEFAULT_SCROLL_DURATION });
     }
   };
 
@@ -78,13 +79,6 @@ export default function Navbar() {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-8">
             <a
-              href="#home"
-              onClick={(event) => scrollToTarget("#home", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00BDFF]"
-            >
-              Home
-            </a>
-            <a
               href="#services"
               onClick={(event) => scrollToTarget("#services", event)}
               className="text-white transition-colors duration-300 hover:text-[#00BDFF]"
@@ -92,11 +86,11 @@ export default function Navbar() {
               Services
             </a>
             <a
-              href="#about"
-              onClick={(event) => scrollToTarget("#about", event)}
+              href="#portfolio"
+              onClick={(event) => scrollToTarget("#portfolio", event)}
               className="text-white transition-colors duration-300 hover:text-[#00BDFF]"
             >
-              About
+              Portfolio
             </a>
             <a
               href="#contact"

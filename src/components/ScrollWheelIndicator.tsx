@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useUnifiedSectionScroll from "@/hooks/useUnifiedSectionScroll";
+import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 type SectionConfig = {
   id: string;
@@ -12,6 +13,10 @@ type SectionConfig = {
 const SECTION_CONFIG: SectionConfig[] = [
   { id: "home", label: "Home" },
   { id: "services", label: "Services" },
+  { id: "technology", label: "Technology" },
+  { id: "how-it-works", label: "How It Works" },
+  { id: "why-choose-us", label: "Why Choose Us" },
+  { id: "portfolio", label: "Portfolio" },
   { id: "about", label: "About" },
   { id: "contact", label: "Contact" },
 ];
@@ -55,12 +60,13 @@ export default function ScrollWheelIndicator() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries
+        const topEntry = entries
           .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
-          .forEach((entry) => {
-            setActiveSection((prev) => (prev === entry.target.id ? prev : entry.target.id));
-          });
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (topEntry) {
+          setActiveSection((prev) => (prev === topEntry.target.id ? prev : topEntry.target.id));
+        }
       },
       {
         rootMargin: "-30% 0px -30% 0px",
@@ -116,7 +122,7 @@ export default function ScrollWheelIndicator() {
 
     const element = document.getElementById(targetId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      smoothScrollIntoView(element, { duration: DEFAULT_SCROLL_DURATION });
       return true;
     }
     return false;
@@ -131,7 +137,7 @@ export default function ScrollWheelIndicator() {
 
   return (
     <motion.div
-      className="pointer-events-none fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-start gap-4 lg:flex"
+      className="pointer-events-none fixed left-6 top-1/3 z-40 hidden -translate-y-1/2 flex-col items-start gap-4 lg:flex"
       initial={{ opacity: 0, x: -24 }}
       animate={hasMounted ? { opacity: 1, x: 0 } : { opacity: 0, x: -24 }}
       transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}

@@ -8,6 +8,13 @@ import ScrollWheelIndicator from "@/components/ScrollWheelIndicator";
 import Preloader from "@/components/Preloader";
 import HeroSection from "@/sections/HeroSection";
 import ServicesSection from "@/sections/ServicesSection";
+import TechnologySection from "@/sections/TechnologySection";
+import HowItWorksSection from "@/sections/HowItWorksSection";
+import AboutSection from "@/sections/AboutSection";
+import WhyChooseUsSection from "../sections/WhyChooseUsSection";
+import PortfolioSection from "../sections/PortfolioSection";
+import ContactSection from "@/sections/ContactSection";
+import FooterSection from "../sections/FooterSection";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -61,24 +68,13 @@ export default function Home() {
       <ScrollWheelIndicator />
       <HeroSection />
       <ServicesSection />
-
-      <section id="about" className="min-h-[100vh] bg-gray-800 flex items-center">
-        <div className="container">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">Section 3</h2>
-            <p className="text-xl text-white/80">This is another dummy section for scroll testing</p>
-          </div>
-        </div>
-      </section>
-      
-      <section id="contact" className="min-h-[100vh] bg-gray-700 flex items-center">
-        <div className="container">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">Section 4</h2>
-            <p className="text-xl text-white/80">This is another dummy section for scroll testing</p>
-          </div>
-        </div>
-      </section>
+      <TechnologySection />
+      <HowItWorksSection />
+      <WhyChooseUsSection />
+      <PortfolioSection />
+      <AboutSection />
+      <ContactSection />
+      <FooterSection />
     </main>
   );
 }
