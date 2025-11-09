@@ -1,6 +1,17 @@
 "use client";
 
-import type { ReactNode } from "react";
+import gsap from "gsap";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import useSectionScrollSteps, {
+  type SectionScrollDirection,
+} from "@/hooks/useSectionScrollSteps";
 
 type ServicesSectionProps = {
   id?: string;
@@ -231,56 +242,550 @@ const secondaryServices: Service[] = [
 ];
 
 export default function ServicesSection({ id = "services" }: ServicesSectionProps) {
-  const services = [...primaryServices, ...secondaryServices];
+  const combinedServices = useMemo(
+    () => [...primaryServices, ...secondaryServices].slice(0, 6),
+    []
+  );
+  const serviceGroups = useMemo(
+    () => [combinedServices.slice(0, 3), combinedServices.slice(3, 6)],
+    [combinedServices]
+  );
+  const [activeGroup, setActiveGroup] = useState(0);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const sectionContentRef = useRef<HTMLDivElement | null>(null);
+  const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
+  const cardsRef = useRef<Array<HTMLElement | null>>([]);
+  const groupRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const groupContainerRef = useRef<HTMLDivElement | null>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const sectionIntroTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const groupTransitionRef = useRef<gsap.core.Timeline | null>(null);
+  const intersectionReachedRef = useRef(false);
+  const thirdScrollCompleteRef = useRef(false);
+  const animationStartedRef = useRef(false);
+  const isAnimatingGroupsRef = useRef(false);
+  const activeGroupRef = useRef(0);
+  const containerHeightRef = useRef<number | null>(null);
+
+  const getGroupCardArticles = useCallback((groupIndex: number) => {
+    const groupEl = groupRefs.current[groupIndex];
+    if (!groupEl) {
+      return [] as HTMLElement[];
+    }
+    return Array.from(
+      groupEl.querySelectorAll<HTMLElement>("article")
+    );
+  }, []);
+
+  useEffect(() => {
+    activeGroupRef.current = activeGroup;
+  }, [activeGroup]);
+
+  const updateContainerHeight = useCallback(() => {
+    const activeGroupEl = groupRefs.current[activeGroupRef.current];
+    if (!activeGroupEl) {
+      return;
+    }
+    const measuredHeight = activeGroupEl.scrollHeight;
+    if (measuredHeight > 0) {
+      const containerEl = groupContainerRef.current;
+      const previousHeight = containerHeightRef.current;
+      containerHeightRef.current = measuredHeight;
+
+      if (containerEl) {
+        if (previousHeight === null) {
+          gsap.set(containerEl, { height: measuredHeight });
+        } else if (previousHeight !== measuredHeight) {
+          gsap.to(containerEl, {
+            height: measuredHeight,
+            duration: 0.6,
+            ease: "power2.out",
+          });
+        }
+      }
+    }
+  }, []);
+
+  const resetGroupsInstant = useCallback(
+    (targetIndex: number) => {
+      const groups = groupRefs.current;
+      if (!groups.length) {
+        return;
+      }
+
+      if (groupTransitionRef.current) {
+        groupTransitionRef.current.kill();
+        groupTransitionRef.current = null;
+      }
+
+      groups.forEach((group, index) => {
+        if (!group) {
+          return;
+        }
+        const cardArticles = getGroupCardArticles(index);
+        gsap.killTweensOf(group);
+        if (cardArticles.length) {
+          gsap.killTweensOf(cardArticles);
+        }
+        gsap.set(group, {
+          position: "absolute",
+          inset: 0,
+          opacity: index === targetIndex ? 1 : 0,
+          y: 0,
+          pointerEvents: index === targetIndex ? "auto" : "none",
+          visibility: index === targetIndex ? "visible" : "hidden",
+        });
+        if (cardArticles.length) {
+          gsap.set(cardArticles, {
+            opacity: index === targetIndex ? 1 : 0,
+            y: 0,
+          });
+        }
+      });
+
+      activeGroupRef.current = targetIndex;
+      setActiveGroup((prev) => (prev !== targetIndex ? targetIndex : prev));
+      isAnimatingGroupsRef.current = false;
+      updateContainerHeight();
+    },
+    [getGroupCardArticles, updateContainerHeight]
+  );
+
+  useEffect(() => {
+    const groups = groupRefs.current;
+    if (!groups.length) {
+      return;
+    }
+
+    groups.forEach((group, index) => {
+      if (!group) {
+        return;
+      }
+      gsap.set(group, {
+        position: "absolute",
+        inset: 0,
+        opacity: index === 0 ? 1 : 0,
+        y: 0,
+        pointerEvents: index === 0 ? "auto" : "none",
+        visibility: index === 0 ? "visible" : "hidden",
+      });
+    });
+
+    updateContainerHeight();
+  }, [updateContainerHeight]);
+
+  useEffect(() => {
+    updateContainerHeight();
+  }, [activeGroup, updateContainerHeight]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      updateContainerHeight();
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [updateContainerHeight]);
+
+  const transitionToGroup = useCallback(
+    (targetIndex: number) => {
+      if (isAnimatingGroupsRef.current) {
+        return;
+      }
+      const currentIndex = activeGroupRef.current;
+      if (targetIndex === currentIndex) {
+        return;
+      }
+
+      const currentGroup = groupRefs.current[currentIndex];
+      const nextGroup = groupRefs.current[targetIndex];
+
+      if (!currentGroup || !nextGroup) {
+        return;
+      }
+
+      isAnimatingGroupsRef.current = true;
+
+      if (groupTransitionRef.current) {
+        groupTransitionRef.current.kill();
+        groupTransitionRef.current = null;
+      }
+
+      const currentGroupCards = getGroupCardArticles(currentIndex);
+      const nextGroupCards = getGroupCardArticles(targetIndex);
+
+      groupTransitionRef.current = gsap
+        .timeline({
+          defaults: {
+            duration: 0.65,
+            ease: "power3.out",
+          },
+          onComplete: () => {
+            gsap.set(currentGroup, {
+              opacity: 0,
+              y: 0,
+              pointerEvents: "none",
+              visibility: "hidden",
+            });
+            gsap.set(nextGroup, {
+              opacity: 1,
+              y: 0,
+              pointerEvents: "auto",
+              visibility: "visible",
+            });
+            if (nextGroupCards.length) {
+              gsap.set(nextGroupCards, { opacity: 1, y: 0 });
+            }
+            setActiveGroup(targetIndex);
+            activeGroupRef.current = targetIndex;
+            isAnimatingGroupsRef.current = false;
+            updateContainerHeight();
+          },
+        })
+        .add(() => {
+          gsap.set(nextGroup, {
+            visibility: "visible",
+            pointerEvents: "none",
+            opacity: 0,
+            y: 40,
+          });
+          if (nextGroupCards.length) {
+            gsap.set(nextGroupCards, { opacity: 0, y: 40 });
+          }
+          if (currentGroupCards.length) {
+            gsap.set(currentGroupCards, { opacity: 1, y: 0 });
+          }
+        })
+        .to(
+          currentGroupCards,
+          {
+            opacity: 0,
+            y: -30,
+            duration: 0.45,
+            stagger: 0.08,
+            ease: "power2.inOut",
+          },
+          0
+        )
+        .to(
+          currentGroup,
+          {
+            opacity: 0,
+            y: -40,
+          },
+          0
+        )
+        .to(
+          nextGroup,
+          {
+            opacity: 1,
+            y: 0,
+            pointerEvents: "auto",
+            visibility: "visible",
+          },
+          "<0.1"
+        )
+        .to(
+          nextGroupCards,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.12,
+          },
+          "-=0.25"
+        );
+    },
+    [getGroupCardArticles, updateContainerHeight]
+  );
+
+  const handleSectionScroll = useCallback(
+    (direction: SectionScrollDirection) => {
+      if (isAnimatingGroupsRef.current) {
+        return true;
+      }
+
+      if (direction === "forward") {
+        if (activeGroupRef.current === 0) {
+          transitionToGroup(1);
+          return true;
+        }
+        return false;
+      }
+
+      if (direction === "backward") {
+        if (activeGroupRef.current === 1) {
+          transitionToGroup(0);
+          return true;
+        }
+        return false;
+      }
+
+      return false;
+    },
+    [transitionToGroup]
+  );
+
+  useSectionScrollSteps(id, handleSectionScroll);
+
+  useEffect(() => {
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) {
+      return;
+    }
+
+    const eyebrowEl = eyebrowRef.current;
+    const headingEl = headingRef.current;
+    const descriptionEl = descriptionRef.current;
+    const cardEls = cardsRef.current.filter(
+      (card): card is HTMLElement => Boolean(card)
+    );
+    const primaryCardEls = cardEls.slice(0, 3);
+
+    const animatedElements = [
+      eyebrowEl,
+      headingEl,
+      descriptionEl,
+      ...primaryCardEls,
+    ].filter(Boolean);
+
+    if (!animatedElements.length) {
+      return;
+    }
+
+    gsap.set(animatedElements, { opacity: 0, y: 60 });
+
+    const startAnimation = () => {
+      if (animationStartedRef.current) {
+        return;
+      }
+      animationStartedRef.current = true;
+
+      const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      if (eyebrowEl) {
+        timeline.to(eyebrowEl, {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+        });
+      }
+
+      if (headingEl) {
+        timeline.to(
+          headingEl,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+          },
+          "-=0.25"
+        );
+      }
+
+      if (descriptionEl) {
+        timeline.to(
+          descriptionEl,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+          },
+          "-=0.35"
+        );
+      }
+
+      if (primaryCardEls.length) {
+        timeline.to(
+          primaryCardEls,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.12,
+          },
+          "-=0.2"
+        );
+      }
+
+      timelineRef.current = timeline;
+    };
+
+    const maybeStartAnimation = () => {
+      if (intersectionReachedRef.current && thirdScrollCompleteRef.current) {
+        startAnimation();
+      }
+    };
+
+    const handleThirdScrollComplete = () => {
+      thirdScrollCompleteRef.current = true;
+      maybeStartAnimation();
+    };
+
+    if (typeof window !== "undefined") {
+      const globalWindow = window as typeof window & {
+        __heroThirdScrollComplete?: boolean;
+      };
+      if (globalWindow.__heroThirdScrollComplete) {
+        thirdScrollCompleteRef.current = true;
+      }
+      window.addEventListener("hero:third-scroll-complete", handleThirdScrollComplete);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          intersectionReachedRef.current = true;
+          observer.disconnect();
+          maybeStartAnimation();
+        }
+      },
+      {
+        threshold: 0.25,
+        rootMargin: "0px 0px -20% 0px",
+      }
+    );
+
+    observer.observe(sectionEl);
+
+    return () => {
+      observer.disconnect();
+      if (typeof window !== "undefined") {
+        window.removeEventListener("hero:third-scroll-complete", handleThirdScrollComplete);
+      }
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+        timelineRef.current = null;
+      }
+      if (groupTransitionRef.current) {
+        groupTransitionRef.current.kill();
+        groupTransitionRef.current = null;
+      }
+      resetGroupsInstant(0);
+    };
+  }, [resetGroupsInstant]);
+
+  useEffect(() => {
+    const contentEl = sectionContentRef.current;
+    if (!contentEl) {
+      return;
+    }
+
+    gsap.set(contentEl, { opacity: 0, y: 64 });
+
+    const introTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    introTimeline.to(contentEl, {
+      opacity: 1,
+      y: 0,
+      duration: 0.9,
+    });
+
+    sectionIntroTimelineRef.current = introTimeline;
+
+    return () => {
+      if (sectionIntroTimelineRef.current) {
+        sectionIntroTimelineRef.current.kill();
+        sectionIntroTimelineRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       id={id}
       className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
     >
-      <div className="container mx-auto px-6 md:px-10 lg:px-14">
+      <div
+        ref={sectionContentRef}
+        className="container mx-auto px-6 md:px-10 lg:px-14"
+      >
         <div className="max-w-3xl">
-          <p className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6">
+          <p
+            ref={eyebrowRef}
+            className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6"
+          >
             Services
           </p>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+          <h2
+            ref={headingRef}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+          >
             End-to-end digital execution from strategy through launch.
           </h2>
-          <p className="text-lg md:text-xl text-white/70">
+          <p ref={descriptionRef} className="text-lg md:text-xl text-white/70">
             We embed with your team to ship faster, polish the details, and ensure
             every touchpoint supports your growth goals.
           </p>
         </div>
 
-        <div className="mt-16 grid gap-8 md:gap-10 lg:gap-12 md:grid-cols-2">
-          {services.map((service) => (
-            <article
-              key={service.title}
-              className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] px-8 py-10 hover:border-[#00BDFF]/60 hover:bg-white/[0.04]"
+        <div ref={groupContainerRef} className="relative mt-16">
+          {serviceGroups.map((group, groupIndex) => (
+            <div
+              key={group.map((service) => service.title).join("-")}
+              ref={(el) => {
+                groupRefs.current[groupIndex] = el;
+              }}
+              className="grid h-full gap-8 md:gap-10 lg:gap-12 sm:grid-cols-2 xl:grid-cols-3"
             >
-              <div className="absolute inset-px rounded-[22px] bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100" />
-              <div className="relative">
-                <div className="mb-4 flex items-center gap-4">
-                  <span className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-white/[0.05] text-[#00BDFF] ring-1 ring-inset ring-white/10">
-                    {service.icon}
-                  </span>
-                  <h3 className="text-2xl font-semibold text-white">
-                    {service.title}
-                  </h3>
-                </div>
-                <p className="text-base text-white/70 leading-relaxed mb-6">
-                  {service.description}
-                </p>
-                <ul className="space-y-3 text-sm text-white/60">
-                  {service.deliverables.map((item) => (
-                    <li key={item} className="flex items-start gap-3">
-                      <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-[#00BDFF]" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
+              {group.map((service, index) => {
+                const cardIndex = groupIndex * 3 + index;
+                return (
+                  <div
+                    key={service.title}
+                    ref={(el) => {
+                      cardsRef.current[cardIndex] = el;
+                    }}
+                    className="group relative h-full [perspective:1600px]"
+                  >
+                    <article
+                      className="relative h-full min-h-[380px] rounded-3xl border border-white/10 bg-white/[0.02] shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition-[transform,box-shadow,border-color,background] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-style:preserve-3d] hover:border-[#00BDFF]/70 hover:bg-white/[0.04] group-hover:[transform:rotateY(180deg)]"
+                    >
+                      <div className="absolute inset-px rounded-[22px] bg-gradient-to-br from-white/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                      <div className="relative flex h-full flex-col items-center justify-center gap-6 px-8 py-10 text-center [backface-visibility:hidden]">
+                        <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.06] text-[#00BDFF] ring-1 ring-inset ring-white/10 shadow-[0_12px_24px_rgba(15,23,42,0.32)]">
+                          {service.icon}
+                        </span>
+                        <h3 className="text-2xl font-semibold text-white tracking-tight">
+                          {service.title}
+                        </h3>
+                        <p className="text-base text-white/60 leading-relaxed">
+                          {service.description}
+                        </p>
+                      </div>
+
+                      <div className="absolute inset-0 flex h-full flex-col items-center justify-center gap-6 px-8 py-10 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                        <div className="space-y-3 max-w-xs">
+                          <h3 className="text-2xl font-semibold text-white">
+                            {service.title}
+                          </h3>
+                          <p className="text-base text-white/70 leading-relaxed">
+                            {service.description}
+                          </p>
+                        </div>
+                        <ul className="space-y-3 text-sm text-white/60">
+                          {service.deliverables.map((item) => (
+                            <li
+                              key={item}
+                              className="flex items-center justify-center gap-3"
+                            >
+                              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-[#00BDFF]" />
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </article>
+                  </div>
+                );
+              })}
+            </div>
           ))}
         </div>
       </div>

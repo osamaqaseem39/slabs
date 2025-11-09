@@ -1,7 +1,18 @@
-"use client";
+ "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
+import useSectionScrollSteps, {
+  type SectionScrollDirection,
+} from "@/hooks/useSectionScrollSteps";
+
+const FIRST_PHASE_DELAY = 2200;
+const SECOND_PHASE_DELAY = 2400;
+const RELEASE_SCROLL_OFFSET = 0;
+const RELEASE_SCROLL_DURATION = 900;
+
+const getNow = () =>
+  typeof performance !== "undefined" ? performance.now() : Date.now();
 
 export default function HeroSection() {
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -15,6 +26,10 @@ export default function HeroSection() {
   const heroAnimationTriggeredRef = useRef(false);
   const scrollPhaseRef = useRef(0);
   const nextPhaseReadyAtRef = useRef(0);
+  const thirdScrollEventDispatchedRef = useRef(false);
+  const overflowStateRef = useRef<{ body: string; html: string } | null>(null);
+  const headingWordElementsRef = useRef<HTMLSpanElement[]>([]);
+  const buttonElementsRef = useRef<HTMLElement[]>([]);
 
   const scrollToTarget = (target: string) => {
     if (typeof window === "undefined") return;
@@ -23,6 +38,206 @@ export default function HeroSection() {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  const ensureAtTop = useCallback(() => {
+    if (typeof window !== "undefined" && scrollPhaseRef.current < 3) {
+      window.scrollTo({ top: 0, left: 0 });
+    }
+  }, []);
+
+  const ensureVideoPrimed = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+    video.autoplay = false;
+    video.pause();
+    if (video.readyState >= 2) {
+      video.currentTime = 0;
+    }
+  }, []);
+
+  const lockScroll = useCallback(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+    const body = document.body;
+    const documentElement = document.documentElement;
+    if (!overflowStateRef.current) {
+      overflowStateRef.current = {
+        body: body.style.overflow,
+        html: documentElement.style.overflow,
+      };
+    }
+    body.style.overflow = "hidden";
+    documentElement.style.overflow = "hidden";
+  }, []);
+
+  const unlockScroll = useCallback(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+    const body = document.body;
+    const documentElement = document.documentElement;
+    const stored = overflowStateRef.current;
+    body.style.overflow = stored?.body ?? "";
+    documentElement.style.overflow = stored?.html ?? "";
+    overflowStateRef.current = null;
+  }, []);
+
+  const animateViewportScroll = useCallback(
+    (distance: number, onComplete?: () => void) => {
+      if (typeof window === "undefined") {
+        if (distance === 0 && typeof onComplete === "function") {
+          onComplete();
+        }
+        return;
+      }
+      if (distance === 0) {
+        if (typeof onComplete === "function") {
+          onComplete();
+        }
+        return;
+      }
+      const startY = window.scrollY;
+      const targetY = startY + distance;
+      const startTime = getNow();
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+      const step = () => {
+        const elapsed = getNow() - startTime;
+        const progress = Math.min(elapsed / RELEASE_SCROLL_DURATION, 1);
+        const eased = easeOutCubic(progress);
+        window.scrollTo({ top: startY + distance * eased });
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          window.scrollTo({ top: targetY });
+          if (typeof onComplete === "function") {
+            onComplete();
+          }
+        }
+      };
+
+      requestAnimationFrame(step);
+    },
+    []
+  );
+
+  const dispatchThirdScrollComplete = useCallback(() => {
+    if (thirdScrollEventDispatchedRef.current || typeof window === "undefined") {
+      return;
+    }
+    thirdScrollEventDispatchedRef.current = true;
+    const globalWindow = window as typeof window & {
+      __heroThirdScrollComplete?: boolean;
+    };
+    globalWindow.__heroThirdScrollComplete = true;
+    window.dispatchEvent(new CustomEvent("hero:third-scroll-complete"));
+  }, []);
+
+  const applyInitialVisualState = useCallback(() => {
+    const headingWords = headingWordElementsRef.current;
+    if (headingWords.length > 0) {
+      gsap.set(headingWords, { opacity: 0, y: 60 });
+    }
+    if (descriptionRef.current) {
+      gsap.set(descriptionRef.current, { opacity: 0, y: 40 });
+    }
+    const buttonElements = buttonElementsRef.current;
+    if (buttonElements.length > 0) {
+      gsap.set(buttonElements, {
+        opacity: 0,
+        y: 30,
+        scale: 0.9,
+        pointerEvents: "none",
+      });
+    }
+  }, []);
+
+  const triggerAutoplay = useCallback(() => {
+    if (autoplayTriggeredRef.current) {
+      return;
+    }
+    const video = videoRef.current;
+    if (!video) {
+      return;
+    }
+    autoplayTriggeredRef.current = true;
+    video.autoplay = true;
+
+    try {
+      const playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {
+          /* user interaction will allow playback */
+        });
+      }
+    } catch {
+      /* swallow errors */
+    }
+  }, []);
+
+  const playHeroAnimation = useCallback(() => {
+    if (heroAnimationTriggeredRef.current) {
+      return;
+    }
+    heroAnimationTriggeredRef.current = true;
+    const timeline = heroTimelineRef.current;
+    if (timeline) {
+      timeline.play();
+    }
+  }, []);
+
+  const resetToPhase0 = useCallback(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+    autoplayTriggeredRef.current = false;
+    heroAnimationTriggeredRef.current = false;
+
+    const timeline = heroTimelineRef.current;
+    if (timeline) {
+      timeline.pause(0);
+    }
+
+    applyInitialVisualState();
+    ensureAtTop();
+
+    scrollPhaseRef.current = 0;
+    nextPhaseReadyAtRef.current = getNow() + 300;
+  }, [applyInitialVisualState, ensureAtTop]);
+
+  const revertToPhase1 = useCallback(() => {
+    const timeline = heroTimelineRef.current;
+    if (timeline) {
+      timeline.pause(0);
+    }
+    heroAnimationTriggeredRef.current = false;
+
+    applyInitialVisualState();
+    autoplayTriggeredRef.current = true;
+    ensureAtTop();
+
+    scrollPhaseRef.current = 1;
+    nextPhaseReadyAtRef.current = getNow() + 300;
+  }, [applyInitialVisualState, ensureAtTop]);
+
+  const releaseToNextSection = useCallback(() => {
+    if (scrollPhaseRef.current >= 3) {
+      return;
+    }
+    scrollPhaseRef.current = 3;
+    unlockScroll();
+    if (typeof window !== "undefined") {
+      const viewportDistance = window.innerHeight - RELEASE_SCROLL_OFFSET;
+      animateViewportScroll(viewportDistance, dispatchThirdScrollComplete);
+    } else {
+      dispatchThirdScrollComplete();
+    }
+  }, [animateViewportScroll, dispatchThirdScrollComplete, unlockScroll]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -43,17 +258,18 @@ export default function HeroSection() {
         .map((word) => `<span class="inline-block">${word}</span>`)
         .join(" ");
 
-      const headingWords = heading.querySelectorAll<HTMLSpanElement>("span");
+      const headingWords = Array.from(heading.querySelectorAll<HTMLSpanElement>("span"));
       const buttonElements = Array.from(buttons.children) as HTMLElement[];
+
+      headingWordElementsRef.current = headingWords;
+      buttonElementsRef.current = buttonElements;
 
       if (!heroReadyRef.current && typeof window !== "undefined") {
         heroReadyRef.current = true;
         window.dispatchEvent(new Event("hero:video-ready"));
       }
 
-      gsap.set(headingWords, { opacity: 0, y: 60 });
-      gsap.set(description, { opacity: 0, y: 40 });
-      gsap.set(buttonElements, { opacity: 0, y: 30, scale: 0.9, pointerEvents: "none" });
+      applyInitialVisualState();
 
       const timeline = gsap
         .timeline({ defaults: { ease: "power2.out" }, paused: true })
@@ -107,6 +323,8 @@ export default function HeroSection() {
           gsap.set(buttonElements, { clearProps: "all" });
         }
         heroTimelineRef.current = null;
+        headingWordElementsRef.current = [];
+        buttonElementsRef.current = [];
       };
     };
 
@@ -134,66 +352,9 @@ export default function HeroSection() {
         teardown();
       }
     };
-  }, []);
+  }, [applyInitialVisualState]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) {
-      return;
-    }
-
-    const scrollKeys = new Set([
-      " ",
-      "PageDown",
-      "PageUp",
-      "ArrowDown",
-      "ArrowUp",
-      "Home",
-      "End",
-    ]);
-
-    const body = typeof document !== "undefined" ? document.body : null;
-    const documentElement =
-      typeof document !== "undefined" ? document.documentElement : null;
-
-    const originalBodyOverflow = body?.style.overflow ?? "";
-    const originalHtmlOverflow = documentElement?.style.overflow ?? "";
-
-    const lockScroll = () => {
-      if (body) {
-        body.style.overflow = "hidden";
-      }
-      if (documentElement) {
-        documentElement.style.overflow = "hidden";
-      }
-    };
-
-    const unlockScroll = () => {
-      if (body) {
-        body.style.overflow = originalBodyOverflow;
-      }
-      if (documentElement) {
-        documentElement.style.overflow = originalHtmlOverflow;
-      }
-    };
-
-    const getNow = () =>
-      typeof performance !== "undefined" ? performance.now() : Date.now();
-
-    const ensureAtTop = () => {
-      if (typeof window !== "undefined") {
-        window.scrollTo({ top: 0, left: 0 });
-      }
-    };
-
-    const ensureVideoPrimed = () => {
-      video.autoplay = false;
-      video.pause();
-      if (video.readyState >= 2) {
-        video.currentTime = 0;
-      }
-    };
-
     lockScroll();
     ensureAtTop();
     ensureVideoPrimed();
@@ -202,180 +363,85 @@ export default function HeroSection() {
     autoplayTriggeredRef.current = false;
     heroAnimationTriggeredRef.current = false;
     nextPhaseReadyAtRef.current = getNow();
-
-    const triggerAutoplay = () => {
-      if (autoplayTriggeredRef.current) {
-        return;
-      }
-
-      autoplayTriggeredRef.current = true;
-      video.autoplay = true;
-
-      try {
-        const playPromise = video.play();
-        if (playPromise && typeof playPromise.catch === "function") {
-          playPromise.catch(() => {
-            /* user interaction will allow playback */
-          });
-        }
-      } catch {
-        /* swallow errors */
-      }
-    };
-
-    const playHeroAnimation = () => {
-      if (heroAnimationTriggeredRef.current) {
-        return;
-      }
-      heroAnimationTriggeredRef.current = true;
-      const timeline = heroTimelineRef.current;
-      if (timeline) {
-        timeline.play();
-      }
-    };
-
-    const handleInitialInteraction = () => {
-      ensureAtTop();
-      triggerAutoplay();
-      scrollPhaseRef.current = 1;
-      nextPhaseReadyAtRef.current = getNow() + 1600;
-    };
-
-    const handleSecondInteraction = () => {
-      ensureAtTop();
-      playHeroAnimation();
-      scrollPhaseRef.current = 2;
-      nextPhaseReadyAtRef.current = getNow() + 1800;
-    };
-
-    const releaseToNextSection = () => {
-      if (scrollPhaseRef.current >= 3) {
-        return;
-      }
-      scrollPhaseRef.current = 3;
-      removeInteractionListeners();
-      unlockScroll();
-      const targetOffset =
-        typeof window !== "undefined" ? window.innerHeight || 0 : 0;
-
-      if (typeof window !== "undefined") {
-        window.scrollTo({ top: targetOffset, behavior: "smooth" });
-      } else {
-        const section = sectionRef.current;
-        if (section?.nextElementSibling instanceof HTMLElement) {
-          section.nextElementSibling.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      }
-    };
-
-    const handleWheel = (event: WheelEvent) => {
-      if (scrollPhaseRef.current >= 3) {
-        return;
-      }
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-      ensureAtTop();
-      if (scrollPhaseRef.current === 0) {
-        handleInitialInteraction();
-        return;
-      }
-      if (scrollPhaseRef.current === 1) {
-        if (getNow() >= nextPhaseReadyAtRef.current) {
-          handleSecondInteraction();
-        }
-        return;
-      }
-      if (scrollPhaseRef.current === 2) {
-        if (getNow() >= nextPhaseReadyAtRef.current) {
-          releaseToNextSection();
-        }
-      }
-    };
-
-    const handleTouchMove = (event: TouchEvent) => {
-      if (scrollPhaseRef.current >= 3) {
-        return;
-      }
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-      ensureAtTop();
-      if (scrollPhaseRef.current === 0) {
-        handleInitialInteraction();
-        return;
-      }
-      if (scrollPhaseRef.current === 1) {
-        if (getNow() >= nextPhaseReadyAtRef.current) {
-          handleSecondInteraction();
-        }
-        return;
-      }
-      if (scrollPhaseRef.current === 2) {
-        if (getNow() >= nextPhaseReadyAtRef.current) {
-          releaseToNextSection();
-        }
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (!scrollKeys.has(event.key) || scrollPhaseRef.current >= 3) {
-        return;
-      }
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-      ensureAtTop();
-      if (scrollPhaseRef.current === 0) {
-        handleInitialInteraction();
-        return;
-      }
-      if (scrollPhaseRef.current === 1) {
-        if (getNow() >= nextPhaseReadyAtRef.current) {
-          handleSecondInteraction();
-        }
-        return;
-      }
-      if (scrollPhaseRef.current === 2) {
-        if (getNow() >= nextPhaseReadyAtRef.current) {
-          releaseToNextSection();
-        }
-      }
-    };
-
-    const handleScroll = () => {
-      if (scrollPhaseRef.current >= 3) {
-        return;
-      }
-      ensureAtTop();
-    };
-
-    function removeInteractionListeners() {
-      window.removeEventListener("wheel", handleWheel);
-      window.removeEventListener("touchmove", handleTouchMove);
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("scroll", handleScroll);
-    }
-
-    window.addEventListener("wheel", handleWheel, { passive: false });
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("scroll", handleScroll, { passive: false });
+    thirdScrollEventDispatchedRef.current = false;
 
     return () => {
-      removeInteractionListeners();
       unlockScroll();
     };
-  }, []);
+  }, [ensureAtTop, ensureVideoPrimed, lockScroll, unlockScroll]);
+
+  const handleSectionScroll = useCallback(
+    (direction: SectionScrollDirection) => {
+      const now = getNow();
+
+      if (direction === "forward") {
+        if (scrollPhaseRef.current >= 3) {
+          return false;
+        }
+
+        ensureAtTop();
+
+        if (scrollPhaseRef.current === 0) {
+          triggerAutoplay();
+          scrollPhaseRef.current = 1;
+          nextPhaseReadyAtRef.current = now + FIRST_PHASE_DELAY;
+          return true;
+        }
+
+        if (scrollPhaseRef.current === 1) {
+          if (now >= nextPhaseReadyAtRef.current) {
+            playHeroAnimation();
+            scrollPhaseRef.current = 2;
+            nextPhaseReadyAtRef.current = now + SECOND_PHASE_DELAY;
+          }
+          return true;
+        }
+
+        if (scrollPhaseRef.current === 2) {
+          if (now >= nextPhaseReadyAtRef.current) {
+            releaseToNextSection();
+          }
+          return true;
+        }
+
+        return true;
+      }
+
+      if (scrollPhaseRef.current >= 3) {
+        return false;
+      }
+
+      ensureAtTop();
+
+      if (scrollPhaseRef.current === 2) {
+        revertToPhase1();
+        return true;
+      }
+
+      if (scrollPhaseRef.current === 1) {
+        resetToPhase0();
+        return true;
+      }
+
+      return true;
+    },
+    [
+      ensureAtTop,
+      playHeroAnimation,
+      releaseToNextSection,
+      resetToPhase0,
+      revertToPhase1,
+      triggerAutoplay,
+    ]
+  );
+
+  useSectionScrollSteps("home", handleSectionScroll);
 
   return (
     <section
       ref={sectionRef}
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
+      className="relative h-screen flex items-center justify-center overflow-hidden bg-black"
     >
       <div className="relative w-full h-full flex items-center justify-center">
         <div className="hero-hover-container relative w-full h-full flex items-center justify-center">

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/layout/Navbar";
+import ScrollWheelIndicator from "@/components/ScrollWheelIndicator";
 import Preloader from "@/components/Preloader";
 import HeroSection from "@/sections/HeroSection";
 import ServicesSection from "@/sections/ServicesSection";
@@ -25,10 +26,39 @@ export default function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const clearHash = () => {
+      if (!window.location.hash) {
+        return;
+      }
+
+      const { pathname, search } = window.location;
+      window.history.replaceState(null, "", `${pathname}${search}`);
+    };
+
+    const handleScroll = () => {
+      clearHash();
+    };
+
+    clearHash();
+    window.addEventListener("hashchange", clearHash);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("hashchange", clearHash);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <main ref={containerRef} className="min-h-screen">
       <Preloader />
       <Navbar />
+      <ScrollWheelIndicator />
       <HeroSection />
       <ServicesSection />
 
