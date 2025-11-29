@@ -152,6 +152,7 @@ export default function TechnologySection() {
     <section
       id="technology"
       ref={sectionRef}
+      data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-gray-900 py-16 md:py-24 lg:py-32"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">

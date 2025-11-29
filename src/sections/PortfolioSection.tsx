@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 
@@ -75,35 +75,21 @@ const FEATURED_PROJECTS = [
 
 export default function PortfolioSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const showcaseRef = useRef<HTMLDivElement | null>(null);
   const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
-  const firstGroupCardRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const secondGroupCardRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const ctaRef = useRef<HTMLDivElement | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
-
-  const projectGroups = useMemo(() => {
-    const midpoint = Math.max(1, Math.ceil(FEATURED_PROJECTS.length / 2));
-    return [
-      FEATURED_PROJECTS.slice(0, midpoint),
-      FEATURED_PROJECTS.slice(midpoint),
-    ];
-  }, []);
 
   useEffect(() => {
     const eyebrowEl = eyebrowRef.current;
     const headingEl = headingRef.current;
     const descriptionEl = descriptionRef.current;
-    const firstCards = firstGroupCardRefs.current.filter(
+    const cards = cardRefs.current.filter(
       (card): card is HTMLDivElement => Boolean(card)
     );
-    const secondCards = secondGroupCardRefs.current.filter(
-      (card): card is HTMLDivElement => Boolean(card)
-    );
-    const showcaseEl = showcaseRef.current;
     const ctaEl = ctaRef.current;
     const sectionEl = sectionRef.current;
 
@@ -115,9 +101,7 @@ export default function PortfolioSection() {
       eyebrowEl,
       headingEl,
       descriptionEl,
-      ...firstCards,
-      ...(projectGroups[1].length ? secondCards : []),
-      projectGroups[1].length ? showcaseEl : null,
+      ...cards,
       ctaEl,
     ].filter(Boolean);
 
@@ -152,9 +136,9 @@ export default function PortfolioSection() {
       );
     }
 
-    if (firstCards.length) {
+    if (cards.length) {
       timeline.to(
-        firstCards,
+        cards,
         {
           opacity: 1,
           y: 0,
@@ -162,19 +146,6 @@ export default function PortfolioSection() {
           stagger: 0.12,
         },
         "-=0.3"
-      );
-    }
-
-    if (projectGroups[1].length && secondCards.length) {
-      timeline.to(
-        secondCards,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.12,
-        },
-        "-=0.35"
       );
     }
 
@@ -222,10 +193,9 @@ export default function PortfolioSection() {
       timelineRef.current?.kill();
       timelineRef.current = null;
     };
-  }, [projectGroups]);
+  }, []);
 
-  firstGroupCardRefs.current.length = projectGroups[0].length;
-  secondGroupCardRefs.current.length = projectGroups[1].length;
+  cardRefs.current.length = FEATURED_PROJECTS.length;
 
   const ctaContent = (
     <div
@@ -265,6 +235,7 @@ export default function PortfolioSection() {
     <section
       id="portfolio"
       ref={sectionRef}
+      data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-24 md:py-32"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
@@ -289,17 +260,17 @@ export default function PortfolioSection() {
           </p>
         </div>
 
-        <div className="mt-16 space-y-14">
-          <div className="grid gap-10 xl:grid-cols-2">
-            {projectGroups[0].map((project, index) => (
+        <div className="mt-12 space-y-10">
+          <div className="grid gap-10 lg:grid-cols-2 xl:grid-cols-3">
+            {FEATURED_PROJECTS.map((project, index) => (
               <div
                 key={project.name}
                 ref={(el) => {
-                  firstGroupCardRefs.current[index] = el;
+                  cardRefs.current[index] = el;
                 }}
-                className="group grid grid-cols-1 overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.03] shadow-[0_26px_55px_rgba(15,23,42,0.32)] backdrop-blur transition duration-500 hover:-translate-y-2 hover:border-[#00BDFF]/60 hover:bg-white/[0.05] md:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]"
+                className="group grid grid-cols-1 overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.03] shadow-[0_26px_55px_rgba(15,23,42,0.32)] backdrop-blur transition duration-500 hover:-translate-y-2 hover:border-[#00BDFF]/60 hover:bg-white/[0.05]"
               >
-                <div className="relative h-56 overflow-hidden sm:h-64">
+                <div className="relative h-56 overflow-hidden sm:h-60 md:h-64">
                   <Image
                     src={project.image}
                     alt={project.name}
@@ -315,87 +286,31 @@ export default function PortfolioSection() {
                   </div>
                 </div>
 
-                  <div className="flex flex-col gap-5 p-8 md:p-10">
-                    <p className="text-base leading-relaxed text-white/75">{project.summary}</p>
-                    <div className="flex flex-wrap gap-3 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-white/45">
-                      {project.scope?.map((item) => (
-                        <span key={item} className="rounded-full border border-white/15 px-4 py-1">
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                    <p className="text-sm text-white/65">{project.highlight}</p>
-                    <div className="flex flex-wrap gap-3 text-sm text-[#00BDFF]">
-                      {project.metrics.map((metric) => (
-                        <span
-                          key={metric}
-                          className="rounded-full border border-[#00BDFF]/60 bg-[#00BDFF]/10 px-4 py-1.5"
-                        >
-                          {metric}
-                        </span>
-                      ))}
-                    </div>
+                <div className="flex flex-col gap-5 p-8 md:p-9">
+                  <p className="text-base leading-relaxed text-white/75">{project.summary}</p>
+                  <div className="flex flex-wrap gap-3 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-white/45">
+                    {project.scope?.map((item) => (
+                      <span key={item} className="rounded-full border border-white/15 px-4 py-1">
+                        {item}
+                      </span>
+                    ))}
                   </div>
+                  <p className="text-sm text-white/65">{project.highlight}</p>
+                  <div className="flex flex-wrap gap-3 text-sm text-[#00BDFF]">
+                    {project.metrics.map((metric) => (
+                      <span
+                        key={metric}
+                        className="rounded-full border border-[#00BDFF]/60 bg-[#00BDFF]/10 px-4 py-1.5"
+                      >
+                        {metric}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-
-          {projectGroups[1].length > 0 ? (
-            <div ref={showcaseRef} className="space-y-12">
-              <div className="grid gap-10 xl:grid-cols-2">
-                {projectGroups[1].map((project, index) => (
-                  <div
-                    key={project.name}
-                    ref={(el) => {
-                      secondGroupCardRefs.current[index] = el;
-                    }}
-                    className="group grid grid-cols-1 overflow-hidden rounded-[32px] border border-white/10 bg-white/[0.03] shadow-[0_26px_55px_rgba(15,23,42,0.32)] backdrop-blur transition duration-500 hover:-translate-y-2 hover:border-[#00BDFF]/60 hover:bg-white/[0.05] md:grid-cols-[minmax(0,0.55fr)_minmax(0,1fr)]"
-                  >
-                    <div className="relative h-56 overflow-hidden sm:h-64">
-                      <Image
-                        src={project.image}
-                        alt={project.name}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                      <div className="absolute bottom-4 left-4 flex flex-col gap-1 text-white">
-                        <span className="text-sm uppercase tracking-[0.35em] text-white/70">
-                          {project.industry}
-                        </span>
-                        <h3 className="text-2xl font-semibold">{project.name}</h3>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-5 p-8 md:p-10">
-                      <p className="text-base leading-relaxed text-white/75">{project.summary}</p>
-                      <div className="flex flex-wrap gap-3 text-[0.7rem] font-medium uppercase tracking-[0.28em] text-white/45">
-                        {project.scope?.map((item) => (
-                          <span key={item} className="rounded-full border border-white/15 px-4 py-1">
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                      <p className="text-sm text-white/65">{project.highlight}</p>
-                      <div className="flex flex-wrap gap-3 text-sm text-[#00BDFF]">
-                        {project.metrics.map((metric) => (
-                          <span
-                            key={metric}
-                            className="rounded-full border border-[#00BDFF]/60 bg-[#00BDFF]/10 px-4 py-1.5"
-                          >
-                            {metric}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {ctaContent}
-            </div>
-          ) : null}
-
-          {projectGroups[1].length === 0 ? ctaContent : null}
+          {ctaContent}
         </div>
       </div>
     </section>

@@ -92,17 +92,24 @@ export default function ScrollWheelIndicator() {
       return;
     }
 
-    const handleScrollTop = () => {
+    const handleScrollExtremes = () => {
       if (window.scrollY < window.innerHeight * 0.25) {
         setActiveSection("home");
+        return;
+      }
+
+      const doc = document.documentElement;
+      const scrollBottom = doc.scrollHeight - (window.scrollY + window.innerHeight);
+      if (scrollBottom < window.innerHeight * 0.25) {
+        setActiveSection("contact");
       }
     };
 
-    window.addEventListener("scroll", handleScrollTop, { passive: true });
-    handleScrollTop();
+    window.addEventListener("scroll", handleScrollExtremes, { passive: true });
+    handleScrollExtremes();
 
     return () => {
-      window.removeEventListener("scroll", handleScrollTop);
+      window.removeEventListener("scroll", handleScrollExtremes);
     };
   }, []);
 

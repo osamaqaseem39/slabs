@@ -232,6 +232,7 @@ export default function WhyChooseUsSection() {
     <section
       id="why-choose-us"
       ref={sectionRef}
+      data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
     >
       <div className="absolute inset-0 -z-20 bg-[linear-gradient(120deg,rgba(15,23,42,0.95),rgba(2,6,23,0.98))]" />

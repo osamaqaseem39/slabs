@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { getSectionScrollHandler, type SectionScrollDirection } from "./useSectionScrollSteps";
+import { smoothScrollTo } from "@/lib/smoothScroll";
 
 type NavigateFn = (targetId: string) => boolean;
 
@@ -102,6 +103,31 @@ export function useUnifiedSectionScroll({
       }, cooldown);
     };
 
+    const checkSectionBounds = (sectionElement: HTMLElement): { atTop: boolean; atBottom: boolean; isTallerThanViewport: boolean } => {
+      const rect = sectionElement.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const sectionHeight = rect.height;
+      const viewportTop = window.scrollY;
+      const viewportBottom = viewportTop + viewportHeight;
+      
+      // Get absolute positions (relative to document top)
+      const sectionTop = rect.top + window.scrollY;
+      const sectionBottom = sectionTop + sectionHeight;
+
+      const isTallerThanViewport = sectionHeight > viewportHeight;
+      
+      // Check if we're at the top of the section (within a small threshold)
+      // At top means viewport top is at or very close to section top
+      const threshold = 50; // pixels threshold for "at boundary"
+      const atTop = Math.abs(viewportTop - sectionTop) <= threshold || viewportTop < sectionTop + threshold;
+      
+      // Check if we're at the bottom of the section
+      // At bottom means viewport bottom is at or very close to section bottom
+      const atBottom = Math.abs(viewportBottom - sectionBottom) <= threshold || viewportBottom > sectionBottom - threshold;
+
+      return { atTop, atBottom, isTallerThanViewport };
+    };
+
     const moveToDelta = (delta: number) => {
       if (isCoolingDownRef.current) {
         return;
@@ -122,6 +148,40 @@ export function useUnifiedSectionScroll({
         if (handled) {
           startCooldown();
           return;
+        }
+      }
+
+      // Check if we need to scroll within the current section first
+      const currentSectionElement = currentSectionId ? document.getElementById(currentSectionId) : null;
+      
+      if (currentSectionElement) {
+        const { atTop, atBottom, isTallerThanViewport } = checkSectionBounds(currentSectionElement);
+
+        // If section is taller than viewport, handle internal scrolling first
+        if (isTallerThanViewport) {
+          const rect = currentSectionElement.getBoundingClientRect();
+          const sectionTop = rect.top + window.scrollY;
+          const sectionBottom = sectionTop + rect.height;
+          const viewportHeight = window.innerHeight;
+
+          if (delta > 0 && !atBottom) {
+            // Scrolling forward but not at bottom - scroll to bottom of section first
+            // Position viewport so its bottom aligns with section bottom
+            const targetScrollY = sectionBottom - viewportHeight;
+            smoothScrollTo(Math.max(0, targetScrollY), {
+              duration: 720,
+            });
+            startCooldown();
+            return;
+          } else if (delta < 0 && !atTop) {
+            // Scrolling backward but not at top - scroll to top of section first
+            smoothScrollTo(sectionTop, {
+              duration: 720,
+            });
+            startCooldown();
+            return;
+          }
+          // If we're at the boundary, proceed to next section
         }
       }
 

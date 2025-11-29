@@ -729,6 +729,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     <section
       ref={sectionRef}
       id={id}
+      data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
     >
       <div

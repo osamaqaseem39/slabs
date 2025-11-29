@@ -145,6 +145,7 @@ export default function HowItWorksSection() {
     <section
       ref={sectionRef}
       id="how-it-works"
+      data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-gray-950/95 py-24 md:py-32"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">

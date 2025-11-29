@@ -86,42 +86,13 @@ export default function ContactSection() {
   }, []);
 
 
-
-
-
-
-
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
-
-    const handleWheel = (event: WheelEvent) => {
-      const el = sectionRef.current;
-      if (!el) {
-        return;
-      }
-
-      const isScrollable = el.scrollHeight - el.clientHeight > 1;
-      if (!isScrollable && event.cancelable) {
-        event.preventDefault();
-      }
-    };
-
-    sectionEl.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      sectionEl.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
-
   cardRefs.current.length = CONTACT_POINTS.length;
 
   return (
     <section
       id="contact"
       ref={sectionRef}
+      data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
