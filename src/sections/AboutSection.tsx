@@ -187,7 +187,7 @@ export default function AboutSection() {
               className="mt-10 rounded-3xl border border-dashed border-[#00BDFF]/40 bg-[#00BDFF]/10 p-6 text-sm text-[#00BDFF]"
             >
               <p>
-                "We build lasting partnerships. Solutions that evolve with your business and deliver value for years to come."
+                &ldquo;We build lasting partnerships. Solutions that evolve with your business and deliver value for years to come.&rdquo;
               </p>
               <p className="mt-4 font-semibold text-white">— Our Promise</p>
             </div>
