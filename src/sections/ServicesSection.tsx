@@ -1,828 +1,326 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
-import useSectionScrollSteps, {
-  type SectionScrollDirection,
-} from "@/hooks/useSectionScrollSteps";
+import { motion } from "framer-motion";
+import Image from "next/image";
+
+type Service = {
+  title: string;
+  image: string;
+  description: string;
+  summary: string;
+  features: string[];
+  highlights: string[];
+};
 
 type ServicesSectionProps = {
   id?: string;
 };
 
-type Service = {
-  title: string;
-  description: string;
-  deliverables: string[];
-  icon: ReactNode;
-};
-
-const primaryServices: Service[] = [
+const services: Service[] = [
   {
-    title: "WordPress Engineering",
-    description:
-      "Custom theme and plugin development focused on performance, accessibility, and easy content authoring.",
-    deliverables: [
-      "Modern headless and traditional builds",
-      "Core Web Vitals optimization",
-      "Content migrations and launch support",
+    title: "Web Development",
+    image: "/service1.png",
+    description: "Crafting high-performance, scalable web applications that deliver exceptional user experiences and drive business growth.",
+    summary: "From concept to deployment, we build web applications that perform.",
+    features: [
+      "Custom web applications",
+      "Full-stack development",
+      "API integration & development",
+      "Performance optimization",
+      "Responsive design",
+      "Progressive Web Apps (PWA)",
     ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M4.5 6.75h15" />
-        <path d="M4.5 12h9" />
-        <path d="M4.5 17.25h6" />
-        <path d="M14.25 14.25L19.5 19.5" />
-        <circle cx="17.25" cy="12" r="2.25" />
-      </svg>
-    ),
+    highlights: [
+      "Modern frameworks (Next.js, React, Node.js)",
+      "Cloud-native architecture",
+      "SEO-optimized solutions",
+    ],
   },
   {
-    title: "Search Engine Optimization",
-    description:
-      "Technical and content SEO programs that drive qualified traffic and measurable growth.",
-    deliverables: [
-      "Comprehensive audits and roadmaps",
-      "Content strategy and on-page optimization",
-      "Analytics, reporting, and iterative improvements",
+    title: "UI/UX Design",
+    image: "/service2.png",
+    description: "Creating intuitive, beautiful interfaces that users love. We combine user research, design thinking, and modern aesthetics to craft experiences that convert.",
+    summary: "Design that bridges user needs with business objectives.",
+    features: [
+      "User interface design",
+      "User experience research",
+      "Interactive prototypes",
+      "Design systems",
+      "Brand identity",
+      "Accessibility compliance",
     ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M12 18.75a6.75 6.75 0 1 0 0-13.5 6.75 6.75 0 0 0 0 13.5Z" />
-        <path d="m16.5 16.5 3 3" />
-        <path d="M9 12h6" />
-        <path d="M12 9v6" />
-      </svg>
-    ),
+    highlights: [
+      "User-centered approach",
+      "Design-to-code handoff",
+      "Continuous design iteration",
+    ],
   },
   {
-    title: "Paid & Organic Social",
-    description:
-      "Campaigns that connect with the right audience through targeted creative and data-backed insights.",
-    deliverables: [
-      "Performance creative and messaging playbooks",
-      "Channel management and experimentation",
-      "Unified campaign reporting",
+    title: "Digital Strategy",
+    image: "/service3.png",
+    description: "Strategic consulting to align your digital presence with business goals. We analyze, plan, and execute data-driven strategies that deliver measurable results.",
+    summary: "Strategic planning that transforms vision into action.",
+    features: [
+      "Digital transformation",
+      "Technical consulting",
+      "Product strategy",
+      "Growth planning",
+      "Analytics & insights",
+      "Roadmap development",
     ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M7.5 7.5h9a2.25 2.25 0 0 1 2.25 2.25v2.25A2.25 2.25 0 0 1 16.5 14.25h-4.5L7.5 18v-3.75H6A2.25 2.25 0 0 1 3.75 12V9.75A2.25 2.25 0 0 1 6 7.5h1.5Z" />
-        <path d="M15 7.5V6A2.25 2.25 0 0 1 17.25 3.75h.75A2.25 2.25 0 0 1 20.25 6v6" />
-      </svg>
-    ),
-  },
-  {
-    title: "Digital Experience Design",
-    description:
-      "Human-centered design systems that translate brand vision into high-converting digital experiences.",
-    deliverables: [
-      "UX research and customer journeys",
-      "UI systems and interactive prototypes",
-      "Design-to-dev collaboration and QA",
+    highlights: [
+      "Data-driven decisions",
+      "Scalable solutions",
+      "Long-term partnerships",
     ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M5.25 5.25h7.5v7.5h-7.5z" />
-        <path d="m12.75 11.25 6-6" />
-        <path d="M15 9.75h3.75V13.5" />
-        <path d="M11.25 12.75 17.25 18.75" />
-        <path d="M5.25 18.75h7.5v-4.5h-7.5z" />
-      </svg>
-    ),
   },
 ];
 
-const secondaryServices: Service[] = [
-  {
-    title: "Marketing Automation",
-    description:
-      "Lifecycle programs that nurture leads with behavior-based messaging and intelligent routing.",
-    deliverables: [
-      "Journey mapping and segmentation",
-      "Platform integrations and workflows",
-      "Ongoing optimization and A/B testing",
-    ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
+function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; index: number; isFlipped: boolean; onFlip: () => void }) {
+  return (
+    <motion.article
+      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-500 hover:border-[#00BDFF]/50"
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      onClick={onFlip}
+    >
+      <motion.div
+        className="relative h-full w-full [transform-style:preserve-3d]"
+        animate={{ rotateY: isFlipped ? 180 : 0 }}
+        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       >
-        <path d="M7.5 3.75v4.5" />
-        <path d="M16.5 3.75v4.5" />
-        <path d="M4.5 9.75h15" />
-        <path d="M6 9.75v6a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 15.75v-6" />
-        <path d="M9.75 14.25h4.5" />
-      </svg>
-    ),
-  },
-  {
-    title: "Data & Analytics",
-    description:
-      "Unified measurement foundations that unlock faster decision making and attribution clarity.",
-    deliverables: [
-      "Tracking plans and instrumentation",
-      "Dashboarding and reporting systems",
-      "Experiment design and analytics QA",
-    ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M5.25 18.75v-6" />
-        <path d="M10.5 18.75v-9" />
-        <path d="M15.75 18.75v-12" />
-        <path d="M21 5.25H3" />
-      </svg>
-    ),
-  },
-  {
-    title: "Product Strategy",
-    description:
-      "Roadmaps grounded in user insights, revenue goals, and technical feasibility to guide roadmaps.",
-    deliverables: [
-      "Vision setting and opportunity sizing",
-      "Prioritization frameworks",
-      "Pilot launches and validation",
-    ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M7.5 16.5 12 6.75l4.5 9.75" />
-        <path d="M8.25 15h7.5" />
-        <path d="M12 3.75v2.25" />
-        <path d="M12 17.25v3" />
-      </svg>
-    ),
-  },
-  {
-    title: "Content Operations",
-    description:
-      "Editorial systems that align creators, reviewers, and automation for consistent, scalable output.",
-    deliverables: [
-      "Governance models and playbooks",
-      "Publishing workflows and tooling",
-      "Training programs and documentation",
-    ],
-    icon: (
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-6 w-6"
-      >
-        <path d="M6.75 4.5h10.5a1.5 1.5 0 0 1 1.5 1.5v12a1.5 1.5 0 0 1-1.5 1.5H6.75a1.5 1.5 0 0 1-1.5-1.5v-12a1.5 1.5 0 0 1 1.5-1.5Z" />
-        <path d="M15 3.75V6" />
-        <path d="M9 3.75V6" />
-        <path d="M6.75 9h10.5" />
-        <path d="M9.75 12.75h4.5" />
-        <path d="M9.75 15.75h3" />
-      </svg>
-    ),
-  },
-];
+        {/* Front Side */}
+        <CardFront service={service} />
+        {/* Back Side */}
+        <CardBack service={service} />
+      </motion.div>
+
+      {/* Glow Effect */}
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 rounded-[32px]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isFlipped ? 0.25 : 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          background: "radial-gradient(circle at 50% 50%, rgba(0,189,255,0.25), transparent 65%)",
+        }}
+      />
+    </motion.article>
+  );
+}
+
+function CardFront({ service }: { service: Service }) {
+  return (
+    <div className="absolute inset-0 flex h-full flex-col rounded-[30px] bg-transparent p-6 [backface-visibility:hidden] overflow-hidden">
+      <div className="flex justify-center flex-shrink-0 mb-6">
+        <div className="relative w-[120px] h-[120px]">
+          <Image
+            src={service.image}
+            alt={service.title}
+            fill
+            className="object-contain"
+            sizes="120px"
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2 flex-shrink-0 mb-6">
+        <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-[#00BDFF] transition-colors duration-300 leading-tight">
+          {service.title}
+        </h3>
+        <p className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/70 leading-tight p-0 m-0">
+          {service.summary}
+        </p>
+      </div>
+
+      <p className="text-sm leading-normal text-white/70 group-hover:text-white/85 transition-colors duration-300 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-6">
+        {service.description}
+      </p>
+
+      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.4em] pt-4 border-t border-white/10 flex-shrink-0">
+        <span className="inline-flex h-1 w-8 rounded-full bg-white/30 group-hover:bg-[#00BDFF]/60 transition-colors duration-500" />
+        <span className="text-white/50">Click to Explore</span>
+      </div>
+    </div>
+  );
+}
+
+function CardBack({ service }: { service: Service }) {
+  return (
+    <div className="absolute inset-0 flex h-full flex-col rounded-[30px] bg-[#020617] p-6 text-left text-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+      {/* Header Section - Compact */}
+      <div className="space-y-2 flex-shrink-0 mb-4">
+        <div className="flex items-center justify-between">
+          <span className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/80">
+            Service Details
+          </span>
+          <span className="text-xs text-white/40 truncate ml-1">
+            {service.title}
+          </span>
+        </div>
+        <h3 className="text-lg font-semibold text-white leading-tight">
+          {service.title}
+        </h3>
+        <p className="text-xs leading-normal text-white/75 line-clamp-2 p-0 m-0">
+          {service.description}
+        </p>
+      </div>
+
+      {/* Features List - Scrollable */}
+      <div className="flex-1 min-h-0 overflow-y-auto mb-3">
+        <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 flex-shrink-0 mb-2 p-0 m-0">
+          Core Services
+        </p>
+        <ul className="space-y-1.5 pr-1">
+          {service.features.map((feature) => (
+            <li key={feature} className="flex items-start gap-2 text-xs text-white/70 leading-relaxed">
+              <span className="mt-1 h-1 w-1 rounded-full bg-[#00BDFF] flex-shrink-0" />
+              <span className="flex-1">{feature}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Highlights Section - Compact */}
+      <div className="space-y-2 pt-3 border-t border-white/10 flex-shrink-0 mb-3">
+        <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 p-0 m-0">
+          Key Highlights
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {service.highlights.map((highlight) => (
+            <span
+              key={highlight}
+              className="px-2.5 py-0.5 text-xs rounded-full border border-[#00BDFF]/40 bg-[#00BDFF]/15 text-[#00BDFF] leading-tight"
+            >
+              {highlight}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer - Compact */}
+      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.3em] pt-3 border-t border-white/10 flex-shrink-0">
+        <span className="inline-flex h-1 w-8 rounded-full bg-[#00BDFF]" />
+        <span className="text-white/50 text-[10px]">Click to flip back</span>
+      </div>
+    </div>
+  );
+}
 
 export default function ServicesSection({ id = "services" }: ServicesSectionProps) {
-  const combinedServices = useMemo(
-    () => [...primaryServices, ...secondaryServices].slice(0, 6),
-    []
-  );
-  const serviceGroups = useMemo(
-    () => [combinedServices.slice(0, 3), combinedServices.slice(3, 6)],
-    [combinedServices]
-  );
-  const [activeGroup, setActiveGroup] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const sectionContentRef = useRef<HTMLDivElement | null>(null);
   const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
-  const cardsRef = useRef<Array<HTMLElement | null>>([]);
-  const groupRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const groupContainerRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<Array<HTMLDivElement | null>>([]);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const sectionIntroTimelineRef = useRef<gsap.core.Timeline | null>(null);
-  const groupTransitionRef = useRef<gsap.core.Timeline | null>(null);
-  const intersectionReachedRef = useRef(false);
-  const thirdScrollCompleteRef = useRef(false);
-  const animationStartedRef = useRef(false);
-  const isAnimatingGroupsRef = useRef(false);
-  const activeGroupRef = useRef(0);
-  const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
-  const containerHeightRef = useRef<number | null>(null);
-
-  const clearHoveredCard = useCallback(() => {
-    setHoveredCardIndex((prev) => (prev === null ? prev : null));
-  }, []);
-
-  const handleCardEnter = useCallback((index: number) => {
-    setHoveredCardIndex(index);
-  }, []);
-
-  const getGroupCardArticles = useCallback((groupIndex: number) => {
-    const groupEl = groupRefs.current[groupIndex];
-    if (!groupEl) {
-      return [] as HTMLElement[];
-    }
-    return Array.from(
-      groupEl.querySelectorAll<HTMLElement>("article")
-    );
-  }, []);
-
-  useEffect(() => {
-    activeGroupRef.current = activeGroup;
-  }, [activeGroup]);
-
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const handleScrollLike = () => {
-      clearHoveredCard();
-    };
-
-    window.addEventListener("scroll", handleScrollLike, { passive: true });
-    window.addEventListener("touchstart", clearHoveredCard, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScrollLike);
-      window.removeEventListener("touchstart", clearHoveredCard);
-    };
-  }, [clearHoveredCard]);
-
-  const updateContainerHeight = useCallback(() => {
-    const activeGroupEl = groupRefs.current[activeGroupRef.current];
-    if (!activeGroupEl) {
-      return;
-    }
-    const measuredHeight = activeGroupEl.scrollHeight;
-    if (measuredHeight > 0) {
-      const containerEl = groupContainerRef.current;
-      const previousHeight = containerHeightRef.current;
-      containerHeightRef.current = measuredHeight;
-
-      if (containerEl) {
-        if (previousHeight === null) {
-          gsap.set(containerEl, { height: measuredHeight });
-        } else if (previousHeight !== measuredHeight) {
-          gsap.to(containerEl, {
-            height: measuredHeight,
-            duration: 0.6,
-            ease: "power2.out",
-          });
-        }
-      }
-    }
-  }, []);
-
-  const resetGroupsInstant = useCallback(
-    (targetIndex: number) => {
-      const groups = groupRefs.current;
-      if (!groups.length) {
-        return;
-      }
-
-      if (groupTransitionRef.current) {
-        groupTransitionRef.current.kill();
-        groupTransitionRef.current = null;
-      }
-
-      clearHoveredCard();
-
-      groups.forEach((group, index) => {
-        if (!group) {
-          return;
-        }
-        const cardArticles = getGroupCardArticles(index);
-        gsap.killTweensOf(group);
-        if (cardArticles.length) {
-          gsap.killTweensOf(cardArticles);
-        }
-        gsap.set(group, {
-          position: "absolute",
-          inset: 0,
-          opacity: index === targetIndex ? 1 : 0,
-          y: 0,
-          pointerEvents: index === targetIndex ? "auto" : "none",
-          visibility: index === targetIndex ? "visible" : "hidden",
-        });
-        if (cardArticles.length) {
-          gsap.set(cardArticles, {
-            opacity: index === targetIndex ? 1 : 0,
-            y: 0,
-          });
-        }
-      });
-
-      activeGroupRef.current = targetIndex;
-      setActiveGroup((prev) => (prev !== targetIndex ? targetIndex : prev));
-      isAnimatingGroupsRef.current = false;
-      updateContainerHeight();
-    },
-    [clearHoveredCard, getGroupCardArticles, updateContainerHeight]
-  );
-
-  useEffect(() => {
-    const groups = groupRefs.current;
-    if (!groups.length) {
-      return;
-    }
-
-    groups.forEach((group, index) => {
-      if (!group) {
-        return;
-      }
-      gsap.set(group, {
-        position: "absolute",
-        inset: 0,
-        opacity: index === 0 ? 1 : 0,
-        y: 0,
-        pointerEvents: index === 0 ? "auto" : "none",
-        visibility: index === 0 ? "visible" : "hidden",
-      });
-    });
-
-    updateContainerHeight();
-  }, [updateContainerHeight]);
-
-  useEffect(() => {
-    updateContainerHeight();
-  }, [activeGroup, updateContainerHeight]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      updateContainerHeight();
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [updateContainerHeight]);
-
-  const transitionToGroup = useCallback(
-    (targetIndex: number) => {
-      if (isAnimatingGroupsRef.current) {
-        return;
-      }
-      const currentIndex = activeGroupRef.current;
-      if (targetIndex === currentIndex) {
-        return;
-      }
-
-      const currentGroup = groupRefs.current[currentIndex];
-      const nextGroup = groupRefs.current[targetIndex];
-
-      if (!currentGroup || !nextGroup) {
-        return;
-      }
-
-      clearHoveredCard();
-      isAnimatingGroupsRef.current = true;
-
-      if (groupTransitionRef.current) {
-        groupTransitionRef.current.kill();
-        groupTransitionRef.current = null;
-      }
-
-      const currentGroupCards = getGroupCardArticles(currentIndex);
-      const nextGroupCards = getGroupCardArticles(targetIndex);
-
-      groupTransitionRef.current = gsap
-        .timeline({
-          defaults: {
-            duration: 0.65,
-            ease: "power3.out",
-          },
-          onComplete: () => {
-            gsap.set(currentGroup, {
-              opacity: 0,
-              y: 0,
-              pointerEvents: "none",
-              visibility: "hidden",
-            });
-            gsap.set(nextGroup, {
-              opacity: 1,
-              y: 0,
-              pointerEvents: "auto",
-              visibility: "visible",
-            });
-            if (nextGroupCards.length) {
-              gsap.set(nextGroupCards, { opacity: 1, y: 0 });
-            }
-            setActiveGroup(targetIndex);
-            activeGroupRef.current = targetIndex;
-            isAnimatingGroupsRef.current = false;
-            updateContainerHeight();
-          },
-        })
-        .add(() => {
-          gsap.set(nextGroup, {
-            visibility: "visible",
-            pointerEvents: "none",
-            opacity: 0,
-            y: 40,
-          });
-          if (nextGroupCards.length) {
-            gsap.set(nextGroupCards, { opacity: 0, y: 40 });
-          }
-          if (currentGroupCards.length) {
-            gsap.set(currentGroupCards, { opacity: 1, y: 0 });
-          }
-        })
-        .to(
-          currentGroupCards,
-          {
-            opacity: 0,
-            y: -30,
-            duration: 0.45,
-            stagger: 0.08,
-            ease: "power2.inOut",
-          },
-          0
-        )
-        .to(
-          currentGroup,
-          {
-            opacity: 0,
-            y: -40,
-          },
-          0
-        )
-        .to(
-          nextGroup,
-          {
-            opacity: 1,
-            y: 0,
-            pointerEvents: "auto",
-            visibility: "visible",
-          },
-          "<0.1"
-        )
-        .to(
-          nextGroupCards,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.65,
-            stagger: 0.12,
-          },
-          "-=0.25"
-        );
-    },
-    [clearHoveredCard, getGroupCardArticles, updateContainerHeight]
-  );
-
-  const handleSectionScroll = useCallback(
-    (direction: SectionScrollDirection) => {
-      if (isAnimatingGroupsRef.current) {
-        return true;
-      }
-
-      if (direction === "forward") {
-        if (activeGroupRef.current === 0) {
-          transitionToGroup(1);
-          return true;
-        }
-        return false;
-      }
-
-      if (direction === "backward") {
-        if (activeGroupRef.current === 1) {
-          transitionToGroup(0);
-          return true;
-        }
-        return false;
-      }
-
-      return false;
-    },
-    [transitionToGroup]
-  );
-
-  useSectionScrollSteps(id, handleSectionScroll);
+  const hasAnimatedRef = useRef(false);
+  const [flippedCard, setFlippedCard] = useState<number | null>(null);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
+    if (!sectionEl) return;
 
     const eyebrowEl = eyebrowRef.current;
     const headingEl = headingRef.current;
     const descriptionEl = descriptionRef.current;
-    const cardEls = cardsRef.current.filter(
-      (card): card is HTMLElement => Boolean(card)
-    );
-    const primaryCardEls = cardEls.slice(0, 3);
+    const cardEls = cardsRef.current.filter((el): el is HTMLDivElement => Boolean(el));
+    const elements = [eyebrowEl, headingEl, descriptionEl, ...cardEls].filter(Boolean);
 
-    const animatedElements = [
-      eyebrowEl,
-      headingEl,
-      descriptionEl,
-      ...primaryCardEls,
-    ].filter(Boolean);
+    if (!elements.length) return;
 
-    if (!animatedElements.length) {
-      return;
+    gsap.set(elements, { opacity: 0, y: 40 });
+
+    const timeline = gsap.timeline({
+      defaults: { ease: "power3.out" },
+      paused: true,
+    });
+
+    if (eyebrowEl) timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.5 });
+    if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+    if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+    if (cardEls.length) {
+      timeline.to(cardEls, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 }, "-=0.3");
     }
 
-    gsap.set(animatedElements, { opacity: 0, y: 60 });
+    timelineRef.current = timeline;
 
-    const startAnimation = () => {
-      if (animationStartedRef.current) {
-        return;
-      }
-      animationStartedRef.current = true;
-
-      const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      if (eyebrowEl) {
-        timeline.to(eyebrowEl, {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-        });
-      }
-
-      if (headingEl) {
-        timeline.to(
-          headingEl,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-          },
-          "-=0.25"
-        );
-      }
-
-      if (descriptionEl) {
-        timeline.to(
-          descriptionEl,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-          },
-          "-=0.35"
-        );
-      }
-
-      if (primaryCardEls.length) {
-        timeline.to(
-          primaryCardEls,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.12,
-          },
-          "-=0.2"
-        );
-      }
-
-      timelineRef.current = timeline;
+    const playTimeline = () => {
+      if (hasAnimatedRef.current || !timelineRef.current) return;
+      hasAnimatedRef.current = true;
+      timelineRef.current.play();
     };
-
-    const maybeStartAnimation = () => {
-      if (intersectionReachedRef.current && thirdScrollCompleteRef.current) {
-        startAnimation();
-      }
-    };
-
-    const handleThirdScrollComplete = () => {
-      thirdScrollCompleteRef.current = true;
-      maybeStartAnimation();
-    };
-
-    if (typeof window !== "undefined") {
-      const globalWindow = window as typeof window & {
-        __heroThirdScrollComplete?: boolean;
-      };
-      if (globalWindow.__heroThirdScrollComplete) {
-        thirdScrollCompleteRef.current = true;
-      }
-      window.addEventListener("hero:third-scroll-complete", handleThirdScrollComplete);
-    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
-          intersectionReachedRef.current = true;
-          observer.disconnect();
-          maybeStartAnimation();
+          playTimeline();
         }
       },
-      {
-        threshold: 0.25,
-        rootMargin: "0px 0px -20% 0px",
-      }
+      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
     );
 
     observer.observe(sectionEl);
 
     return () => {
       observer.disconnect();
-      if (typeof window !== "undefined") {
-        window.removeEventListener("hero:third-scroll-complete", handleThirdScrollComplete);
-      }
-      if (timelineRef.current) {
-        timelineRef.current.kill();
-        timelineRef.current = null;
-      }
-      if (groupTransitionRef.current) {
-        groupTransitionRef.current.kill();
-        groupTransitionRef.current = null;
-      }
-      resetGroupsInstant(0);
-    };
-  }, [resetGroupsInstant]);
-
-  useEffect(() => {
-    const contentEl = sectionContentRef.current;
-    if (!contentEl) {
-      return;
-    }
-
-    gsap.set(contentEl, { opacity: 0, y: 64 });
-
-    const introTimeline = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    introTimeline.to(contentEl, {
-      opacity: 1,
-      y: 0,
-      duration: 0.9,
-    });
-
-    sectionIntroTimelineRef.current = introTimeline;
-
-    return () => {
-      if (sectionIntroTimelineRef.current) {
-        sectionIntroTimelineRef.current.kill();
-        sectionIntroTimelineRef.current = null;
-      }
+      timelineRef.current?.kill();
     };
   }, []);
+
+  const handleCardFlip = (index: number) => {
+    setFlippedCard((current) => (current === index ? null : index));
+  };
 
   return (
     <section
       ref={sectionRef}
       id={id}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
+      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
     >
-      <div
-        ref={sectionContentRef}
-        className="container mx-auto px-6 md:px-10 lg:px-14"
-      >
-        <div className="max-w-3xl">
+      <div className="container mx-auto px-6 md:px-10 lg:px-14">
+        {/* Section Header */}
+        <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
           <p
             ref={eyebrowRef}
-            className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6"
+            className="text-base uppercase tracking-[0.4em] text-[#00BDFF] mb-4"
           >
             Services
           </p>
           <h2
             ref={headingRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+            className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-4"
           >
-            End-to-end digital execution from strategy through launch.
+            What we do
           </h2>
-          <p ref={descriptionRef} className="text-lg md:text-xl text-white/70">
-            We embed with your team to ship faster, polish the details, and ensure
-            every touchpoint supports your growth goals.
+          <p
+            ref={descriptionRef}
+            className="text-sm md:text-base text-white/70 leading-normal max-w-3xl mx-auto"
+          >
+            We deliver end-to-end solutions that combine strategy, design, and development to help your business thrive in the digital landscape.
           </p>
         </div>
 
-        <div ref={groupContainerRef} className="relative mt-16">
-          {serviceGroups.map((group, groupIndex) => (
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
+          {services.map((service, index) => (
             <div
-              key={group.map((service) => service.title).join("-")}
+              key={service.title}
               ref={(el) => {
-                groupRefs.current[groupIndex] = el;
+                cardsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="grid h-full gap-8 md:gap-10 lg:gap-12 sm:grid-cols-2 xl:grid-cols-3"
             >
-              {group.map((service, index) => {
-                const cardIndex = groupIndex * 3 + index;
-                return (
-                  <div
-                    key={service.title}
-                    ref={(el) => {
-                      cardsRef.current[cardIndex] = el;
-                    }}
-                className="group relative h-full [perspective:1600px]"
-                data-flipped={hoveredCardIndex === cardIndex}
-                onMouseEnter={() => handleCardEnter(cardIndex)}
-                onMouseLeave={clearHoveredCard}
-                onFocus={() => handleCardEnter(cardIndex)}
-                onBlur={clearHoveredCard}
-                  >
-                    <article
-                  tabIndex={0}
-                  data-flipped={hoveredCardIndex === cardIndex}
-                  className="relative h-full min-h-[380px] rounded-3xl border border-white/10 bg-white/[0.02] shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition-[transform,box-shadow,border-color,background] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-style:preserve-3d] group-hover:border-[#00BDFF]/70 group-hover:bg-white/[0.04] focus-visible:border-[#00BDFF]/70 focus-visible:bg-white/[0.04] data-[flipped=true]:border-[#00BDFF]/70 data-[flipped=true]:bg-white/[0.04] data-[flipped=true]:[transform:rotateY(180deg)]"
-                    >
-                  <div className="absolute inset-px rounded-[22px] bg-gradient-to-br from-white/[0.04] to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-data-[flipped=true]:opacity-100 data-[flipped=true]:opacity-100" />
-
-                      <div className="relative flex h-full flex-col items-center justify-center gap-6 px-8 py-10 text-center [backface-visibility:hidden]">
-                        <span className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/[0.06] text-[#00BDFF] ring-1 ring-inset ring-white/10 shadow-[0_12px_24px_rgba(15,23,42,0.32)]">
-                          {service.icon}
-                        </span>
-                        <h3 className="text-2xl font-semibold text-white tracking-tight">
-                          {service.title}
-                        </h3>
-                        <p className="text-base text-white/60 leading-relaxed">
-                          {service.description}
-                        </p>
-                      </div>
-
-                      <div className="absolute inset-0 flex h-full flex-col items-center justify-center gap-6 px-8 py-10 text-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                        <div className="space-y-3 max-w-xs">
-                          <h3 className="text-2xl font-semibold text-white">
-                            {service.title}
-                          </h3>
-                          <p className="text-base text-white/70 leading-relaxed">
-                            {service.description}
-                          </p>
-                        </div>
-                        <ul className="space-y-3 text-sm text-white/60">
-                          {service.deliverables.map((item) => (
-                            <li
-                              key={item}
-                              className="flex items-center justify-center gap-3"
-                            >
-                              <span className="h-2 w-2 flex-shrink-0 rounded-full bg-[#00BDFF]" />
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </article>
-                  </div>
-                );
-              })}
+              <ServiceCard
+                service={service}
+                index={index}
+                isFlipped={flippedCard === index}
+                onFlip={() => handleCardFlip(index)}
+              />
             </div>
           ))}
         </div>
@@ -830,5 +328,4 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     </section>
   );
 }
-
 

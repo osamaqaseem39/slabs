@@ -1,115 +1,195 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { Target, Rocket, Heart, LucideIcon } from "lucide-react";
 
-const CORE_VALUES = [
-  {
-    title: "Transparency First",
-    description:
-      "Clear milestones, open communication, and artifacts you can share with stakeholders without extra polish.",
-  },
-  {
-    title: "Velocity With Discipline",
-    description:
-      "We ship fast, but never at the expense of accessibility, performance, or documentation.",
-  },
-  {
-    title: "Embedded Partnership",
-    description:
-      "We integrate with your sprints, rituals, and tools so the hand-off from agency to in-house team is seamless.",
-  },
-];
+type CoreValue = {
+  title: string;
+  description: string;
+  icon: LucideIcon;
+};
 
-const CAPABILITIES = [
-  "Product & GTM Alignment",
-  "Design Systems & Prototyping",
-  "Full-stack Web Engineering",
-  "Lifecycle & Experimentation",
-  "Platform Integrations",
-  "Analytics & Insights",
+const CORE_VALUES: CoreValue[] = [
+  {
+    title: "Results-Driven Approach",
+    description:
+      "Clear objectives and measurable outcomes. We deliver real business value, not just beautiful code.",
+    icon: Target,
+  },
+  {
+    title: "Innovation at Speed",
+    description:
+      "Cutting-edge technologies and proven methodologies. Fast delivery without compromising quality.",
+    icon: Rocket,
+  },
+  {
+    title: "Client-Centric Culture",
+    description:
+      "Your vision is our mission. We listen, collaborate, and adapt to build lasting partnerships.",
+    icon: Heart,
+  },
 ];
 
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+  const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
+  const valuesRef = useRef<Array<HTMLDivElement | null>>([]);
+  const sidebarRef = useRef<HTMLDivElement | null>(null);
+  const quoteRef = useRef<HTMLDivElement | null>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const hasAnimatedRef = useRef(false);
+
+  useEffect(() => {
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
+
+    const eyebrowEl = eyebrowRef.current;
+    const headingEl = headingRef.current;
+    const descriptionEl = descriptionRef.current;
+    const valueEls = valuesRef.current.filter((el): el is HTMLDivElement => Boolean(el));
+    const sidebarEl = sidebarRef.current;
+    const quoteEl = quoteRef.current;
+
+    const elements = [
+      eyebrowEl,
+      headingEl,
+      descriptionEl,
+      ...valueEls,
+      sidebarEl,
+      quoteEl,
+    ].filter(Boolean);
+
+    if (!elements.length) return;
+
+    gsap.set(elements, { opacity: 0, y: 40 });
+
+    const timeline = gsap.timeline({
+      defaults: { ease: "power3.out" },
+      paused: true,
+    });
+
+    if (eyebrowEl) {
+      timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.5 });
+    }
+    if (headingEl) {
+      timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+    }
+    if (descriptionEl) {
+      timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+    }
+    if (valueEls.length) {
+      timeline.to(valueEls, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 }, "-=0.3");
+    }
+    if (sidebarEl) {
+      timeline.to(sidebarEl, { opacity: 1, y: 0, duration: 0.8 }, "-=0.4");
+    }
+    if (quoteEl) {
+      timeline.to(quoteEl, { opacity: 1, y: 0, duration: 0.7 }, "-=0.2");
+    }
+
+    timelineRef.current = timeline;
+
+    const playTimeline = () => {
+      if (hasAnimatedRef.current || !timelineRef.current) return;
+      hasAnimatedRef.current = true;
+      timelineRef.current.play();
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          playTimeline();
+        }
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
+    );
+
+    observer.observe(sectionEl);
+
+    return () => {
+      observer.disconnect();
+      timelineRef.current?.kill();
+    };
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       id="about"
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
+      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div className="space-y-12">
             <div className="space-y-6">
-            <p
-            ref={eyebrowRef}
-            className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6"
-          >
-            About
-          </p>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
-                We partner with teams that treat digital as a growth engine, not just a website.
+              <p
+                ref={eyebrowRef}
+                className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6"
+              >
+                About
+              </p>
+              <h2
+                ref={headingRef}
+                className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight"
+              >
+                Crafting digital solutions that drive results.
               </h2>
-              <p className="text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl">
-                From strategy workshops to post-launch analytics, we blend creative, engineering, and GTM
-                expertise. The output is momentum: aligned roadmaps, crafted experiences, and instrumentation
-                that proves impact.
+              <p
+                ref={descriptionRef}
+                className="text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl"
+              >
+                Passionate developers, designers, and strategists solving real problems. We turn complex challenges into elegant solutions that drive growth.
               </p>
             </div>
 
-            <div className="grid gap-10 md:grid-cols-2">
-              {CORE_VALUES.map((value) => (
-                <motion.article
+            <div className="grid gap-8 md:grid-cols-2">
+              {CORE_VALUES.map((value, index) => (
+                <article
                   key={value.title}
-                  className="rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  viewport={{ once: true, amount: 0.4 }}
+                  ref={(el) => {
+                    valuesRef.current[index] = el;
+                  }}
+                  className="group rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00BDFF]/50 hover:bg-white/[0.08] transition-all duration-500"
                 >
-                  <h3 className="text-2xl font-semibold text-white">{value.title}</h3>
-                  <p className="mt-4 text-base text-white/70 leading-relaxed">{value.description}</p>
-                </motion.article>
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl border border-[#00BDFF]/30 bg-[#00BDFF]/10 flex items-center justify-center group-hover:bg-[#00BDFF]/20 group-hover:border-[#00BDFF]/50 transition-all duration-500">
+                      <value.icon className="w-6 h-6 text-[#00BDFF]" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-2xl font-semibold text-white group-hover:text-[#00BDFF] transition-colors duration-300">
+                      {value.title}
+                    </h3>
+                  </div>
+                  <p className="text-base text-white/70 leading-relaxed">{value.description}</p>
+                </article>
               ))}
             </div>
           </div>
 
-          <div className="rounded-[36px] border border-white/10 bg-white/[0.04] shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-10 backdrop-blur lg:sticky lg:top-28">
+          <div
+            ref={sidebarRef}
+            className="rounded-[36px] border border-white/10 bg-white/[0.04] shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-10 backdrop-blur lg:sticky lg:top-28"
+          >
             <div className="space-y-6">
               <h3 className="text-3xl font-semibold text-white leading-snug">
-                The team behind the launch button.
+                Passionate experts, united by purpose.
               </h3>
               <p className="text-base text-white/70 leading-relaxed">
-                Designers, engineers, marketers, and analysts working as one squad. We operate with shared
-                rituals, shared dashboards, and shared accountability for outcomes.
+                Decades of combined experience in engineering, design, and strategy. Constantly learning and pushing the boundaries of digital innovation.
               </p>
             </div>
 
-            <div className="mt-10 space-y-6">
-              <p className="text-sm uppercase tracking-[0.35em] text-[#00BDFF]">Core Stack</p>
-              <div className="grid gap-3">
-                {CAPABILITIES.map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-3 text-sm font-medium text-white"
-                  >
-                    <span className="inline-flex h-2 w-2 rounded-full bg-[#00BDFF]" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mt-10 rounded-3xl border border-dashed border-[#00BDFF]/40 bg-[#00BDFF]/10 p-6 text-sm text-[#00BDFF]">
+            <div
+              ref={quoteRef}
+              className="mt-10 rounded-3xl border border-dashed border-[#00BDFF]/40 bg-[#00BDFF]/10 p-6 text-sm text-[#00BDFF]"
+            >
               <p>
-                “We treat every engagement like an in-house initiative—standing up systems that keep shipping,
-                learning, and iteration alive long after launch.”
+                "We build lasting partnerships. Solutions that evolve with your business and deliver value for years to come."
               </p>
-              <p className="mt-4 font-semibold text-white">— Leadership Team</p>
+              <p className="mt-4 font-semibold text-white">— Our Promise</p>
             </div>
           </div>
         </div>

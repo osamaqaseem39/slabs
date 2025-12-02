@@ -49,6 +49,56 @@ const isScrollableElement = (element: EventTarget | null): boolean => {
   return isScrollableElement(element.parentElement);
 };
 
+const isInsideIgnoredSection = (element: EventTarget | null): boolean => {
+  if (!(element instanceof HTMLElement)) {
+    return false;
+  }
+
+  let current: HTMLElement | null = element;
+
+  while (current) {
+    if (current.dataset?.universalScrollIgnore) {
+      return true;
+    }
+    current = current.parentElement;
+  }
+
+  return false;
+};
+
+const isViewportOverIgnoredSection = (): boolean => {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const viewportTop = window.scrollY;
+  const viewportBottom = viewportTop + window.innerHeight;
+  const viewportCenter = viewportTop + window.innerHeight / 2;
+  
+  // Check all sections with the ignore attribute
+  const ignoredSections = document.querySelectorAll("[data-universal-scroll-ignore]");
+  
+  for (const section of ignoredSections) {
+    const rect = section.getBoundingClientRect();
+    // getBoundingClientRect().top is relative to viewport, so add scrollY to get absolute position
+    const sectionTop = rect.top + window.scrollY;
+    const sectionBottom = sectionTop + rect.height;
+    
+    // Check if viewport overlaps significantly with this ignored section
+    // Use a threshold to ensure we're actually inside the section
+    const overlapTop = Math.max(viewportTop, sectionTop);
+    const overlapBottom = Math.min(viewportBottom, sectionBottom);
+    const overlapHeight = Math.max(0, overlapBottom - overlapTop);
+    const minOverlap = window.innerHeight * 0.3; // Require at least 30% overlap
+    
+    if (overlapHeight >= minOverlap) {
+      return true;
+    }
+  }
+  
+  return false;
+};
+
 const clamp = (value: number, min: number, max: number) => {
   if (value < min) return min;
   if (value > max) return max;
@@ -82,10 +132,76 @@ export function useUnifiedSectionScroll({
   const isCoolingDownRef = useRef(false);
   const touchStartYRef = useRef<number | null>(null);
   const touchDeltaAccumRef = useRef(0);
+  const isInIgnoredSectionRef = useRef(false);
+  const viewportCheckThrottleRef = useRef<number | null>(null);
+  const heroScrollCompleteRef = useRef(false);
 
   useEffect(() => {
     activeIndexRef.current = sections.findIndex((id) => id === activeId);
   }, [activeId, sections]);
+
+  // Listen for hero scroll completion
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const globalWindow = window as typeof window & {
+      __heroThirdScrollComplete?: boolean;
+    };
+
+    // Check if already complete
+    if (globalWindow.__heroThirdScrollComplete) {
+      heroScrollCompleteRef.current = true;
+    }
+
+    const handleHeroComplete = () => {
+      heroScrollCompleteRef.current = true;
+    };
+
+    window.addEventListener("hero:third-scroll-complete", handleHeroComplete);
+
+    return () => {
+      window.removeEventListener("hero:third-scroll-complete", handleHeroComplete);
+    };
+  }, []);
+
+  // Update ignored section state periodically and on scroll
+  useEffect(() => {
+    if (!enabled || typeof window === "undefined") {
+      return;
+    }
+
+    const updateIgnoredSectionState = () => {
+      isInIgnoredSectionRef.current = isViewportOverIgnoredSection();
+    };
+
+    // Initial check
+    updateIgnoredSectionState();
+
+    // Throttled scroll listener to update state
+    const handleScroll = () => {
+      if (viewportCheckThrottleRef.current !== null) {
+        return;
+      }
+
+      viewportCheckThrottleRef.current = window.requestAnimationFrame(() => {
+        updateIgnoredSectionState();
+        viewportCheckThrottleRef.current = null;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleScroll);
+      if (viewportCheckThrottleRef.current !== null) {
+        cancelAnimationFrame(viewportCheckThrottleRef.current);
+      }
+    };
+  }, [enabled]);
 
   useEffect(() => {
     if (!enabled || typeof window === "undefined") {
@@ -198,6 +314,26 @@ export function useUnifiedSectionScroll({
     };
 
     const handleWheel = (event: WheelEvent) => {
+      // Allow normal scrolling inside ignored sections - use cached value for performance
+      if (isInsideIgnoredSection(event.target) || isInIgnoredSectionRef.current) {
+        return;
+      }
+
+      // Check if current active section should be ignored
+      const currentSectionId = sections[activeIndexRef.current >= 0 ? activeIndexRef.current : 0];
+      if (currentSectionId) {
+        const currentSectionElement = document.getElementById(currentSectionId);
+        if (currentSectionElement?.dataset?.universalScrollIgnore) {
+          return;
+        }
+      }
+
+      // If hero scroll is complete and we're not in the hero section, allow normal scrolling
+      const isHeroSection = currentSectionId === "home";
+      if (heroScrollCompleteRef.current && !isHeroSection) {
+        return; // Allow normal scrolling after hero section
+      }
+
       if (isCoolingDownRef.current) {
         event.preventDefault();
         return;
@@ -233,6 +369,17 @@ export function useUnifiedSectionScroll({
     };
 
     const handleTouchStart = (event: TouchEvent) => {
+      if (isInsideIgnoredSection(event.target) || isInIgnoredSectionRef.current) {
+        return;
+      }
+
+      // Check if hero scroll is complete and we're not in hero section
+      const currentSectionId = sections[activeIndexRef.current >= 0 ? activeIndexRef.current : 0];
+      const isHeroSection = currentSectionId === "home";
+      if (heroScrollCompleteRef.current && !isHeroSection) {
+        return;
+      }
+
       if (isScrollableElement(event.target)) {
         return;
       }
@@ -243,6 +390,17 @@ export function useUnifiedSectionScroll({
     };
 
     const handleTouchMove = (event: TouchEvent) => {
+      if (isInsideIgnoredSection(event.target) || isInIgnoredSectionRef.current) {
+        return;
+      }
+
+      // Check if hero scroll is complete and we're not in hero section
+      const currentSectionId = sections[activeIndexRef.current >= 0 ? activeIndexRef.current : 0];
+      const isHeroSection = currentSectionId === "home";
+      if (heroScrollCompleteRef.current && !isHeroSection) {
+        return;
+      }
+
       if (isCoolingDownRef.current) {
         if (event.cancelable) {
           event.preventDefault();

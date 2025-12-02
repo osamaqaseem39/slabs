@@ -22,7 +22,7 @@ const FOOTER_LINK_GROUPS = [
   {
     heading: "Connect",
     links: [
-      { label: "hello@slabs.agency", href: "mailto:hello@slabs.agency" },
+      { label: "hello@synovolabs.com", href: "mailto:hello@synovolabs.com" },
       { label: "Calendly", href: "https://cal.com/" },
       { label: "LinkedIn", href: "https://www.linkedin.com/" },
       { label: "Dribbble", href: "https://dribbble.com/" },
@@ -33,7 +33,7 @@ const FOOTER_LINK_GROUPS = [
 export default function FooterSection() {
   return (
     <footer className="bg-gray-950 border-t border-white/10">
-      <div className="container mx-auto px-6 md:px-10 lg:px-14 py-16">
+      <div className="container mx-auto px-6 md:px-10 lg:px-14 py-20">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-6">
             <h3 className="text-3xl md:text-4xl font-semibold text-white">
@@ -44,10 +44,10 @@ export default function FooterSection() {
               you’re headed—we’ll chart the build.
             </p>
             <a
-              href="mailto:hello@slabs.agency"
+              href="mailto:hello@synovolabs.com"
               className="inline-flex items-center gap-3 rounded-full bg-[#00BDFF] px-6 py-3 text-sm font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#0dd0ff]"
             >
-              hello@slabs.agency
+              hello@synovolabs.com
             </a>
           </div>
 
@@ -75,7 +75,7 @@ export default function FooterSection() {
         </div>
 
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/40 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Slabs. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Synovo Labs. All rights reserved.</p>
           <div className="flex flex-wrap gap-6">
             <a href="#" className="transition-colors duration-300 hover:text-[#00BDFF]">
               Privacy Policy

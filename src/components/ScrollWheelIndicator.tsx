@@ -59,30 +59,52 @@ export default function ScrollWheelIndicator() {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const topEntry = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+    const setupObserver = () => {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const topEntry = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
 
-        if (topEntry) {
-          setActiveSection((prev) => (prev === topEntry.target.id ? prev : topEntry.target.id));
+          if (topEntry) {
+            setActiveSection((prev) => (prev === topEntry.target.id ? prev : topEntry.target.id));
+          }
+        },
+        {
+          rootMargin: "-30% 0px -30% 0px",
+          threshold: Array.from({ length: 11 }, (_, index) => index / 10),
         }
-      },
-      {
-        rootMargin: "-30% 0px -30% 0px",
-        threshold: Array.from({ length: 11 }, (_, index) => index / 10),
-      }
-    );
+      );
 
-    SECTION_CONFIG.forEach((section) => {
-      const element = document.getElementById(section.id);
-      if (element) {
-        observer.observe(element);
+      SECTION_CONFIG.forEach((section) => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          observer.observe(element);
+        }
+      });
+
+      return observer;
+    };
+
+    // Wait for DOM to be ready
+    const observer = setupObserver();
+    
+    // Also try again after a short delay to catch any late-rendering sections
+    const timeoutId = setTimeout(() => {
+      const elements = SECTION_CONFIG.map((section) => document.getElementById(section.id));
+      const missingElements = SECTION_CONFIG.filter((_, index) => !elements[index]);
+      if (missingElements.length > 0) {
+        missingElements.forEach((section) => {
+          const element = document.getElementById(section.id);
+          if (element) {
+            observer.observe(element);
+          }
+        });
       }
-    });
+    }, 100);
 
     return () => {
+      clearTimeout(timeoutId);
       observer.disconnect();
     };
   }, []);

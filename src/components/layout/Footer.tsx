@@ -58,8 +58,7 @@ export default function Footer() {
               />
             </motion.div>
             <p className="mb-6 leading-relaxed opacity-80">
-              Leading digital marketing agency specializing in WordPress
-              development, SEO, and comprehensive digital solutions. Grow your
+              Synovo Labs specializes in WordPress development, SEO, and comprehensive digital solutions. Grow your
               business online with our expert team.
             </p>
             <div className="flex space-x-4">
@@ -137,7 +136,7 @@ export default function Footer() {
 
         <div className="border-t pt-8 text-center opacity-60" style={{ borderColor: "rgba(255, 255, 255, 0.2)" }}>
           <p>
-            © {new Date().getFullYear()} Digital Marketing Agency. All rights
+            © {new Date().getFullYear()} Synovo Labs. All rights
             reserved.
           </p>
         </div>

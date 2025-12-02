@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
 import useSectionScrollSteps, {
   type SectionScrollDirection,
@@ -8,7 +8,6 @@ import useSectionScrollSteps, {
 import { smoothScrollIntoView, DEFAULT_SCROLL_DURATION } from "@/lib/smoothScroll";
 
 const HERO_SECTION_ID = "home";
-const HERO_SCROLL_STAGE_COUNT = 3;
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -19,40 +18,7 @@ export default function HeroSection() {
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
   const originalHeadingHTMLRef = useRef<string | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const stageRef = useRef(0);
-  const sequenceCompleteRef = useRef(false);
-  const thirdScrollDispatchedRef = useRef(false);
-
-  const [stage, setStage] = useState(0);
-  const [isSequenceComplete, setIsSequenceComplete] = useState(false);
-
-  const setStageValue = useCallback((nextStage: number) => {
-    const clamped = Math.max(0, Math.min(HERO_SCROLL_STAGE_COUNT, nextStage));
-    const previous = stageRef.current;
-
-    if (previous === clamped) {
-      return previous;
-    }
-
-    stageRef.current = clamped;
-    setStage(clamped);
-
-    const isComplete = clamped >= HERO_SCROLL_STAGE_COUNT;
-    sequenceCompleteRef.current = isComplete;
-    setIsSequenceComplete(isComplete);
-
-    if (!isComplete) {
-      thirdScrollDispatchedRef.current = false;
-    }
-
-    return clamped;
-  }, []);
-
-  const markSequenceComplete = useCallback(() => {
-    if (stageRef.current < HERO_SCROLL_STAGE_COUNT) {
-      setStageValue(HERO_SCROLL_STAGE_COUNT);
-    }
-  }, [setStageValue]);
+  const hasScrolledRef = useRef(false);
 
   const scrollToTarget = useCallback(
     (target: string) => {
@@ -65,67 +31,43 @@ export default function HeroSection() {
         return false;
       }
 
-      if (target !== "#home") {
-        markSequenceComplete();
-      }
-
       smoothScrollIntoView(element, { duration: DEFAULT_SCROLL_DURATION });
       return true;
     },
-    [markSequenceComplete]
+    []
   );
 
   const handleHeroScroll = useCallback(
     (direction: SectionScrollDirection) => {
-      if (sequenceCompleteRef.current) {
+      if (hasScrolledRef.current) {
         return false;
       }
 
       if (direction === "forward") {
-        const nextStage = stageRef.current + 1;
-
-        if (nextStage < HERO_SCROLL_STAGE_COUNT) {
-          setStageValue(nextStage);
-          return true;
+        hasScrolledRef.current = true;
+        
+        // Complete all animations immediately
+        const timeline = timelineRef.current;
+        if (timeline) {
+          timeline.play();
         }
 
-        if (nextStage === HERO_SCROLL_STAGE_COUNT) {
-          setStageValue(nextStage);
-          return false;
+        // Scroll to next section
+        const nextSection = document.querySelector("#services");
+        if (nextSection instanceof HTMLElement) {
+          smoothScrollIntoView(nextSection, { duration: DEFAULT_SCROLL_DURATION });
         }
-
-        return false;
-      }
-
-      if (direction === "backward") {
-        if (stageRef.current > 0) {
-          setStageValue(stageRef.current - 1);
-          return true;
-        }
-
+        
         return false;
       }
 
       return false;
     },
-    [setStageValue]
+    []
   );
 
-  useSectionScrollSteps(HERO_SECTION_ID, isSequenceComplete ? null : handleHeroScroll);
+  useSectionScrollSteps(HERO_SECTION_ID, handleHeroScroll);
 
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const globalWindow = window as typeof window & {
-      __heroThirdScrollComplete?: boolean;
-    };
-
-    if (globalWindow.__heroThirdScrollComplete) {
-      setStageValue(HERO_SCROLL_STAGE_COUNT);
-    }
-  }, [setStageValue]);
 
   useEffect(() => {
     const headingEl = headingRef.current;
@@ -160,11 +102,11 @@ export default function HeroSection() {
     });
 
     if (videoContainer) {
-      gsap.set(videoContainer, { scale: 0.92 });
+      gsap.set(videoContainer, { opacity: 1 });
     }
 
     const timeline = gsap
-      .timeline({ defaults: { ease: "power2.out" }, paused: true })
+      .timeline({ defaults: { ease: "power2.out" }, paused: false })
       .to(headingWords, {
         opacity: 1,
         y: 0,
@@ -198,18 +140,10 @@ export default function HeroSection() {
         "-=0.4"
       );
 
-    timeline.eventCallback("onReverseComplete", () => {
-      if (buttonElements.length) {
-        gsap.set(buttonElements, { pointerEvents: "none" });
-      }
-    });
-
     videoEl.loop = true;
     videoEl.muted = true;
-    videoEl.autoplay = false;
+    videoEl.autoplay = true;
     videoEl.playsInline = true;
-    videoEl.pause();
-    videoEl.currentTime = 0;
 
     timelineRef.current = timeline;
 
@@ -226,76 +160,40 @@ export default function HeroSection() {
       }
 
       if (videoContainer) {
-        gsap.set(videoContainer, { clearProps: "transform" });
+        gsap.set(videoContainer, { clearProps: "opacity" });
       }
     };
   }, []);
 
   useEffect(() => {
-    const timeline = timelineRef.current;
     const videoEl = videoRef.current;
-    const buttonElements = buttonsRef.current
-      ? (Array.from(buttonsRef.current.children) as HTMLElement[])
-      : [];
-
-    if (stage >= 1) {
-      timeline?.play();
-    } else {
-      timeline?.reverse();
-      if (buttonElements.length) {
-        gsap.set(buttonElements, { pointerEvents: "none" });
-      }
-    }
 
     if (videoEl) {
-      if (stage >= 2) {
-        const playPromise = videoEl.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            videoEl.muted = true;
-            return videoEl.play().catch(() => undefined);
-          });
-        }
-
-        gsap.to(videoEl, {
-          duration: 1.4,
-          ease: "power3.out",
-          filter:
-            "brightness(1.18) contrast(1.28) saturate(1.18) hue-rotate(200deg)",
-        });
-      } else {
-        videoEl.pause();
-        videoEl.currentTime = 0;
-
-        gsap.to(videoEl, {
-          duration: 0.6,
-          ease: "power2.out",
-          filter:
-            "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
+      // Always try to play the video for background
+      const playPromise = videoEl.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          videoEl.muted = true;
+          return videoEl.play().catch(() => undefined);
         });
       }
+
+      gsap.to(videoEl, {
+        duration: 0.6,
+        ease: "power2.out",
+        filter:
+          "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
+      });
     }
 
     if (videoContainerRef.current) {
       gsap.to(videoContainerRef.current, {
-        scale: stage >= 2 ? 1 : 0.92,
+        opacity: 1,
         duration: 0.8,
         ease: "power3.out",
       });
     }
-
-    if (stage >= HERO_SCROLL_STAGE_COUNT && !thirdScrollDispatchedRef.current) {
-      thirdScrollDispatchedRef.current = true;
-
-      if (typeof window !== "undefined") {
-        const globalWindow = window as typeof window & {
-          __heroThirdScrollComplete?: boolean;
-        };
-        globalWindow.__heroThirdScrollComplete = true;
-        window.dispatchEvent(new CustomEvent("hero:third-scroll-complete"));
-      }
-    }
-  }, [stage]);
+  }, []);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -312,21 +210,40 @@ export default function HeroSection() {
       window.dispatchEvent(new CustomEvent("hero:video-ready"));
     };
 
-    if (videoEl.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-      notifyReady();
-      return;
-    }
-
     const handleReady = () => {
       notifyReady();
+      // Ensure video plays when ready
+      const playPromise = videoEl.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((error) => {
+          console.warn("Video autoplay failed:", error);
+          videoEl.muted = true;
+          videoEl.play().catch(() => {
+            // Silently fail if still can't play
+          });
+        });
+      }
     };
 
-    videoEl.addEventListener("canplaythrough", handleReady);
-    videoEl.addEventListener("loadeddata", handleReady);
+    const handleError = () => {
+      console.error("Video failed to load:", videoEl.error);
+    };
+
+    if (videoEl.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+      handleReady();
+    } else {
+      videoEl.addEventListener("canplaythrough", handleReady);
+      videoEl.addEventListener("loadeddata", handleReady);
+      videoEl.addEventListener("error", handleError);
+    }
+
+    // Try to play immediately
+    handleReady();
 
     return () => {
       videoEl.removeEventListener("canplaythrough", handleReady);
       videoEl.removeEventListener("loadeddata", handleReady);
+      videoEl.removeEventListener("error", handleError);
     };
   }, []);
 
@@ -334,65 +251,43 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       id={HERO_SECTION_ID}
-      data-hero-stage={stage}
       className="relative h-screen flex items-center justify-center overflow-hidden bg-black"
     >
-      <div className="relative w-full h-full flex items-center justify-center">
-        <div className="hero-hover-container relative w-full h-full flex items-center justify-center">
-          <div
-            className="hero-glow absolute rounded-full pointer-events-none"
-            style={{
-              width: "1000px",
-              height: "1000px",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              background:
-                "radial-gradient(circle, rgba(0, 189, 255, 0.4) 0%, rgba(16, 64, 198, 0.3) 30%, rgba(16, 64, 198, 0.15) 60%, transparent 100%)",
-              filter: "blur(80px)",
-              zIndex: 0,
-            }}
-          />
-
-          <div
-            className="hero-oval absolute rounded-full"
-            style={{
-              width: "750px",
-              height: "750px",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              background:
-                "radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 1) 100%)",
-              zIndex: 2,
-            }}
-          />
-
-          <div
-            ref={videoContainerRef}
-            className="hero-video-container relative w-[400px] h-[400px] md:w-[600px] md:h-[600px] z-10"
-          >
-            <video
-              ref={videoRef}
-              className="hero-video w-full h-full object-contain"
-              style={{
-                position: "relative",
-                zIndex: 3,
-                filter:
-                  "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
-              }}
-              src="/videohero.mp4"
-              autoPlay={false}
-              loop
-              muted
-              playsInline
-              preload="metadata"
-            />
-          </div>
-        </div>
+      {/* Background Video */}
+      <div
+        ref={videoContainerRef}
+        className="absolute inset-0 w-full h-full z-0"
+        style={{ opacity: 1 }}
+      >
+        <video
+          ref={videoRef}
+          className="hero-video w-full h-full object-cover"
+          style={{
+            filter:
+              "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
+            width: "100%",
+            height: "100%",
+          }}
+          src="/videohero.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+        />
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 z-10">
+      {/* Overlay */}
+      <div
+        className="absolute inset-0 z-[1]"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(0, 4, 14, 0.5) 0%, rgba(2, 1, 53, 0.4) 50%, rgba(0, 43, 161, 0.6) 100%)",
+        }}
+      />
+
+      {/* Content */}
+      <div className="absolute inset-x-0 bottom-0 z-[2]">
         <div className="container pb-8 md:pb-12">
           <h1
             ref={headingRef}
@@ -404,7 +299,7 @@ export default function HeroSection() {
             ref={descriptionRef}
             className="text-lg md:text-xl text-white/80 max-w-2xl mb-6"
           >
-            Leading digital marketing agency specializing in WordPress development, SEO, social
+            Synovo Labs specializes in WordPress development, SEO, social
             media marketing, and web design. Grow your online presence with our expert team.
           </p>
           <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">

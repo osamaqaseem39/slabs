@@ -1,24 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 const CONTACT_POINTS = [
   {
     label: "Start a project",
-    description: "Share timelines, goals, and constraints so we can scope a launch-ready plan.",
-    action: "hello@slabs.agency",
-    href: "mailto:hello@slabs.agency",
+    description: "Share your goals and we'll create a launch-ready plan.",
+    action: "hello@synovolabs.com",
+    href: "mailto:hello@synovolabs.com",
   },
   {
     label: "Book a workshop",
-    description: "Align stakeholders around GTM, product, or design systems in a focused session.",
+    description: "Align your team in a focused session.",
     action: "Pick a time",
     href: "https://cal.com/",
   },
   {
     label: "Join the team",
-    description: "We’re always meeting builders who live at the intersection of product, design, and growth.",
+    description: "We're always looking for talented builders.",
     action: "View openings",
     href: "#",
   },
@@ -26,15 +26,25 @@ const CONTACT_POINTS = [
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
   const formRef = useRef<HTMLFormElement | null>(null);
+  
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
     if (!sectionEl) return;
 
+    const eyebrowEl = eyebrowRef.current;
     const titleEl = titleRef.current;
     const descriptionEl = descriptionRef.current;
     const cards = cardRefs.current.filter((card): card is HTMLDivElement => Boolean(card));
@@ -46,9 +56,21 @@ export default function ContactSection() {
         paused: true,
       })
       .fromTo(
-        [titleEl, descriptionEl],
+        eyebrowEl,
         { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.15 }
+        { opacity: 1, y: 0, duration: 0.5 }
+      )
+      .fromTo(
+        titleEl,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.65 },
+        "-=0.3"
+      )
+      .fromTo(
+        descriptionEl,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.65 },
+        "-=0.3"
       )
       .fromTo(
         cards,
@@ -85,32 +107,66 @@ export default function ContactSection() {
     };
   }, []);
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-  cardRefs.current.length = CONTACT_POINTS.length;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // TODO: Implement form submission logic (e.g., API call, email service)
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("Form submitted:", formData);
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        message: "",
+      });
+      
+      // Show success message (you can add a toast notification here)
+      alert("Thank you for your message! We'll get back to you soon.");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section
       id="contact"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gray-950 py-24 md:py-32"
+      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div className="space-y-12">
             <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.4em] text-[#00BDFF]" ref={descriptionRef}>
+              <p className="text-sm uppercase tracking-[0.4em] text-[#00BDFF]" ref={eyebrowRef}>
                 Contact
               </p>
               <h2
                 ref={titleRef}
                 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
               >
-                The next launch is only as strong as the team behind it.
+                Let's build something great together.
               </h2>
-              <p className="text-lg md:text-xl text-white/70 max-w-3xl leading-relaxed">
-                Give us a starting point or a north star. We’ll send back the milestones, team mix, and
-                instrumentation required to ship—and prove—results.
+              <p className="text-lg md:text-xl text-white/70 max-w-3xl leading-relaxed" ref={descriptionRef}>
+                Share your vision and we'll deliver the plan to make it happen.
               </p>
             </div>
 
@@ -142,50 +198,78 @@ export default function ContactSection() {
 
           <form
             ref={formRef}
+            onSubmit={handleSubmit}
             className="rounded-[32px] border border-white/10 bg-white/[0.04] p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur"
           >
             <div className="grid gap-6">
               <div>
-                <label className="text-sm font-medium text-white/70">Name</label>
+                <label htmlFor="name" className="text-sm font-medium text-white/70">
+                  Name
+                </label>
                 <input
+                  id="name"
+                  name="name"
                   type="text"
-                  placeholder="How should we address you?"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Your name"
+                  required
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-white/70">Email</label>
+                <label htmlFor="email" className="text-sm font-medium text-white/70">
+                  Email
+                </label>
                 <input
+                  id="email"
+                  name="email"
                   type="email"
-                  placeholder="Where can we reach you?"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="your@email.com"
+                  required
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-white/70">Company</label>
+                <label htmlFor="company" className="text-sm font-medium text-white/70">
+                  Company
+                </label>
                 <input
+                  id="company"
+                  name="company"
                   type="text"
-                  placeholder="Who do you represent?"
+                  value={formData.company}
+                  onChange={handleInputChange}
+                  placeholder="Company name"
                   className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-white/70">What’s on your roadmap?</label>
+                <label htmlFor="message" className="text-sm font-medium text-white/70">
+                  Message
+                </label>
                 <textarea
+                  id="message"
+                  name="message"
                   rows={4}
-                  placeholder="Tell us about the initiative, challenges, or metrics you’re targeting."
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Tell us about your project..."
+                  required
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40 resize-none"
                 />
               </div>
               <button
                 type="submit"
-                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00BDFF] px-6 py-3 text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#0dd0ff]"
+                disabled={isSubmitting}
+                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00BDFF] px-6 py-3 text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#0dd0ff] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
               </button>
               <p className="text-xs text-white/40">
-                By submitting this form, you consent to being contacted about services. We’ll never share your
-                info.
+                We'll never share your information.
               </p>
             </div>
           </form>

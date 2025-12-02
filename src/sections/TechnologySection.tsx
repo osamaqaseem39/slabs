@@ -1,73 +1,304 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { motion, AnimatePresence } from "framer-motion";
+import Model3D from "@/components/Model3D";
 
-type TechnologyStack = {
-  title: string;
+type Technology = {
+  name: string;
+  modelType: "cube" | "pyramid" | "torus";
   description: string;
-  items: string[];
+  stack: string[];
+  features: string[];
+  useCases: string[];
 };
 
-const technologyStacks: TechnologyStack[] = [
+const technologies: Technology[] = [
   {
-    title: "Experience Platforms",
-    description:
-      "Composable front-end foundations aligned to performance, accessibility, and publishing needs.",
-    items: ["Next.js and React", "Headless WordPress", "Astro and Vite"],
+    name: "Frontend",
+    modelType: "cube",
+    description: "Modern frontend technologies for building responsive, interactive user interfaces that deliver exceptional user experiences.",
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion", "GSAP", "Three.js", "WebGL"],
+    features: [
+      "Server-side rendering (SSR)",
+      "Static site generation (SSG)",
+      "Component-based architecture",
+      "Responsive design systems",
+      "Advanced animations",
+      "Performance optimization",
+    ],
+    useCases: [
+      "E-commerce platforms",
+      "SaaS applications",
+      "Marketing websites",
+      "Progressive web apps",
+      "Interactive dashboards",
+      "Real-time applications",
+    ],
   },
   {
-    title: "Automation and Data",
-    description:
-      "Tooling that keeps campaigns measurable and adaptive across the full customer journey.",
-    items: ["Segment and Customer.io", "HubSpot and Salesforce", "Looker and Mode"],
+    name: "Backend",
+    modelType: "pyramid",
+    description: "Robust backend solutions for scalable applications and seamless API integrations with enterprise-grade security.",
+    stack: ["Node.js", "Express", "GraphQL", "REST APIs", "Serverless", "PostgreSQL", "MongoDB", "Redis"],
+    features: [
+      "RESTful & GraphQL APIs",
+      "Microservices architecture",
+      "Real-time communication",
+      "Database optimization",
+      "Authentication & authorization",
+      "Caching strategies",
+    ],
+    useCases: [
+      "API development",
+      "Microservices",
+      "Real-time systems",
+      "Data processing",
+      "Authentication services",
+      "Third-party integrations",
+    ],
   },
   {
-    title: "Delivery Tooling",
-    description:
-      "DevOps pipelines engineered for quick iteration, safe releases, and observability from day one.",
-    items: ["GitHub Actions", "Vercel and Netlify", "Docker and Kubernetes"],
+    name: "DevOps",
+    modelType: "torus",
+    description: "Streamlined deployment pipelines and infrastructure management for reliable, scalable operations.",
+    stack: ["Docker", "Kubernetes", "AWS", "CI/CD", "GitHub Actions", "Terraform", "Monitoring", "Security"],
+    features: [
+      "Automated deployments",
+      "Container orchestration",
+      "Infrastructure as code",
+      "Continuous integration",
+      "Performance monitoring",
+      "Security scanning",
+    ],
+    useCases: [
+      "Cloud infrastructure",
+      "CI/CD pipelines",
+      "Container management",
+      "Monitoring & logging",
+      "Security compliance",
+      "Scalable deployments",
+    ],
+  },
+  {
+    name: "UI/UX",
+    modelType: "cube",
+    description: "Creating intuitive, beautiful interfaces that users love. We combine user research, design thinking, and modern aesthetics.",
+    stack: ["Figma", "Adobe XD", "Sketch", "Prototyping", "User Research", "Design Systems", "Accessibility", "Usability Testing"],
+    features: [
+      "User interface design",
+      "User experience research",
+      "Interactive prototypes",
+      "Design systems",
+      "Brand identity",
+      "Accessibility compliance",
+    ],
+    useCases: [
+      "Web applications",
+      "Mobile apps",
+      "Design systems",
+      "Brand identity",
+      "User research",
+      "Prototyping",
+    ],
+  },
+  {
+    name: "Digital Marketing",
+    modelType: "pyramid",
+    description: "Strategic digital marketing solutions that drive growth, engagement, and measurable results across all channels.",
+    stack: ["SEO", "SEM", "Social Media", "Content Marketing", "Email Marketing", "Analytics", "PPC", "Conversion Optimization"],
+    features: [
+      "Search engine optimization",
+      "Pay-per-click advertising",
+      "Social media management",
+      "Content strategy",
+      "Email campaigns",
+      "Analytics & reporting",
+    ],
+    useCases: [
+      "Brand awareness",
+      "Lead generation",
+      "E-commerce growth",
+      "Content marketing",
+      "Social media campaigns",
+      "SEO optimization",
+    ],
   },
 ];
+
+function TechnologyAccordionItem({ 
+  tech, 
+  index, 
+  isOpen, 
+  onToggle, 
+  isFirst, 
+  isLast 
+}: { 
+  tech: Technology; 
+  index: number; 
+  isOpen: boolean; 
+  onToggle: () => void;
+  isFirst: boolean;
+  isLast: boolean;
+}) {
+  return (
+    <div className="relative flex flex-row flex-1 h-[500px]">
+      {/* Header - Always Visible */}
+      <button
+        onClick={onToggle}
+        className={`group relative flex-shrink-0 flex items-center justify-center p-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/50 transition-all duration-300 h-full min-w-[120px] border-r border-white/10 ${
+          isOpen 
+            ? "bg-white/[0.04] border-[#00BDFF]/30" 
+            : "bg-white/[0.02] hover:bg-white/[0.03]"
+        } ${
+          isFirst ? "rounded-l-[30px]" : ""
+        } ${
+          isLast && !isOpen ? "rounded-r-[30px] border-r-0" : ""
+        } ${
+          isLast ? "border-r-0" : ""
+        }`}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <h3 
+            className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight ${
+              isOpen 
+                ? "text-[#00BDFF]" 
+                : "text-white group-hover:text-[#00BDFF]"
+            }`}
+            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+          >
+            {tech.name}
+          </h3>
+          <motion.div
+            animate={{ rotate: isOpen ? 90 : 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="flex-shrink-0"
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={`transition-colors duration-300 ${
+                isOpen ? "text-[#00BDFF]" : "text-white/50"
+              }`}
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </motion.div>
+        </div>
+      </button>
+
+      {/* Accordion Content - Expands to the Right */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: "auto", opacity: 1 }}
+            exit={{ width: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className={`overflow-hidden bg-white/[0.04] h-full border-r border-white/10 ${
+              isLast && !isOpen ? "rounded-r-[30px]" : ""
+            } ${
+              isLast ? "border-r-0" : ""
+            }`}
+          >
+            <div className="px-8 pt-8 pb-12 min-w-[600px] max-w-[700px] h-full overflow-y-auto space-y-6 flex flex-col">
+              {/* Technology Stack */}
+              <div className="w-full flex flex-col">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 mb-3 text-left">
+                  Technology Stack
+                </p>
+                <div className="flex flex-wrap gap-2 justify-start">
+                  {tech.stack.map((item) => (
+                    <motion.span
+                      key={item}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: tech.stack.indexOf(item) * 0.03 }}
+                      className="px-3 py-1.5 text-xs rounded-full border border-[#00BDFF]/40 bg-[#00BDFF]/15 text-[#00BDFF] font-medium hover:bg-[#00BDFF]/25 hover:border-[#00BDFF]/60 transition-colors duration-300"
+                    >
+                      {item}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Key Features */}
+              <div className="w-full flex flex-col">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 mb-3 text-left">
+                  Key Features
+                </p>
+                <ul className="space-y-2 flex flex-col">
+                  {tech.features.map((feature) => (
+                    <motion.li
+                      key={feature}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
+                      className="flex items-start gap-2 text-xs text-white/70 leading-relaxed"
+                    >
+                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00BDFF] flex-shrink-0" />
+                      <span>{feature}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Use Cases */}
+              <div className="w-full flex flex-col pb-4">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 mb-3 text-left">
+                  Use Cases
+                </p>
+                <div className="flex flex-wrap gap-2 justify-start">
+                  {tech.useCases.map((useCase) => (
+                    <motion.span
+                      key={useCase}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3, delay: tech.useCases.indexOf(useCase) * 0.03 }}
+                      className="px-2.5 py-1 text-xs rounded-lg border border-white/20 bg-white/[0.05] text-white/80 font-medium"
+                    >
+                      {useCase}
+                    </motion.span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function TechnologySection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-  const descriptionRef = useRef<HTMLParagraphElement | null>(null);
-  const statsCardRef = useRef<HTMLDivElement | null>(null);
-  const stackCardsRef = useRef<Array<HTMLDivElement | null>>([]);
-
+  const accordionsRef = useRef<Array<HTMLDivElement | null>>([]);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
+  const [openAccordion, setOpenAccordion] = useState<number | null>(0);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
-    if (!sectionEl) {
-      return;
-    }
+    if (!sectionEl) return;
 
     const eyebrowEl = eyebrowRef.current;
     const headingEl = headingRef.current;
-    const descriptionEl = descriptionRef.current;
-    const statsEl = statsCardRef.current;
-    const stackEls = stackCardsRef.current.filter(
-      (card): card is HTMLDivElement => Boolean(card)
-    );
+    const accordionEls = accordionsRef.current.filter((el): el is HTMLDivElement => Boolean(el));
 
-    const elementsToAnimate = [
-      eyebrowEl,
-      headingEl,
-      descriptionEl,
-      statsEl,
-      ...stackEls,
-    ].filter(Boolean);
+    const elements = [eyebrowEl, headingEl, ...accordionEls].filter(Boolean);
 
-    if (!elementsToAnimate.length) {
-      return;
-    }
+    if (!elements.length) return;
 
-    gsap.set(elementsToAnimate, { opacity: 0, y: 40 });
+    gsap.set(elements, { opacity: 0, y: 40 });
 
     const timeline = gsap.timeline({
       defaults: { ease: "power3.out" },
@@ -78,35 +309,12 @@ export default function TechnologySection() {
       timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.5 });
     }
     if (headingEl) {
-      timeline.to(
-        headingEl,
-        { opacity: 1, y: 0, duration: 0.65 },
-        timeline.duration() ? "-=0.3" : undefined
-      );
+      timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     }
-    if (descriptionEl) {
+    if (accordionEls.length) {
       timeline.to(
-        descriptionEl,
-        { opacity: 1, y: 0, duration: 0.6 },
-        "-=0.35"
-      );
-    }
-    if (statsEl) {
-      timeline.to(
-        statsEl,
-        { opacity: 1, y: 0, duration: 0.7 },
-        "-=0.4"
-      );
-    }
-    if (stackEls.length) {
-      timeline.to(
-        stackEls,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.75,
-          stagger: 0.12,
-        },
+        accordionEls,
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 },
         "-=0.3"
       );
     }
@@ -114,157 +322,86 @@ export default function TechnologySection() {
     timelineRef.current = timeline;
 
     const playTimeline = () => {
-      if (hasAnimatedRef.current || !timelineRef.current) {
-        return;
-      }
+      if (hasAnimatedRef.current || !timelineRef.current) return;
       hasAnimatedRef.current = true;
       timelineRef.current.play();
     };
 
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
           playTimeline();
         }
-      });
-    };
-
-    const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.2,
-      rootMargin: "0px 0px -10% 0px",
-    });
+      },
+      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
+    );
 
     observer.observe(sectionEl);
-
-    const rect = sectionEl.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      playTimeline();
-    }
 
     return () => {
       observer.disconnect();
       timelineRef.current?.kill();
-      timelineRef.current = null;
     };
   }, []);
+
+  const handleAccordionToggle = (index: number) => {
+    setOpenAccordion((current) => (current === index ? null : index));
+  };
 
   return (
     <section
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gray-900 py-16 md:py-24 lg:py-32"
+      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
-        <div className="max-w-3xl">
+        {/* Section Header */}
+        <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
           <p
             ref={eyebrowRef}
-            className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6"
+            className="text-base uppercase tracking-[0.4em] text-[#00BDFF] mb-4"
           >
             Technologies
           </p>
           <h2
             ref={headingRef}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
+            className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-4"
           >
-            Proven platforms and tooling that keep releases fast, stable, and measurable.
+            Our stack
           </h2>
-          <p ref={descriptionRef} className="text-lg md:text-xl text-white/70">
-            We pair flexible modern frameworks with automation and analytics so your team can launch
-            confidently and optimize in real time.
-          </p>
         </div>
 
-        <div className="mt-12 md:mt-16 lg:mt-20 grid gap-12 md:gap-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
-          <div
-            ref={statsCardRef}
-            className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] via-white/[0.02] to-transparent p-8 md:p-10 text-white shadow-[0_28px_60px_rgba(15,23,42,0.32)]"
+        {/* Horizontal Connected Accordion */}
+        <div className="w-full flex justify-center overflow-x-auto">
+          <motion.div
+            className="relative rounded-[30px] bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-visible inline-flex"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
           >
-            <h3 className="text-3xl font-semibold leading-tight mb-6">
-              A single pipeline from prototype to production.
-            </h3>
-            <p className="text-white/70 leading-relaxed mb-8">
-              We bring opinionated defaults for deployment, QA, analytics, and growth tooling so teams can
-              focus on the customer experience instead of integrating yet another platform.
-            </p>
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="space-y-2">
-                <p className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/70">Coverage</p>
-                <p className="text-2xl font-semibold">Strategy → Launch → Ops</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/70">Tooling Uptime</p>
-                <p className="text-2xl font-semibold">99.9% monitored</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/70">Avg. Iteration</p>
-                <p className="text-2xl font-semibold">&lt; 2 week release train</p>
-              </div>
-              <div className="space-y-2">
-                <p className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/70">Stack Fit</p>
-                <p className="text-2xl font-semibold">B2B &amp; Product GTM</p>
-              </div>
-            </div>
-            <div className="mt-10 border-t border-white/10 pt-8">
-              <h4 className="text-lg font-semibold text-white mb-4">Operational Highlights</h4>
-              <ul className="space-y-3 text-white/70">
-                <li>
-                  Dedicated enablement playbooks covering discovery, backlog hygiene, and experimentation
-                  protocols.
-                </li>
-                <li>
-                  Shared observability dashboards with automated alerts wired into incident response workflows.
-                </li>
-                <li>
-                  Optional co-managed squads to help internal teams adopt new delivery practices sustainably.
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="relative lg:pl-16">
-            <div className="pointer-events-none absolute left-6 top-6 bottom-6 hidden lg:block">
-              <span className="block h-full w-px bg-gradient-to-b from-[#00BDFF] via-white/20 to-transparent" />
-            </div>
-            <div className="space-y-8 md:space-y-10">
-              {technologyStacks.map((stack, index) => (
-                <article
-                  key={stack.title}
-                  ref={(el: HTMLDivElement | null) => {
-                    stackCardsRef.current[index] = el;
+            <div className="flex min-w-fit">
+              {technologies.map((tech, index) => (
+                <div
+                  key={tech.name}
+                  ref={(el) => {
+                    accordionsRef.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="rounded-[28px] border border-white/10 bg-white/[0.02] p-8 shadow-[0_20px_40px_rgba(15,23,42,0.24)] backdrop-blur-sm transition duration-500 hover:border-[#00BDFF]/60 hover:bg-white/[0.05]"
+                  className="relative"
                 >
-                  <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
-                    <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-[#00BDFF]/70 bg-[#00BDFF]/10 text-sm font-semibold text-[#00BDFF]">
-                      {index + 1}
-                    </span>
-                    <div className="flex-1">
-                      <div>
-                        <h3 className="text-2xl font-semibold text-white">{stack.title}</h3>
-                        <p className="mt-3 text-base text-white/70 leading-relaxed">
-                          {stack.description}
-                        </p>
-                      </div>
-                      <div className="mt-6 flex flex-wrap gap-3">
-                        {stack.items.map((item) => (
-                          <span
-                            key={item}
-                            className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-sm text-white/80"
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </article>
+                  <TechnologyAccordionItem
+                    tech={tech}
+                    index={index}
+                    isOpen={openAccordion === index}
+                    onToggle={() => handleAccordionToggle(index)}
+                    isFirst={index === 0}
+                    isLast={index === technologies.length - 1}
+                  />
+                </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
   );
 }
-
