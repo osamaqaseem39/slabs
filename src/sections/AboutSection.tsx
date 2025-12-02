@@ -151,7 +151,7 @@ export default function AboutSection() {
                 <article
                   key={value.title}
                   ref={(el) => {
-                    valuesRef.current[index] = el;
+                    valuesRef.current[index] = el as HTMLDivElement | null;
                   }}
                   className="group rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00BDFF]/50 hover:bg-white/[0.08] transition-all duration-500"
                 >
