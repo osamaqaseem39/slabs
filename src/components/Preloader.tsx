@@ -98,7 +98,7 @@ export default function Preloader() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#141b38]"
     >
       <div className="flex flex-col items-center gap-10 px-6 text-white">
         <div className="preloader-logo-wrapper">

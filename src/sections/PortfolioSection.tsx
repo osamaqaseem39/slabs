@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
-import { ShoppingCart, LayoutDashboard, TrendingUp, LucideIcon } from "lucide-react";
+import Image from "next/image";
 
 type Project = {
   name: string;
-  icon: LucideIcon;
+  image: string;
   category: string;
   description: string;
   technologies: string[];
@@ -16,7 +16,7 @@ type Project = {
 const projects: Project[] = [
   {
     name: "E-Commerce Platform",
-    icon: ShoppingCart,
+    image: "/project1.jpg",
     category: "Web Development",
     description: "A high-performance e-commerce platform built with Next.js and Node.js, featuring real-time inventory management, secure payment processing, and advanced analytics dashboard.",
     technologies: ["Next.js", "Node.js", "PostgreSQL", "Stripe API"],
@@ -24,7 +24,7 @@ const projects: Project[] = [
   },
   {
     name: "SaaS Dashboard Redesign",
-    icon: LayoutDashboard,
+    image: "/project2.jpg",
     category: "UI/UX Design",
     description: "Complete redesign of a SaaS analytics dashboard focusing on user experience, accessibility, and modern design principles. Increased user engagement by 45% and reduced task completion time by 30%.",
     technologies: ["Figma", "React", "Design System", "User Research"],
@@ -32,7 +32,7 @@ const projects: Project[] = [
   },
   {
     name: "Digital Transformation Strategy",
-    icon: TrendingUp,
+    image: "/project3.jpg",
     category: "Digital Strategy",
     description: "Comprehensive digital transformation roadmap for a legacy enterprise, including cloud migration strategy, modern tech stack recommendations, and phased implementation plan resulting in 60% cost reduction.",
     technologies: ["AWS", "Microservices", "DevOps", "Analytics"],
@@ -136,52 +136,65 @@ export default function PortfolioSection() {
               ref={(el) => {
                 modelsRef.current[index] = el;
               }}
-              className="group flex flex-col items-center gap-6 p-6 rounded-2xl border border-white/10 bg-white hover:border-[#00bef7]/50 hover:bg-white/90 transition-all duration-500"
+              className="group relative h-[500px] rounded-3xl overflow-hidden cursor-pointer"
             >
-              <div className="relative flex items-center justify-center w-32 h-32 mb-4">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00bef7]/20 to-[#00bef7]/5 blur-xl group-hover:blur-2xl transition-all duration-500" />
-                <div className="relative flex items-center justify-center w-24 h-24 rounded-2xl border border-[#00bef7]/30 bg-[#00bef7]/10 group-hover:bg-[#00bef7]/20 group-hover:border-[#00bef7]/50 transition-all duration-500">
-                  <project.icon 
-                    className="w-12 h-12 text-[#00bef7] group-hover:scale-110 transition-transform duration-500" 
-                    strokeWidth={1.5}
-                  />
-                </div>
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <Image
+                  src={project.image}
+                  alt={project.name}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               </div>
-              
-              <div className="flex flex-col items-center gap-3 text-center w-full">
-                <div className="flex flex-col items-center gap-2 w-full">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/80 font-medium">
-                    {project.category}
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-300">
-                    {project.name}
-                  </h3>
-                </div>
-                
-                <p className="text-sm text-gray-700 leading-relaxed line-clamp-3 min-h-[4.5rem]">
-                  {project.description}
-                </p>
-                
-                {project.client && (
-                  <div className="text-xs text-gray-600 italic">
-                    Client: {project.client}
+
+              {/* Title - Always Visible */}
+              <div className="absolute top-6 left-6 right-6 z-10">
+                <h3 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+                  {project.name}
+                </h3>
+              </div>
+
+              {/* Gradient Overlay - Opens from Bottom on Hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#141b38] via-[#141b38]/80 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out" style={{ transitionDelay: '100ms' }}>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-2">
+                      <span className="text-xs uppercase tracking-[0.3em] text-[#00bef7] font-medium">
+                        {project.category}
+                      </span>
+                      <h3 className="text-2xl md:text-3xl font-bold text-white">
+                        {project.name}
+                      </h3>
+                    </div>
+                    
+                    <p className="text-sm text-white/90 leading-relaxed">
+                      {project.description}
+                    </p>
+                    
+                    {project.client && (
+                      <div className="text-xs text-white/70 italic">
+                        Client: {project.client}
+                      </div>
+                    )}
+                    
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {project.technologies.slice(0, 3).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-3 py-1.5 text-xs rounded-full border border-[#00bef7]/50 bg-[#00bef7]/20 text-white backdrop-blur-sm"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {project.technologies.length > 3 && (
+                        <span className="px-3 py-1.5 text-xs rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm">
+                          +{project.technologies.length - 3} more
+                        </span>
+                      )}
+                    </div>
                   </div>
-                )}
-                
-                <div className="flex flex-wrap gap-2 justify-center mt-2">
-                  {project.technologies.slice(0, 3).map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3 py-1 text-xs rounded-full border border-[#00bef7]/30 bg-[#00bef7]/10 text-[#00bef7]"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                  {project.technologies.length > 3 && (
-                    <span className="px-3 py-1 text-xs rounded-full border border-gray-200 bg-gray-100 text-gray-700">
-                      +{project.technologies.length - 3} more
-                    </span>
-                  )}
                 </div>
               </div>
             </div>

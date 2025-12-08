@@ -279,11 +279,7 @@ export default function HeroSection() {
 
       {/* Overlay */}
       <div
-        className="absolute inset-0 z-[1]"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(20, 27, 56, 0.6) 0%, rgba(20, 27, 56, 0.5) 50%, rgba(16, 64, 198, 0.7) 100%)",
-        }}
+        className="absolute inset-0 z-[1] bg-[#00bdff]/40"
       />
 
       {/* Content */}
