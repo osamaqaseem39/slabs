@@ -147,10 +147,10 @@ function TechnologyAccordionItem({
       {/* Header - Always Visible */}
       <button
         onClick={onToggle}
-        className={`group relative flex-shrink-0 flex items-center justify-between p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 w-full border-b border-white/10 ${
+        className={`group relative flex-shrink-0 flex items-center justify-center p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 w-full border-b border-white/10 ${
           isOpen 
             ? "bg-[#00bdff] border-[#00bef7]/30" 
-            : "bg-[#00bdff] hover:bg-[#00bdff]/90"
+            : "bg-[#00bdff] hover:bg-[#00bef7] hover:border-[#00bef7]/50"
         } ${
           isFirst ? "rounded-t-[30px]" : ""
         } ${
@@ -158,10 +158,10 @@ function TechnologyAccordionItem({
         }`}
       >
         <h3 
-          className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight ${
+          className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight text-center ${
             isOpen 
               ? "text-white" 
-              : "text-white group-hover:text-[#00bef7]"
+              : "text-white group-hover:text-white"
           }`}
         >
           {tech.name}
@@ -169,7 +169,7 @@ function TechnologyAccordionItem({
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="flex-shrink-0"
+          className="absolute right-6 flex-shrink-0"
         >
           <svg
             width="24"
