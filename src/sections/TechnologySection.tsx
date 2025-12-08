@@ -204,11 +204,11 @@ function TechnologyAccordionItem({
             <div className="px-8 pt-8 pb-12 w-full overflow-y-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Technology Stack */}
-                <div className="flex flex-col">
-                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3">
                     Technology Stack
                   </p>
-                  <div className="flex flex-wrap gap-2 justify-start">
+                  <div className="flex flex-wrap gap-2 justify-center">
                     {tech.stack.map((item) => (
                       <motion.span
                         key={item}
@@ -224,20 +224,20 @@ function TechnologyAccordionItem({
                 </div>
 
                 {/* Key Features */}
-                <div className="flex flex-col">
-                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3">
                     Key Features
                   </p>
-                  <ul className="space-y-2 flex flex-col">
+                  <ul className="space-y-2 flex flex-col items-center">
                     {tech.features.map((feature) => (
                       <motion.li
                         key={feature}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
-                        className="flex items-start gap-2 text-xs text-gray-800 leading-relaxed"
+                        className="flex items-center gap-2 text-xs text-gray-800 leading-relaxed"
                       >
-                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
+                        <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                         <span>{feature}</span>
                       </motion.li>
                     ))}
@@ -245,11 +245,11 @@ function TechnologyAccordionItem({
                 </div>
 
                 {/* Use Cases */}
-                <div className="flex flex-col">
-                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3">
                     Use Cases
                   </p>
-                  <div className="flex flex-wrap gap-2 justify-start">
+                  <div className="flex flex-wrap gap-2 justify-center">
                     {tech.useCases.map((useCase) => (
                       <motion.span
                         key={useCase}

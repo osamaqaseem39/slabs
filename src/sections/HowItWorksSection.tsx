@@ -91,15 +91,6 @@ export default function HowItWorksSection() {
     }
   };
 
-  const handleCardEnter = (stepIndex: number) => {
-    if (stepIndex === currentIndex) {
-      setFlippedCard(stepIndex);
-    }
-  };
-
-  const handleCardLeave = () => {
-    setFlippedCard(null);
-  };
 
   useEffect(() => {
     const newProgress = ((currentIndex + 1) / PROCESS_STEPS.length) * 100;
@@ -234,8 +225,6 @@ export default function HowItWorksSection() {
                 <motion.article
                   className="group relative flex h-[460px] w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-white backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 perspective-[1600px] cursor-pointer"
                   onClick={() => handleCardClick(currentIndex)}
-                  onMouseEnter={() => handleCardEnter(currentIndex)}
-                  onMouseLeave={handleCardLeave}
                 >
                   <div
                     className={`relative h-full w-full [transform-style:preserve-3d] [transition:transform_0.8s_cubic-bezier(0.22,1,0.36,1)] ${
@@ -269,7 +258,7 @@ export default function HowItWorksSection() {
 
                       <div className="mt-6 pt-6 border-t border-gray-200">
                         <p className="text-xs text-gray-500 text-center">
-                          Hover or click to see deliverables
+                          Click to see deliverables
                         </p>
                       </div>
                     </div>
