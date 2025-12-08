@@ -152,8 +152,8 @@ export default function PortfolioSection() {
               </div>
 
               {/* Title at Bottom with Gradient */}
-              <div className="relative z-10 bg-gradient-to-r from-[#00bdff] to-[#1040c6] p-6">
-                <h3 className="text-xl md:text-2xl font-bold text-white">
+              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-r from-[#00bdff]/80 via-[#00bdff]/70 to-[#1040c6]/80 p-6 backdrop-blur-sm">
+                <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">
                   {project.name}
                 </h3>
               </div>
