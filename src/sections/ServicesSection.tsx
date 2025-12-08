@@ -81,7 +81,7 @@ const services: Service[] = [
 function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; index: number; isFlipped: boolean; onFlip: () => void }) {
   return (
     <motion.article
-      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-[#141b38] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-500 hover:border-[#00bef7]/50"
+      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-500 hover:border-[#00bef7]/50"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
@@ -129,21 +129,21 @@ function CardFront({ service }: { service: Service }) {
       </div>
 
       <div className="space-y-2 flex-shrink-0 mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-[#00bef7] transition-colors duration-300 leading-tight">
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-300 leading-tight">
           {service.title}
         </h3>
-        <p className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/70 leading-tight p-0 m-0">
+        <p className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/80 leading-tight p-0 m-0">
           {service.summary}
         </p>
       </div>
 
-      <p className="text-sm leading-normal text-white/80 group-hover:text-white/95 transition-colors duration-300 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-6">
+      <p className="text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-300 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-6">
         {service.description}
       </p>
 
-      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.4em] pt-4 border-t border-white/10 flex-shrink-0">
-        <span className="inline-flex h-1 w-8 rounded-full bg-white/30 group-hover:bg-[#00bef7]/60 transition-colors duration-500" />
-        <span className="text-white/50">Click to Explore</span>
+      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.4em] pt-4 border-t border-gray-200 flex-shrink-0">
+        <span className="inline-flex h-1 w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-500" />
+        <span className="text-gray-600">Click to Explore</span>
       </div>
     </div>
   );
@@ -151,21 +151,21 @@ function CardFront({ service }: { service: Service }) {
 
 function CardBack({ service }: { service: Service }) {
   return (
-    <div className="absolute inset-0 flex h-full flex-col rounded-[30px] bg-[#141b38] p-6 text-left text-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+    <div className="absolute inset-0 flex h-full flex-col rounded-[30px] bg-white p-6 text-left text-gray-900 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
       {/* Header Section - Compact */}
       <div className="space-y-2 flex-shrink-0 mb-4">
         <div className="flex items-center justify-between">
           <span className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/80">
             Service Details
           </span>
-          <span className="text-xs text-white/40 truncate ml-1">
+          <span className="text-xs text-gray-500 truncate ml-1">
             {service.title}
           </span>
         </div>
-        <h3 className="text-lg font-semibold text-white leading-tight">
+        <h3 className="text-lg font-semibold text-gray-900 leading-tight">
           {service.title}
         </h3>
-        <p className="text-xs leading-normal text-white/85 line-clamp-2 p-0 m-0">
+        <p className="text-xs leading-normal text-gray-700 line-clamp-2 p-0 m-0">
           {service.description}
         </p>
       </div>
@@ -177,7 +177,7 @@ function CardBack({ service }: { service: Service }) {
         </p>
         <ul className="space-y-1.5 pr-1">
           {service.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-2 text-xs text-white/80 leading-relaxed">
+            <li key={feature} className="flex items-start gap-2 text-xs text-gray-700 leading-relaxed">
               <span className="mt-1 h-1 w-1 rounded-full bg-[#00bef7] flex-shrink-0" />
               <span className="flex-1">{feature}</span>
             </li>
@@ -205,7 +205,7 @@ function CardBack({ service }: { service: Service }) {
       {/* Footer - Compact */}
       <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.3em] pt-3 border-t border-white/10 flex-shrink-0">
         <span className="inline-flex h-1 w-8 rounded-full bg-[#00bef7]" />
-        <span className="text-white/50 text-[10px]">Click to flip back</span>
+        <span className="text-gray-600 text-[10px]">Click to flip back</span>
       </div>
     </div>
   );

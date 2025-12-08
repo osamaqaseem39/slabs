@@ -165,23 +165,23 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 cardsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-[#141b38] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-[#141b38]/90 p-8"
+              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-[#00bdff] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-[#00bdff]/90 p-8"
               whileHover={{ y: -8 }}
             >
               <div className="flex flex-col h-full">
                 <div className="mb-6">
                   <div className="text-5xl mb-4">{benefit.icon}</div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
+                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
                     {benefit.title}
                   </h3>
-                  <p className="text-sm text-white/80 leading-relaxed">
+                  <p className="text-sm text-gray-800 leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>
-                <ul className="mt-auto space-y-2 pt-6 border-t border-white/10">
+                <ul className="mt-auto space-y-2 pt-6 border-t border-gray-300">
                   {benefit.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-xs text-white/70">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
+                    <li key={feature} className="flex items-center gap-2 text-xs text-gray-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-gray-900 flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -200,12 +200,12 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 statsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="text-center p-6 rounded-2xl border border-white/10 bg-[#141b38] backdrop-blur-sm"
+              className="text-center p-6 rounded-2xl border border-white/10 bg-[#00bdff] backdrop-blur-sm"
             >
-              <div className="text-4xl md:text-5xl font-bold text-[#00bef7] mb-2">
+              <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
                 {stat.value}
               </div>
-              <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">
+              <div className="text-xs md:text-sm text-gray-700 uppercase tracking-wider">
                 {stat.label}
               </div>
             </motion.div>

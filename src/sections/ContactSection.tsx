@@ -177,10 +177,10 @@ export default function ContactSection() {
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-[#141b38] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-[#141b38]/90"
+                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-white p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/90"
                 >
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-2xl font-semibold text-white">{point.label}</h3>
+                    <h3 className="text-2xl font-semibold text-gray-900">{point.label}</h3>
                     <a
                       href={point.href}
                       target={point.href.startsWith("http") ? "_blank" : undefined}
@@ -190,7 +190,7 @@ export default function ContactSection() {
                       {point.action}
                     </a>
                   </div>
-                  <p className="text-white/80 leading-relaxed">{point.description}</p>
+                  <p className="text-gray-700 leading-relaxed">{point.description}</p>
                 </div>
               ))}
             </div>
@@ -199,11 +199,11 @@ export default function ContactSection() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="rounded-[32px] border border-white/10 bg-[#141b38] p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur"
+            className="rounded-[32px] border border-white/10 bg-white p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur"
           >
             <div className="grid gap-6">
               <div>
-                <label htmlFor="name" className="text-sm font-medium text-white/70">
+                <label htmlFor="name" className="text-sm font-medium text-gray-700">
                   Name
                 </label>
                 <input
@@ -214,11 +214,11 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Your name"
                   required
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="text-sm font-medium text-white/70">
+                <label htmlFor="email" className="text-sm font-medium text-gray-700">
                   Email
                 </label>
                 <input
@@ -229,11 +229,11 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="your@email.com"
                   required
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="company" className="text-sm font-medium text-white/70">
+                <label htmlFor="company" className="text-sm font-medium text-gray-700">
                   Company
                 </label>
                 <input
@@ -243,11 +243,11 @@ export default function ContactSection() {
                   value={formData.company}
                   onChange={handleInputChange}
                   placeholder="Company name"
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="text-sm font-medium text-white/70">
+                <label htmlFor="message" className="text-sm font-medium text-gray-700">
                   Message
                 </label>
                 <textarea
@@ -258,7 +258,7 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Tell us about your project..."
                   required
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
+                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
                 />
               </div>
               <button
@@ -268,7 +268,7 @@ export default function ContactSection() {
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-gray-500">
                 We'll never share your information.
               </p>
             </div>

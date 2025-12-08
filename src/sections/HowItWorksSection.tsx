@@ -232,7 +232,7 @@ export default function HowItWorksSection() {
                 className="absolute inset-0 flex items-center justify-center"
               >
                 <motion.article
-                  className="group relative flex h-[460px] w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#141b38] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 perspective-[1600px] cursor-pointer"
+                  className="group relative flex h-[460px] w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-white backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 perspective-[1600px] cursor-pointer"
                   onClick={() => handleCardClick(currentIndex)}
                   onMouseEnter={() => handleCardEnter(currentIndex)}
                   onMouseLeave={handleCardLeave}
@@ -256,31 +256,31 @@ export default function HowItWorksSection() {
                       </div>
 
                       <div className="flex-1 space-y-5">
-                        <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                        <h3 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                           {PROCESS_STEPS[currentIndex].title}
                         </h3>
-                        <p className="text-base md:text-lg font-medium text-[#00bef7]/80 uppercase tracking-wider">
+                        <p className="text-base md:text-lg font-medium text-[#00bef7]/90 uppercase tracking-wider">
                           {PROCESS_STEPS[currentIndex].summary}
                         </p>
-                        <p className="text-lg md:text-xl leading-relaxed text-white/80 max-w-2xl">
+                        <p className="text-lg md:text-xl leading-relaxed text-gray-700 max-w-2xl">
                           {PROCESS_STEPS[currentIndex].details}
                         </p>
                       </div>
 
-                      <div className="mt-6 pt-6 border-t border-white/10">
-                        <p className="text-xs text-white/40 text-center">
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <p className="text-xs text-gray-500 text-center">
                           Hover or click to see deliverables
                         </p>
                       </div>
                     </div>
 
                     {/* Back of Card */}
-                    <div className="absolute inset-0 flex h-full flex-col p-8 bg-[#141b38] [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+                    <div className="absolute inset-0 flex h-full flex-col p-8 bg-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
                       <div className="mb-4 flex-shrink-0">
                         <div className="text-sm font-medium text-[#00bef7] mb-2 uppercase tracking-wider">
                           {PROCESS_STEPS[currentIndex].timeline}
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-bold text-white">
+                        <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
                           {PROCESS_STEPS[currentIndex].title}
                         </h3>
                       </div>
@@ -288,7 +288,7 @@ export default function HowItWorksSection() {
                       <div className="flex-1 grid grid-cols-2 gap-6 min-h-0">
                         {/* Left Column - Deliverables */}
                         <div className="flex flex-col min-h-0">
-                          <div className="text-xs font-semibold text-[#00bef7]/80 mb-3 uppercase tracking-wider">
+                          <div className="text-xs font-semibold text-[#00bef7]/90 mb-3 uppercase tracking-wider">
                             Deliverables
                           </div>
                           <div className="space-y-2.5 flex-1">
@@ -298,7 +298,7 @@ export default function HowItWorksSection() {
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.08 }}
-                                className="flex items-center gap-3 text-base text-white/85"
+                                className="flex items-center gap-3 text-base text-gray-800"
                               >
                                 <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#00bef7]/20">
                                   <svg className="h-4 w-4 text-[#00bef7]" fill="currentColor" viewBox="0 0 20 20">
@@ -315,24 +315,24 @@ export default function HowItWorksSection() {
                         <div className="flex flex-col space-y-4 min-h-0">
                           {/* Key Activities Section */}
                           <div className="flex-shrink-0">
-                            <div className="text-xs font-semibold text-[#00bef7]/80 mb-2 uppercase tracking-wider">
+                            <div className="text-xs font-semibold text-[#00bef7]/90 mb-2 uppercase tracking-wider">
                               Key Activities
                             </div>
                             <div className="space-y-2">
                               {PROCESS_STEPS[currentIndex].summary && (
-                                <div className="text-sm text-white/70 leading-relaxed">
+                                <div className="text-sm text-gray-700 leading-relaxed">
                                   {PROCESS_STEPS[currentIndex].summary}
                                 </div>
                               )}
-                              <div className="text-sm text-white/75 leading-relaxed">
+                              <div className="text-sm text-gray-700 leading-relaxed">
                                 {PROCESS_STEPS[currentIndex].details}
                               </div>
                             </div>
                           </div>
 
                           {/* Stats Section */}
-                          <div className="pt-3 border-t border-white/10 flex-shrink-0">
-                            <div className="text-xs font-semibold text-[#00bef7]/80 mb-2 uppercase tracking-wider">
+                          <div className="pt-3 border-t border-gray-200 flex-shrink-0">
+                            <div className="text-xs font-semibold text-[#00bef7]/90 mb-2 uppercase tracking-wider">
                               Process Metrics
                             </div>
                             <div className="grid grid-cols-2 gap-2">
@@ -342,12 +342,12 @@ export default function HowItWorksSection() {
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: idx * 0.1 }}
-                                  className="text-center p-2 rounded-lg bg-white/5 border border-white/10"
+                                  className="text-center p-2 rounded-lg bg-gray-50 border border-gray-200"
                                 >
                                   <div className="text-base font-bold text-[#00bef7] mb-0.5">
                                     {value}
                                   </div>
-                                  <div className="text-xs text-white/60 uppercase tracking-wider leading-tight">
+                                  <div className="text-xs text-gray-600 uppercase tracking-wider leading-tight">
                                     {key}
                                   </div>
                                 </motion.div>
