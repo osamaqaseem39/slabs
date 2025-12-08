@@ -150,7 +150,7 @@ export default function ContactSection() {
       id="contact"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#00bef7] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">

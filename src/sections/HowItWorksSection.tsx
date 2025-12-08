@@ -110,7 +110,7 @@ export default function HowItWorksSection() {
     <section
       id="how-it-works"
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#00bef7] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="max-w-3xl space-y-6 mb-20">

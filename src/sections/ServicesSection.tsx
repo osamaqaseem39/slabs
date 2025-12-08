@@ -281,7 +281,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
       ref={sectionRef}
       id={id}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#00bef7] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
