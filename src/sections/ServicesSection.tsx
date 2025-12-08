@@ -288,7 +288,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
         <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-4"
+            className="text-base uppercase tracking-[0.4em] text-white mb-4"
           >
             Services
           </p>

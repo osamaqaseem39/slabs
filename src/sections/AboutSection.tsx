@@ -120,7 +120,7 @@ export default function AboutSection() {
       ref={sectionRef}
       id="about"
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#1040c6] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#141b38] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
@@ -153,17 +153,17 @@ export default function AboutSection() {
                   ref={(el) => {
                     valuesRef.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="group rounded-3xl border border-white/10 bg-[#00bdff] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00bef7]/50 hover:bg-[#00bdff]/90 transition-all duration-500"
+                  className="group rounded-3xl border border-white/10 bg-white p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00bef7]/50 hover:bg-white/90 transition-all duration-500"
                 >
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl border border-white/30 bg-white/20 flex items-center justify-center group-hover:bg-white/30 group-hover:border-white/50 transition-all duration-500">
-                      <value.icon className="w-6 h-6 text-white" strokeWidth={1.5} />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl border border-[#00bef7]/30 bg-[#00bef7]/10 flex items-center justify-center group-hover:bg-[#00bef7]/20 group-hover:border-[#00bef7]/50 transition-all duration-500">
+                      <value.icon className="w-6 h-6 text-[#00bef7]" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-2xl font-semibold text-white group-hover:text-[#00bef7] transition-colors duration-300">
+                    <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-300">
                       {value.title}
                     </h3>
                   </div>
-                  <p className="text-base text-white/90 leading-relaxed">{value.description}</p>
+                  <p className="text-base text-gray-700 leading-relaxed">{value.description}</p>
                 </article>
               ))}
             </div>
@@ -171,25 +171,25 @@ export default function AboutSection() {
 
           <div
             ref={sidebarRef}
-            className="rounded-[36px] border border-white/10 bg-[#00bdff] shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-10 backdrop-blur lg:sticky lg:top-28"
+            className="rounded-[36px] border border-white/10 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-10 backdrop-blur lg:sticky lg:top-28"
           >
             <div className="space-y-6">
-              <h3 className="text-3xl font-semibold text-white leading-snug">
+              <h3 className="text-3xl font-semibold text-gray-900 leading-snug">
                 Passionate experts, united by purpose.
               </h3>
-              <p className="text-base text-white/90 leading-relaxed">
+              <p className="text-base text-gray-700 leading-relaxed">
                 Decades of combined experience in engineering, design, and strategy. Constantly learning and pushing the boundaries of digital innovation.
               </p>
             </div>
 
             <div
               ref={quoteRef}
-              className="mt-10 rounded-3xl border border-dashed border-white/40 bg-white/20 p-6 text-sm text-white"
+              className="mt-10 rounded-3xl border border-dashed border-[#00bef7]/40 bg-[#00bef7]/10 p-6 text-sm text-gray-900"
             >
               <p>
                 &ldquo;We build lasting partnerships. Solutions that evolve with your business and deliver value for years to come.&rdquo;
               </p>
-              <p className="mt-4 font-semibold text-white">— Our Promise</p>
+              <p className="mt-4 font-semibold text-gray-900">— Our Promise</p>
             </div>
           </div>
         </div>
