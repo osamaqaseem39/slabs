@@ -68,7 +68,7 @@ export default function Navbar() {
             whileTap={{ scale: 0.95 }}
           >
             <Image
-              src="/logo-full.png"
+              src={scrolled ? "/logo-b.png" : "/logo-full.png"}
               alt="Company Logo"
               width={350}
               height={117}

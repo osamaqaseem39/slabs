@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 const FOOTER_LINK_GROUPS = [
   {
     heading: "Work",
@@ -36,6 +38,15 @@ export default function FooterSection() {
       <div className="container mx-auto px-6 md:px-10 lg:px-14 py-20">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-6">
+            <div className="mb-4">
+              <Image
+                src="/logo-w.png"
+                alt="Company Logo"
+                width={200}
+                height={67}
+                className="h-12 w-auto object-contain"
+              />
+            </div>
             <h3 className="text-3xl md:text-4xl font-semibold text-white">
               Move faster, launch smarter, measure everything.
             </h3>
