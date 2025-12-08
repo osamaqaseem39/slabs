@@ -143,130 +143,125 @@ function TechnologyAccordionItem({
   isLast: boolean;
 }) {
   return (
-    <div className="relative flex flex-row flex-1 h-[500px]">
+    <div className="relative flex flex-col flex-1 w-full">
       {/* Header - Always Visible */}
       <button
         onClick={onToggle}
-        className={`group relative flex-shrink-0 flex items-center justify-center p-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 h-full min-w-[120px] border-r border-white/10 ${
+        className={`group relative flex-shrink-0 flex items-center justify-between p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 w-full border-b border-white/10 ${
           isOpen 
             ? "bg-[#00bdff] border-[#00bef7]/30" 
             : "bg-[#00bdff] hover:bg-[#00bdff]/90"
         } ${
-          isFirst ? "rounded-l-[30px]" : ""
+          isFirst ? "rounded-t-[30px]" : ""
         } ${
-          isLast && !isOpen ? "rounded-r-[30px] border-r-0" : ""
-        } ${
-          isLast ? "border-r-0" : ""
+          isLast && !isOpen ? "rounded-b-[30px] border-b-0" : ""
         }`}
       >
-        <div className="flex flex-col items-center gap-4">
-          <h3 
-            className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight ${
-              isOpen 
-                ? "text-white" 
-                : "text-white group-hover:text-[#00bef7]"
+        <h3 
+          className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight ${
+            isOpen 
+              ? "text-white" 
+              : "text-white group-hover:text-[#00bef7]"
+          }`}
+        >
+          {tech.name}
+        </h3>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="flex-shrink-0"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`transition-colors duration-300 ${
+              isOpen ? "text-white" : "text-white/70"
             }`}
-            style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
           >
-            {tech.name}
-          </h3>
-          <motion.div
-            animate={{ rotate: isOpen ? 90 : 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="flex-shrink-0"
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={`transition-colors duration-300 ${
-                isOpen ? "text-white" : "text-white/70"
-              }`}
-            >
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </motion.div>
-        </div>
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </motion.div>
       </button>
 
-      {/* Accordion Content - Expands to the Right */}
+      {/* Accordion Content - Expands Down */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: "auto", opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className={`overflow-hidden bg-white h-full border-r border-gray-200 ${
-              isLast && !isOpen ? "rounded-r-[30px]" : ""
-            } ${
-              isLast ? "border-r-0" : ""
+            className={`overflow-hidden bg-white w-full border-b border-gray-200 ${
+              isLast ? "rounded-b-[30px] border-b-0" : ""
             }`}
           >
-            <div className="px-8 pt-8 pb-12 min-w-[600px] max-w-[700px] h-full overflow-y-auto space-y-6 flex flex-col">
-              {/* Technology Stack */}
-              <div className="w-full flex flex-col">
-                <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
-                  Technology Stack
-                </p>
-                <div className="flex flex-wrap gap-2 justify-start">
-                  {tech.stack.map((item) => (
-                    <motion.span
-                      key={item}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: tech.stack.indexOf(item) * 0.03 }}
-                      className="px-3 py-1.5 text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors duration-300"
-                    >
-                      {item}
-                    </motion.span>
-                  ))}
+            <div className="px-8 pt-8 pb-12 w-full overflow-y-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Technology Stack */}
+                <div className="flex flex-col">
+                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
+                    Technology Stack
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-start">
+                    {tech.stack.map((item) => (
+                      <motion.span
+                        key={item}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: tech.stack.indexOf(item) * 0.03 }}
+                        className="px-3 py-1.5 text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors duration-300"
+                      >
+                        {item}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Key Features */}
-              <div className="w-full flex flex-col">
-                <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
-                  Key Features
-                </p>
-                <ul className="space-y-2 flex flex-col">
-                  {tech.features.map((feature) => (
-                    <motion.li
-                      key={feature}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
-                      className="flex items-start gap-2 text-xs text-gray-800 leading-relaxed"
-                    >
-                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
+                {/* Key Features */}
+                <div className="flex flex-col">
+                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
+                    Key Features
+                  </p>
+                  <ul className="space-y-2 flex flex-col">
+                    {tech.features.map((feature) => (
+                      <motion.li
+                        key={feature}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
+                        className="flex items-start gap-2 text-xs text-gray-800 leading-relaxed"
+                      >
+                        <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
 
-              {/* Use Cases */}
-              <div className="w-full flex flex-col pb-4">
-                <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
-                  Use Cases
-                </p>
-                <div className="flex flex-wrap gap-2 justify-start">
-                  {tech.useCases.map((useCase) => (
-                    <motion.span
-                      key={useCase}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: tech.useCases.indexOf(useCase) * 0.03 }}
-                      className="px-2.5 py-1 text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium"
-                    >
-                      {useCase}
-                    </motion.span>
-                  ))}
+                {/* Use Cases */}
+                <div className="flex flex-col">
+                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 text-left">
+                    Use Cases
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-start">
+                    {tech.useCases.map((useCase) => (
+                      <motion.span
+                        key={useCase}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3, delay: tech.useCases.indexOf(useCase) * 0.03 }}
+                        className="px-2.5 py-1 text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium"
+                      >
+                        {useCase}
+                      </motion.span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -372,14 +367,14 @@ export default function TechnologySection() {
           </h2>
         </div>
 
-        {/* Horizontal Connected Accordion */}
-        <div className="w-full flex justify-center overflow-x-auto">
+        {/* Landscape Accordion */}
+        <div className="w-full max-w-6xl mx-auto">
           <motion.div
-            className="relative rounded-[30px] bg-[#00bdff] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-visible inline-flex"
+            className="relative rounded-[30px] bg-[#00bdff] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-hidden"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="flex min-w-fit">
+            <div className="flex flex-col">
               {technologies.map((tech, index) => (
                 <div
                   key={tech.name}
