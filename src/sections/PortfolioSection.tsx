@@ -136,28 +136,30 @@ export default function PortfolioSection() {
               ref={(el) => {
                 modelsRef.current[index] = el;
               }}
-              className="group relative h-[500px] rounded-3xl overflow-hidden cursor-pointer"
+              className="group relative flex flex-col h-[500px] rounded-3xl overflow-hidden cursor-pointer bg-white"
             >
-              {/* Background Image */}
-              <div className="absolute inset-0">
-                <Image
-                  src={project.image}
-                  alt={project.name}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+              {/* Image Container - Contained */}
+              <div className="relative flex-1 p-6 flex items-center justify-center bg-white">
+                <div className="relative w-full h-full">
+                  <Image
+                    src={project.image}
+                    alt={project.name}
+                    fill
+                    className="object-contain transition-transform duration-700 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </div>
               </div>
 
-              {/* Title - Always Visible */}
-              <div className="absolute top-6 left-6 right-6 z-10">
-                <h3 className="text-2xl md:text-3xl font-bold text-white drop-shadow-lg">
+              {/* Title at Bottom with Gradient */}
+              <div className="relative z-10 bg-gradient-to-r from-[#00bdff] to-[#1040c6] p-6">
+                <h3 className="text-xl md:text-2xl font-bold text-white">
                   {project.name}
                 </h3>
               </div>
 
               {/* Gradient Overlay - Opens from Bottom on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#141b38] via-[#141b38]/80 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#141b38] via-[#141b38]/90 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out pointer-events-none group-hover:pointer-events-auto">
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out" style={{ transitionDelay: '100ms' }}>
                   <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
