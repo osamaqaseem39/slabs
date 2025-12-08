@@ -279,7 +279,7 @@ export default function HeroSection() {
 
       {/* Overlay */}
       <div
-        className="absolute inset-0 z-[1] bg-[#00bdff]/40"
+        className="absolute inset-0 z-[1] bg-[#00bdff]/80"
       />
 
       {/* Content */}

@@ -103,7 +103,7 @@ export default function Preloader() {
       <div className="flex flex-col items-center gap-10 px-6 text-white">
         <div className="preloader-logo-wrapper">
           <Image
-            src="/logo-bw.jpeg"
+            src="/logo-b.png"
             alt="Company Logo"
             width={240}
             height={80}
