@@ -57,12 +57,9 @@ export default function Navbar() {
         <div
           className={`flex items-center justify-between rounded-3xl border transition-all duration-500 transform-gpu ${
             scrolled
-              ? "border-white/20 shadow-[0_12px_48px_rgba(15,23,42,0.25)] backdrop-blur-xl supports-[backdrop-filter]:backdrop-blur-xl px-6 py-2 h-16"
+              ? "border-white/20 bg-white/10 shadow-[0_12px_48px_rgba(15,23,42,0.25)] backdrop-blur-xl supports-[backdrop-filter]:backdrop-blur-xl px-6 py-2 h-16"
               : "border-transparent bg-transparent shadow-none px-0 py-0 h-20"
           }`}
-          style={scrolled ? {
-            background: "linear-gradient(to right, #141b38, #00bdff)"
-          } : {}}
         >
           {/* Logo */}
           <motion.div
