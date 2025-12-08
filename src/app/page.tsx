@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/layout/Navbar";
-import ScrollWheelIndicator from "@/components/ScrollWheelIndicator";
 import Preloader from "@/components/Preloader";
 import HeroSection from "@/sections/HeroSection";
 import ServicesSection from "@/sections/ServicesSection";
@@ -65,7 +64,6 @@ export default function Home() {
     <main ref={containerRef} className="min-h-screen">
       <Preloader />
       <Navbar />
-      <ScrollWheelIndicator />
       <HeroSection />
       <ServicesSection />
       <TechnologySection />
