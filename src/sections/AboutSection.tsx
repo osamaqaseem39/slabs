@@ -81,13 +81,13 @@ export default function AboutSection() {
       timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     }
     if (valueEls.length) {
-      timeline.to(valueEls, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 }, "-=0.3");
+      timeline.to(valueEls, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05 }, "-=0.3");
     }
     if (sidebarEl) {
-      timeline.to(sidebarEl, { opacity: 1, y: 0, duration: 0.8 }, "-=0.4");
+      timeline.to(sidebarEl, { opacity: 1, y: 0, duration: 0.6 }, "-=0.4");
     }
     if (quoteEl) {
-      timeline.to(quoteEl, { opacity: 1, y: 0, duration: 0.7 }, "-=0.2");
+      timeline.to(quoteEl, { opacity: 1, y: 0, duration: 0.6 }, "-=0.2");
     }
 
     timelineRef.current = timeline;

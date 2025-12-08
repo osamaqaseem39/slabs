@@ -75,13 +75,13 @@ export default function ContactSection() {
       .fromTo(
         cards,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.12 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.05 },
         "-=0.25"
       )
       .fromTo(
         formEl,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.7 },
+        { opacity: 1, y: 0, duration: 0.6 },
         "-=0.3"
       );
 
