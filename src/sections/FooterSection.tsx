@@ -32,7 +32,7 @@ const FOOTER_LINK_GROUPS = [
 
 export default function FooterSection() {
   return (
-    <footer className="bg-[rgb(20,27,56)] border-t border-white/10">
+    <footer className="bg-[#1040c6] border-t border-white/10">
       <div className="container mx-auto px-6 md:px-10 lg:px-14 py-20">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-6">

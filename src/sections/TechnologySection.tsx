@@ -149,8 +149,8 @@ function TechnologyAccordionItem({
         onClick={onToggle}
         className={`group relative flex-shrink-0 flex items-center justify-center p-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 h-full min-w-[120px] border-r border-white/10 ${
           isOpen 
-            ? "bg-white/[0.04] border-[#00bef7]/30" 
-            : "bg-white/[0.02] hover:bg-white/[0.03]"
+            ? "bg-[#141b38] border-[#00bef7]/30" 
+            : "bg-[#141b38] hover:bg-[#141b38]/90"
         } ${
           isFirst ? "rounded-l-[30px]" : ""
         } ${
@@ -202,7 +202,7 @@ function TechnologyAccordionItem({
             animate={{ width: "auto", opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className={`overflow-hidden bg-white/[0.04] h-full border-r border-white/10 ${
+            className={`overflow-hidden bg-[#141b38] h-full border-r border-white/10 ${
               isLast && !isOpen ? "rounded-r-[30px]" : ""
             } ${
               isLast ? "border-r-0" : ""
@@ -241,7 +241,7 @@ function TechnologyAccordionItem({
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
-                      className="flex items-start gap-2 text-xs text-white/70 leading-relaxed"
+                      className="flex items-start gap-2 text-xs text-white/80 leading-relaxed"
                     >
                       <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                       <span>{feature}</span>
@@ -262,7 +262,7 @@ function TechnologyAccordionItem({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3, delay: tech.useCases.indexOf(useCase) * 0.03 }}
-                      className="px-2.5 py-1 text-xs rounded-lg border border-white/20 bg-white/[0.05] text-white/80 font-medium"
+                      className="px-2.5 py-1 text-xs rounded-lg border border-white/20 bg-[#141b38] text-white/90 font-medium"
                     >
                       {useCase}
                     </motion.span>
@@ -353,7 +353,7 @@ export default function TechnologySection() {
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#1040c6] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
@@ -375,7 +375,7 @@ export default function TechnologySection() {
         {/* Horizontal Connected Accordion */}
         <div className="w-full flex justify-center overflow-x-auto">
           <motion.div
-            className="relative rounded-[30px] bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-visible inline-flex"
+            className="relative rounded-[30px] bg-[#141b38] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-visible inline-flex"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
           >

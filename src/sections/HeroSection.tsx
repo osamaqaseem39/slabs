@@ -282,7 +282,7 @@ export default function HeroSection() {
         className="absolute inset-0 z-[1]"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0, 4, 14, 0.5) 0%, rgba(2, 1, 53, 0.4) 50%, rgba(0, 43, 161, 0.6) 100%)",
+            "linear-gradient(to bottom, rgba(20, 27, 56, 0.6) 0%, rgba(20, 27, 56, 0.5) 50%, rgba(16, 64, 198, 0.7) 100%)",
         }}
       />
 

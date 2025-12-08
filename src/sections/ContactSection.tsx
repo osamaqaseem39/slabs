@@ -150,7 +150,7 @@ export default function ContactSection() {
       id="contact"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#00bef7] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#00bdff] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
@@ -177,7 +177,7 @@ export default function ContactSection() {
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/[0.06]"
+                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-[#141b38] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-[#141b38]/90"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <h3 className="text-2xl font-semibold text-white">{point.label}</h3>
@@ -190,7 +190,7 @@ export default function ContactSection() {
                       {point.action}
                     </a>
                   </div>
-                  <p className="text-white/70 leading-relaxed">{point.description}</p>
+                  <p className="text-white/80 leading-relaxed">{point.description}</p>
                 </div>
               ))}
             </div>
@@ -199,7 +199,7 @@ export default function ContactSection() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="rounded-[32px] border border-white/10 bg-white/[0.04] p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur"
+            className="rounded-[32px] border border-white/10 bg-[#141b38] p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur"
           >
             <div className="grid gap-6">
               <div>

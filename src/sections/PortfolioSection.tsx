@@ -111,7 +111,7 @@ export default function PortfolioSection() {
       id="portfolio"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#00bef7] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#00bdff] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="max-w-4xl mx-auto text-center mb-20">
@@ -136,7 +136,7 @@ export default function PortfolioSection() {
               ref={(el) => {
                 modelsRef.current[index] = el;
               }}
-              className="group flex flex-col items-center gap-6 p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-[#00bef7]/50 hover:bg-white/[0.04] transition-all duration-500"
+              className="group flex flex-col items-center gap-6 p-6 rounded-2xl border border-white/10 bg-[#141b38] hover:border-[#00bef7]/50 hover:bg-[#141b38]/90 transition-all duration-500"
             >
               <div className="relative flex items-center justify-center w-32 h-32 mb-4">
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00bef7]/20 to-[#00bef7]/5 blur-xl group-hover:blur-2xl transition-all duration-500" />
@@ -158,12 +158,12 @@ export default function PortfolioSection() {
                   </h3>
                 </div>
                 
-                <p className="text-sm text-white/70 leading-relaxed line-clamp-3 min-h-[4.5rem]">
+                <p className="text-sm text-white/80 leading-relaxed line-clamp-3 min-h-[4.5rem]">
                   {project.description}
                 </p>
                 
                 {project.client && (
-                  <div className="text-xs text-white/50 italic">
+                  <div className="text-xs text-white/60 italic">
                     Client: {project.client}
                   </div>
                 )}
@@ -178,7 +178,7 @@ export default function PortfolioSection() {
                     </span>
                   ))}
                   {project.technologies.length > 3 && (
-                    <span className="px-3 py-1 text-xs rounded-full border border-white/20 bg-white/5 text-white/60">
+                    <span className="px-3 py-1 text-xs rounded-full border border-white/20 bg-[#141b38] text-white/70">
                       +{project.technologies.length - 3} more
                     </span>
                   )}

@@ -110,7 +110,7 @@ export default function HowItWorksSection() {
     <section
       id="how-it-works"
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#00bef7] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#00bdff] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="max-w-3xl space-y-6 mb-20">
@@ -232,7 +232,7 @@ export default function HowItWorksSection() {
                 className="absolute inset-0 flex items-center justify-center"
               >
                 <motion.article
-                  className="group relative flex h-[460px] w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-white/[0.02] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 perspective-[1600px] cursor-pointer"
+                  className="group relative flex h-[460px] w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#141b38] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 perspective-[1600px] cursor-pointer"
                   onClick={() => handleCardClick(currentIndex)}
                   onMouseEnter={() => handleCardEnter(currentIndex)}
                   onMouseLeave={handleCardLeave}
@@ -275,7 +275,7 @@ export default function HowItWorksSection() {
                     </div>
 
                     {/* Back of Card */}
-                    <div className="absolute inset-0 flex h-full flex-col p-8 bg-gradient-to-br from-[#020617] to-[#0a1628] [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+                    <div className="absolute inset-0 flex h-full flex-col p-8 bg-[#141b38] [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
                       <div className="mb-4 flex-shrink-0">
                         <div className="text-sm font-medium text-[#00bef7] mb-2 uppercase tracking-wider">
                           {PROCESS_STEPS[currentIndex].timeline}
@@ -324,7 +324,7 @@ export default function HowItWorksSection() {
                                   {PROCESS_STEPS[currentIndex].summary}
                                 </div>
                               )}
-                              <div className="text-sm text-white/60 leading-relaxed">
+                              <div className="text-sm text-white/75 leading-relaxed">
                                 {PROCESS_STEPS[currentIndex].details}
                               </div>
                             </div>
@@ -347,7 +347,7 @@ export default function HowItWorksSection() {
                                   <div className="text-base font-bold text-[#00bef7] mb-0.5">
                                     {value}
                                   </div>
-                                  <div className="text-xs text-white/50 uppercase tracking-wider leading-tight">
+                                  <div className="text-xs text-white/60 uppercase tracking-wider leading-tight">
                                     {key}
                                   </div>
                                 </motion.div>

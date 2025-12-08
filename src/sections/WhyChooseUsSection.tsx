@@ -131,7 +131,7 @@ export default function WhyChooseUsSection() {
       id="why-choose-us"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#1040c6] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
@@ -165,7 +165,7 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 cardsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/[0.04] p-8"
+              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-[#141b38] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-[#141b38]/90 p-8"
               whileHover={{ y: -8 }}
             >
               <div className="flex flex-col h-full">
@@ -174,13 +174,13 @@ export default function WhyChooseUsSection() {
                   <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
                     {benefit.title}
                   </h3>
-                  <p className="text-sm text-white/70 leading-relaxed">
+                  <p className="text-sm text-white/80 leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>
                 <ul className="mt-auto space-y-2 pt-6 border-t border-white/10">
                   {benefit.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-xs text-white/60">
+                    <li key={feature} className="flex items-center gap-2 text-xs text-white/70">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
@@ -200,7 +200,7 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 statsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="text-center p-6 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm"
+              className="text-center p-6 rounded-2xl border border-white/10 bg-[#141b38] backdrop-blur-sm"
             >
               <div className="text-4xl md:text-5xl font-bold text-[#00bef7] mb-2">
                 {stat.value}

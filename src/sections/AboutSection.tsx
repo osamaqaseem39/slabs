@@ -120,7 +120,7 @@ export default function AboutSection() {
       ref={sectionRef}
       id="about"
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#1040c6] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
@@ -153,7 +153,7 @@ export default function AboutSection() {
                   ref={(el) => {
                     valuesRef.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="group rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00bef7]/50 hover:bg-white/[0.08] transition-all duration-500"
+                  className="group rounded-3xl border border-white/10 bg-[#141b38] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00bef7]/50 hover:bg-[#141b38]/90 transition-all duration-500"
                 >
                   <div className="flex items-start gap-4 mb-4">
                     <div className="flex-shrink-0 w-12 h-12 rounded-xl border border-[#00bef7]/30 bg-[#00bef7]/10 flex items-center justify-center group-hover:bg-[#00bef7]/20 group-hover:border-[#00bef7]/50 transition-all duration-500">
@@ -163,7 +163,7 @@ export default function AboutSection() {
                       {value.title}
                     </h3>
                   </div>
-                  <p className="text-base text-white/70 leading-relaxed">{value.description}</p>
+                  <p className="text-base text-white/80 leading-relaxed">{value.description}</p>
                 </article>
               ))}
             </div>
@@ -171,7 +171,7 @@ export default function AboutSection() {
 
           <div
             ref={sidebarRef}
-            className="rounded-[36px] border border-white/10 bg-white/[0.04] shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-10 backdrop-blur lg:sticky lg:top-28"
+            className="rounded-[36px] border border-white/10 bg-[#141b38] shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-10 backdrop-blur lg:sticky lg:top-28"
           >
             <div className="space-y-6">
               <h3 className="text-3xl font-semibold text-white leading-snug">
