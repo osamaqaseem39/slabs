@@ -57,9 +57,12 @@ export default function Navbar() {
         <div
           className={`flex items-center justify-between rounded-3xl border transition-all duration-500 transform-gpu ${
             scrolled
-              ? "border-gray-200 bg-white/95 shadow-[0_12px_48px_rgba(15,23,42,0.25)] backdrop-blur-xl supports-[backdrop-filter]:backdrop-blur-xl px-6 py-2 h-16"
+              ? "border-white/20 shadow-[0_12px_48px_rgba(15,23,42,0.25)] backdrop-blur-xl supports-[backdrop-filter]:backdrop-blur-xl px-6 py-2 h-16"
               : "border-transparent bg-transparent shadow-none px-0 py-0 h-20"
           }`}
+          style={scrolled ? {
+            background: "linear-gradient(to right, #141b38, #00bdff)"
+          } : {}}
         >
           {/* Logo */}
           <motion.div
@@ -72,9 +75,7 @@ export default function Navbar() {
               alt="Company Logo"
               width={350}
               height={117}
-              className={`h-20 w-auto object-contain transition-all duration-300 ${
-                scrolled ? "brightness-0" : ""
-              }`}
+              className="h-20 w-auto object-contain"
             />
           </motion.div>
 
@@ -83,27 +84,21 @@ export default function Navbar() {
             <a
               href="#services"
               onClick={(event) => scrollToTarget("#services", event)}
-              className={`transition-colors duration-300 hover:text-[#00bef7] ${
-                scrolled ? "text-gray-900" : "text-white"
-              }`}
+              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
             >
               Services
             </a>
             <a
               href="#portfolio"
               onClick={(event) => scrollToTarget("#portfolio", event)}
-              className={`transition-colors duration-300 hover:text-[#00bef7] ${
-                scrolled ? "text-gray-900" : "text-white"
-              }`}
+              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
             >
               Portfolio
             </a>
             <a
               href="#contact"
               onClick={(event) => scrollToTarget("#contact", event)}
-              className={`transition-colors duration-300 hover:text-[#00bef7] ${
-                scrolled ? "text-gray-900" : "text-white"
-              }`}
+              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
             >
               Contact
             </a>
@@ -119,9 +114,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className={`md:hidden transition-colors duration-300 ${
-            scrolled ? "text-gray-900" : "text-white"
-          }`}>
+          <button className="md:hidden text-white transition-colors duration-300">
             <svg
               className="w-6 h-6"
               fill="none"
