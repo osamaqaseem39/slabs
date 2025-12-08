@@ -151,24 +151,22 @@ export default function PortfolioSection() {
                 </div>
               </div>
 
-              {/* Title at Bottom with Gradient */}
-              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-r from-[#00bdff]/80 via-[#00bdff]/70 to-[#1040c6]/80 p-6 backdrop-blur-sm">
-                <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">
-                  {project.name}
-                </h3>
-              </div>
-
-              {/* Gradient Overlay - Opens from Bottom on Hover */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#141b38] via-[#141b38]/90 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out pointer-events-none group-hover:pointer-events-auto">
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out" style={{ transitionDelay: '100ms' }}>
-                  <div className="flex flex-col gap-4">
+              {/* Gradient Overlay with Title - Opens from Bottom on Hover */}
+              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-[#141b38] via-[#141b38]/90 to-transparent transform translate-y-[calc(100%-80px)] group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                <div className="p-6 md:p-8">
+                  {/* Title - Always Visible */}
+                  <div className="mb-4">
+                    <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">
+                      {project.name}
+                    </h3>
+                  </div>
+                  
+                  {/* Additional Content - Visible on Hover */}
+                  <div className="flex flex-col gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out" style={{ transitionDelay: '100ms' }}>
                     <div className="flex flex-col gap-2">
                       <span className="text-xs uppercase tracking-[0.3em] text-[#00bef7] font-medium">
                         {project.category}
                       </span>
-                      <h3 className="text-2xl md:text-3xl font-bold text-white">
-                        {project.name}
-                      </h3>
                     </div>
                     
                     <p className="text-sm text-white/90 leading-relaxed">
