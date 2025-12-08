@@ -2,10 +2,10 @@
 
 // Colors
 export const COLORS = {
-  primary: "#1040C6",
-  secondary: "#00BDFF",
-  background: "#141B38",
-  backgroundDark: "#000000",
+  primary: "#00bef7",
+  secondary: "#00bef7",
+  background: "rgb(20, 27, 56)",
+  backgroundDark: "rgb(20, 27, 56)",
   white: "#ffffff",
 } as const;
 

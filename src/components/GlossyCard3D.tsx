@@ -144,7 +144,7 @@ const GlossyCard3D = forwardRef<HTMLDivElement, GlossyCard3DProps>(
     };
 
     const glowStyle: CSSProperties = {
-      background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(0, 189, 255, ${isHovered ? 0.3 : 0.1}) 0%, transparent 60%)`,
+      background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(0, 190, 247, ${isHovered ? 0.3 : 0.1}) 0%, transparent 60%)`,
       opacity: isHovered ? 1 : 0,
       transition: "opacity 0.4s ease",
     };
@@ -176,7 +176,7 @@ const GlossyCard3D = forwardRef<HTMLDivElement, GlossyCard3DProps>(
 
               {/* Animated gradient border glow */}
               <div
-                className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#00BDFF]/30 via-[#00BDFF]/15 to-transparent transition-opacity duration-500 ${
+                className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#00bef7]/30 via-[#00bef7]/15 to-transparent transition-opacity duration-500 ${
                   isHovered ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -217,7 +217,7 @@ const GlossyCard3D = forwardRef<HTMLDivElement, GlossyCard3DProps>(
 
                 {/* Animated gradient border glow */}
                 <div
-                  className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#00BDFF]/30 via-[#00BDFF]/15 to-transparent transition-opacity duration-500 ${
+                  className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#00bef7]/30 via-[#00bef7]/15 to-transparent transition-opacity duration-500 ${
                     isHovered ? "opacity-100" : "opacity-0"
                   }`}
                 />

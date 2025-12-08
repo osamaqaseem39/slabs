@@ -111,13 +111,13 @@ export default function PortfolioSection() {
       id="portfolio"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="max-w-4xl mx-auto text-center mb-20">
           <p
             ref={eyebrowRef}
-            className="mb-6 text-sm uppercase tracking-[0.4em] text-[#00BDFF]"
+            className="mb-6 text-sm uppercase tracking-[0.4em] text-[#00bef7]"
           >
             Portfolio
           </p>
@@ -136,13 +136,13 @@ export default function PortfolioSection() {
               ref={(el) => {
                 modelsRef.current[index] = el;
               }}
-              className="group flex flex-col items-center gap-6 p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-[#00BDFF]/50 hover:bg-white/[0.04] transition-all duration-500"
+              className="group flex flex-col items-center gap-6 p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:border-[#00bef7]/50 hover:bg-white/[0.04] transition-all duration-500"
             >
               <div className="relative flex items-center justify-center w-32 h-32 mb-4">
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00BDFF]/20 to-[#00BDFF]/5 blur-xl group-hover:blur-2xl transition-all duration-500" />
-                <div className="relative flex items-center justify-center w-24 h-24 rounded-2xl border border-[#00BDFF]/30 bg-[#00BDFF]/10 group-hover:bg-[#00BDFF]/20 group-hover:border-[#00BDFF]/50 transition-all duration-500">
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#00bef7]/20 to-[#00bef7]/5 blur-xl group-hover:blur-2xl transition-all duration-500" />
+                <div className="relative flex items-center justify-center w-24 h-24 rounded-2xl border border-[#00bef7]/30 bg-[#00bef7]/10 group-hover:bg-[#00bef7]/20 group-hover:border-[#00bef7]/50 transition-all duration-500">
                   <project.icon 
-                    className="w-12 h-12 text-[#00BDFF] group-hover:scale-110 transition-transform duration-500" 
+                    className="w-12 h-12 text-[#00bef7] group-hover:scale-110 transition-transform duration-500" 
                     strokeWidth={1.5}
                   />
                 </div>
@@ -150,10 +150,10 @@ export default function PortfolioSection() {
               
               <div className="flex flex-col items-center gap-3 text-center w-full">
                 <div className="flex flex-col items-center gap-2 w-full">
-                  <span className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/80 font-medium">
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/80 font-medium">
                     {project.category}
                   </span>
-                  <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-[#00BDFF] transition-colors duration-300">
+                  <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-[#00bef7] transition-colors duration-300">
                     {project.name}
                   </h3>
                 </div>
@@ -172,7 +172,7 @@ export default function PortfolioSection() {
                   {project.technologies.slice(0, 3).map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 text-xs rounded-full border border-[#00BDFF]/30 bg-[#00BDFF]/10 text-[#00BDFF]"
+                      className="px-3 py-1 text-xs rounded-full border border-[#00bef7]/30 bg-[#00bef7]/10 text-[#00bef7]"
                     >
                       {tech}
                     </span>

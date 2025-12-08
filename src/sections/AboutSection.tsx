@@ -120,7 +120,7 @@ export default function AboutSection() {
       ref={sectionRef}
       id="about"
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
@@ -128,7 +128,7 @@ export default function AboutSection() {
             <div className="space-y-6">
               <p
                 ref={eyebrowRef}
-                className="text-sm uppercase tracking-[0.4em] text-[#00BDFF] mb-6"
+                className="text-sm uppercase tracking-[0.4em] text-[#00bef7] mb-6"
               >
                 About
               </p>
@@ -153,13 +153,13 @@ export default function AboutSection() {
                   ref={(el) => {
                     valuesRef.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="group rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00BDFF]/50 hover:bg-white/[0.08] transition-all duration-500"
+                  className="group rounded-3xl border border-white/10 bg-white/[0.05] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00bef7]/50 hover:bg-white/[0.08] transition-all duration-500"
                 >
                   <div className="flex items-start gap-4 mb-4">
-                    <div className="flex-shrink-0 w-12 h-12 rounded-xl border border-[#00BDFF]/30 bg-[#00BDFF]/10 flex items-center justify-center group-hover:bg-[#00BDFF]/20 group-hover:border-[#00BDFF]/50 transition-all duration-500">
-                      <value.icon className="w-6 h-6 text-[#00BDFF]" strokeWidth={1.5} />
+                    <div className="flex-shrink-0 w-12 h-12 rounded-xl border border-[#00bef7]/30 bg-[#00bef7]/10 flex items-center justify-center group-hover:bg-[#00bef7]/20 group-hover:border-[#00bef7]/50 transition-all duration-500">
+                      <value.icon className="w-6 h-6 text-[#00bef7]" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-2xl font-semibold text-white group-hover:text-[#00BDFF] transition-colors duration-300">
+                    <h3 className="text-2xl font-semibold text-white group-hover:text-[#00bef7] transition-colors duration-300">
                       {value.title}
                     </h3>
                   </div>
@@ -184,7 +184,7 @@ export default function AboutSection() {
 
             <div
               ref={quoteRef}
-              className="mt-10 rounded-3xl border border-dashed border-[#00BDFF]/40 bg-[#00BDFF]/10 p-6 text-sm text-[#00BDFF]"
+              className="mt-10 rounded-3xl border border-dashed border-[#00bef7]/40 bg-[#00bef7]/10 p-6 text-sm text-[#00bef7]"
             >
               <p>
                 &ldquo;We build lasting partnerships. Solutions that evolve with your business and deliver value for years to come.&rdquo;

@@ -147,9 +147,9 @@ function TechnologyAccordionItem({
       {/* Header - Always Visible */}
       <button
         onClick={onToggle}
-        className={`group relative flex-shrink-0 flex items-center justify-center p-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/50 transition-all duration-300 h-full min-w-[120px] border-r border-white/10 ${
+        className={`group relative flex-shrink-0 flex items-center justify-center p-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 h-full min-w-[120px] border-r border-white/10 ${
           isOpen 
-            ? "bg-white/[0.04] border-[#00BDFF]/30" 
+            ? "bg-white/[0.04] border-[#00bef7]/30" 
             : "bg-white/[0.02] hover:bg-white/[0.03]"
         } ${
           isFirst ? "rounded-l-[30px]" : ""
@@ -163,8 +163,8 @@ function TechnologyAccordionItem({
           <h3 
             className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight ${
               isOpen 
-                ? "text-[#00BDFF]" 
-                : "text-white group-hover:text-[#00BDFF]"
+                ? "text-[#00bef7]" 
+                : "text-white group-hover:text-[#00bef7]"
             }`}
             style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
           >
@@ -185,7 +185,7 @@ function TechnologyAccordionItem({
               strokeLinecap="round"
               strokeLinejoin="round"
               className={`transition-colors duration-300 ${
-                isOpen ? "text-[#00BDFF]" : "text-white/50"
+                isOpen ? "text-[#00bef7]" : "text-white/50"
               }`}
             >
               <path d="m9 18 6-6-6-6" />
@@ -211,7 +211,7 @@ function TechnologyAccordionItem({
             <div className="px-8 pt-8 pb-12 min-w-[600px] max-w-[700px] h-full overflow-y-auto space-y-6 flex flex-col">
               {/* Technology Stack */}
               <div className="w-full flex flex-col">
-                <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 mb-3 text-left">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 mb-3 text-left">
                   Technology Stack
                 </p>
                 <div className="flex flex-wrap gap-2 justify-start">
@@ -221,7 +221,7 @@ function TechnologyAccordionItem({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3, delay: tech.stack.indexOf(item) * 0.03 }}
-                      className="px-3 py-1.5 text-xs rounded-full border border-[#00BDFF]/40 bg-[#00BDFF]/15 text-[#00BDFF] font-medium hover:bg-[#00BDFF]/25 hover:border-[#00BDFF]/60 transition-colors duration-300"
+                      className="px-3 py-1.5 text-xs rounded-full border border-[#00bef7]/40 bg-[#00bef7]/15 text-[#00bef7] font-medium hover:bg-[#00bef7]/25 hover:border-[#00bef7]/60 transition-colors duration-300"
                     >
                       {item}
                     </motion.span>
@@ -231,7 +231,7 @@ function TechnologyAccordionItem({
 
               {/* Key Features */}
               <div className="w-full flex flex-col">
-                <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 mb-3 text-left">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 mb-3 text-left">
                   Key Features
                 </p>
                 <ul className="space-y-2 flex flex-col">
@@ -243,7 +243,7 @@ function TechnologyAccordionItem({
                       transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
                       className="flex items-start gap-2 text-xs text-white/70 leading-relaxed"
                     >
-                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00BDFF] flex-shrink-0" />
+                      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                       <span>{feature}</span>
                     </motion.li>
                   ))}
@@ -252,7 +252,7 @@ function TechnologyAccordionItem({
 
               {/* Use Cases */}
               <div className="w-full flex flex-col pb-4">
-                <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 mb-3 text-left">
+                <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 mb-3 text-left">
                   Use Cases
                 </p>
                 <div className="flex flex-wrap gap-2 justify-start">
@@ -353,14 +353,14 @@ export default function TechnologySection() {
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00BDFF] mb-4"
+            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-4"
           >
             Technologies
           </p>

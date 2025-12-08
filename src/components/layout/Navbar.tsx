@@ -81,28 +81,28 @@ export default function Navbar() {
             <a
               href="#services"
               onClick={(event) => scrollToTarget("#services", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00BDFF]"
+              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
             >
               Services
             </a>
             <a
               href="#portfolio"
               onClick={(event) => scrollToTarget("#portfolio", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00BDFF]"
+              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
             >
               Portfolio
             </a>
             <a
               href="#contact"
               onClick={(event) => scrollToTarget("#contact", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00BDFF]"
+              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
             >
               Contact
             </a>
             <motion.button
               className="px-6 py-2 text-white rounded-full font-semibold"
-              style={{ backgroundColor: "#1040C6" }}
-              whileHover={{ scale: 1.05, backgroundColor: "#00BDFF" }}
+              style={{ backgroundColor: "#00bef7" }}
+              whileHover={{ scale: 1.05, backgroundColor: "#00bef7" }}
               whileTap={{ scale: 0.95 }}
               onClick={(event) => scrollToTarget("#contact", event)}
             >

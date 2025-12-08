@@ -131,14 +131,14 @@ export default function WhyChooseUsSection() {
       id="why-choose-us"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-16 md:mb-20">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00BDFF] mb-4"
+            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-4"
           >
             Why Choose Us
           </p>
@@ -165,13 +165,13 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 cardsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00BDFF]/50 hover:bg-white/[0.04] p-8"
+              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/[0.04] p-8"
               whileHover={{ y: -8 }}
             >
               <div className="flex flex-col h-full">
                 <div className="mb-6">
                   <div className="text-5xl mb-4">{benefit.icon}</div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-[#00BDFF] transition-colors duration-300">
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
                     {benefit.title}
                   </h3>
                   <p className="text-sm text-white/70 leading-relaxed">
@@ -181,13 +181,13 @@ export default function WhyChooseUsSection() {
                 <ul className="mt-auto space-y-2 pt-6 border-t border-white/10">
                   {benefit.features.map((feature) => (
                     <li key={feature} className="flex items-center gap-2 text-xs text-white/60">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#00BDFF] flex-shrink-0" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00BDFF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00bef7]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </motion.div>
           ))}
         </div>
@@ -202,7 +202,7 @@ export default function WhyChooseUsSection() {
               }}
               className="text-center p-6 rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-sm"
             >
-              <div className="text-4xl md:text-5xl font-bold text-[#00BDFF] mb-2">
+              <div className="text-4xl md:text-5xl font-bold text-[#00bef7] mb-2">
                 {stat.value}
               </div>
               <div className="text-xs md:text-sm text-white/60 uppercase tracking-wider">

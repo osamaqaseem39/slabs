@@ -38,7 +38,7 @@ export default function Footer() {
       id="contact"
       ref={footerRef}
       className="text-white py-16 px-4"
-      style={{ backgroundColor: "#000000" }}
+      style={{ backgroundColor: "rgb(20, 27, 56)" }}
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">

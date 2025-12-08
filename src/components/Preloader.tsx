@@ -115,7 +115,7 @@ export default function Preloader() {
         <div className="w-72 max-w-[80vw]">
           <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#00BDFF] via-[#00A0F2] to-[#1040C6]"
+              className="h-full rounded-full bg-gradient-to-r from-[#00bef7] via-[#00bef7] to-[#00bef7]"
               style={{
                 width: `${Math.min(progress, 100)}%`,
                 transition: "width 0.2s ease-out",

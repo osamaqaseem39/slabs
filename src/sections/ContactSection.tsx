@@ -150,13 +150,13 @@ export default function ContactSection() {
       id="contact"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div className="space-y-12">
             <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.4em] text-[#00BDFF]" ref={eyebrowRef}>
+              <p className="text-sm uppercase tracking-[0.4em] text-[#00bef7]" ref={eyebrowRef}>
                 Contact
               </p>
               <h2
@@ -177,7 +177,7 @@ export default function ContactSection() {
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00BDFF]/70 hover:bg-white/[0.06]"
+                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/[0.03] p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/[0.06]"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <h3 className="text-2xl font-semibold text-white">{point.label}</h3>
@@ -185,7 +185,7 @@ export default function ContactSection() {
                       href={point.href}
                       target={point.href.startsWith("http") ? "_blank" : undefined}
                       rel={point.href.startsWith("http") ? "noreferrer" : undefined}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#00BDFF]/10 px-4 py-2 text-sm font-medium text-[#00BDFF] transition-colors duration-300 group-hover:bg-[#00BDFF]/20"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#00bef7]/10 px-4 py-2 text-sm font-medium text-[#00bef7] transition-colors duration-300 group-hover:bg-[#00bef7]/20"
                     >
                       {point.action}
                     </a>
@@ -214,7 +214,7 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Your name"
                   required
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
@@ -229,7 +229,7 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="your@email.com"
                   required
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
@@ -243,7 +243,7 @@ export default function ContactSection() {
                   value={formData.company}
                   onChange={handleInputChange}
                   placeholder="Company name"
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40"
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
@@ -258,13 +258,13 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Tell us about your project..."
                   required
-                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00BDFF] focus:outline-none focus:ring-2 focus:ring-[#00BDFF]/40 resize-none"
+                  className="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder:text-white/40 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00BDFF] px-6 py-3 text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#0dd0ff] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00bef7] px-6 py-3 text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#00bef7] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>

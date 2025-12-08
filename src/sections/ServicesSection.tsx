@@ -81,7 +81,7 @@ const services: Service[] = [
 function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; index: number; isFlipped: boolean; onFlip: () => void }) {
   return (
     <motion.article
-      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-500 hover:border-[#00BDFF]/50"
+      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white/[0.02] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-500 hover:border-[#00bef7]/50"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
@@ -106,7 +106,7 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
         animate={{ opacity: isFlipped ? 0.25 : 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         style={{
-          background: "radial-gradient(circle at 50% 50%, rgba(0,189,255,0.25), transparent 65%)",
+          background: "radial-gradient(circle at 50% 50%, rgba(0,190,247,0.25), transparent 65%)",
         }}
       />
     </motion.article>
@@ -129,10 +129,10 @@ function CardFront({ service }: { service: Service }) {
       </div>
 
       <div className="space-y-2 flex-shrink-0 mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-[#00BDFF] transition-colors duration-300 leading-tight">
+        <h3 className="text-2xl md:text-3xl font-bold text-white group-hover:text-[#00bef7] transition-colors duration-300 leading-tight">
           {service.title}
         </h3>
-        <p className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/70 leading-tight p-0 m-0">
+        <p className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/70 leading-tight p-0 m-0">
           {service.summary}
         </p>
       </div>
@@ -142,7 +142,7 @@ function CardFront({ service }: { service: Service }) {
       </p>
 
       <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.4em] pt-4 border-t border-white/10 flex-shrink-0">
-        <span className="inline-flex h-1 w-8 rounded-full bg-white/30 group-hover:bg-[#00BDFF]/60 transition-colors duration-500" />
+        <span className="inline-flex h-1 w-8 rounded-full bg-white/30 group-hover:bg-[#00bef7]/60 transition-colors duration-500" />
         <span className="text-white/50">Click to Explore</span>
       </div>
     </div>
@@ -155,7 +155,7 @@ function CardBack({ service }: { service: Service }) {
       {/* Header Section - Compact */}
       <div className="space-y-2 flex-shrink-0 mb-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm uppercase tracking-[0.3em] text-[#00BDFF]/80">
+          <span className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/80">
             Service Details
           </span>
           <span className="text-xs text-white/40 truncate ml-1">
@@ -172,13 +172,13 @@ function CardBack({ service }: { service: Service }) {
 
       {/* Features List - Scrollable */}
       <div className="flex-1 min-h-0 overflow-y-auto mb-3">
-        <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 flex-shrink-0 mb-2 p-0 m-0">
+        <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 flex-shrink-0 mb-2 p-0 m-0">
           Core Services
         </p>
         <ul className="space-y-1.5 pr-1">
           {service.features.map((feature) => (
             <li key={feature} className="flex items-start gap-2 text-xs text-white/70 leading-relaxed">
-              <span className="mt-1 h-1 w-1 rounded-full bg-[#00BDFF] flex-shrink-0" />
+              <span className="mt-1 h-1 w-1 rounded-full bg-[#00bef7] flex-shrink-0" />
               <span className="flex-1">{feature}</span>
             </li>
           ))}
@@ -187,14 +187,14 @@ function CardBack({ service }: { service: Service }) {
 
       {/* Highlights Section - Compact */}
       <div className="space-y-2 pt-3 border-t border-white/10 flex-shrink-0 mb-3">
-        <p className="text-xs uppercase tracking-[0.3em] text-[#00BDFF]/70 p-0 m-0">
+        <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 p-0 m-0">
           Key Highlights
         </p>
         <div className="flex flex-wrap gap-1.5">
           {service.highlights.map((highlight) => (
             <span
               key={highlight}
-              className="px-2.5 py-0.5 text-xs rounded-full border border-[#00BDFF]/40 bg-[#00BDFF]/15 text-[#00BDFF] leading-tight"
+              className="px-2.5 py-0.5 text-xs rounded-full border border-[#00bef7]/40 bg-[#00bef7]/15 text-[#00bef7] leading-tight"
             >
               {highlight}
             </span>
@@ -204,7 +204,7 @@ function CardBack({ service }: { service: Service }) {
 
       {/* Footer - Compact */}
       <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.3em] pt-3 border-t border-white/10 flex-shrink-0">
-        <span className="inline-flex h-1 w-8 rounded-full bg-[#00BDFF]" />
+        <span className="inline-flex h-1 w-8 rounded-full bg-[#00bef7]" />
         <span className="text-white/50 text-[10px]">Click to flip back</span>
       </div>
     </div>
@@ -281,14 +281,14 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
       ref={sectionRef}
       id={id}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[rgb(20,27,56)] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00BDFF] mb-4"
+            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-4"
           >
             Services
           </p>

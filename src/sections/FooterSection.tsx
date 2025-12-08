@@ -32,7 +32,7 @@ const FOOTER_LINK_GROUPS = [
 
 export default function FooterSection() {
   return (
-    <footer className="bg-gray-950 border-t border-white/10">
+    <footer className="bg-[rgb(20,27,56)] border-t border-white/10">
       <div className="container mx-auto px-6 md:px-10 lg:px-14 py-20">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="space-y-6">
@@ -45,7 +45,7 @@ export default function FooterSection() {
             </p>
             <a
               href="mailto:hello@synovolabs.com"
-              className="inline-flex items-center gap-3 rounded-full bg-[#00BDFF] px-6 py-3 text-sm font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#0dd0ff]"
+              className="inline-flex items-center gap-3 rounded-full bg-[#00bef7] px-6 py-3 text-sm font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#00bef7]"
             >
               hello@synovolabs.com
             </a>
@@ -62,7 +62,7 @@ export default function FooterSection() {
                         href={link.href}
                         target={link.href.startsWith("http") ? "_blank" : undefined}
                         rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                        className="transition-colors duration-300 hover:text-[#00BDFF]"
+                        className="transition-colors duration-300 hover:text-[#00bef7]"
                       >
                         {link.label}
                       </a>
@@ -77,13 +77,13 @@ export default function FooterSection() {
         <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-sm text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} Synovo Labs. All rights reserved.</p>
           <div className="flex flex-wrap gap-6">
-            <a href="#" className="transition-colors duration-300 hover:text-[#00BDFF]">
+            <a href="#" className="transition-colors duration-300 hover:text-[#00bef7]">
               Privacy Policy
             </a>
-            <a href="#" className="transition-colors duration-300 hover:text-[#00BDFF]">
+            <a href="#" className="transition-colors duration-300 hover:text-[#00bef7]">
               Terms of Service
             </a>
-            <a href="#" className="transition-colors duration-300 hover:text-[#00BDFF]">
+            <a href="#" className="transition-colors duration-300 hover:text-[#00bef7]">
               Accessibility
             </a>
           </div>

@@ -31,6 +31,9 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "#00bef7",
+        secondary: "#00bef7",
+        tertiary: "rgb(20 27 56)",
       },
       screens: {
         xs: "375px",

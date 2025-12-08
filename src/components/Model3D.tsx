@@ -16,8 +16,8 @@ type Model3DProps = {
 export default function Model3D({
   type = "cube",
   size = 120,
-  color = "#00BDFF",
-  glowColor = "#00BDFF",
+  color = "#00bef7",
+  glowColor = "#00bef7",
   rotationSpeed = 0.5,
   autoRotate = true,
   className = "",

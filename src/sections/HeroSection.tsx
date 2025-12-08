@@ -304,7 +304,7 @@ export default function HeroSection() {
           </p>
           <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
             <button
-              className="px-8 py-3 bg-[#1040C6] text-white rounded-full font-semibold hover:bg-[#00BDFF] transition-colors duration-300"
+              className="px-8 py-3 bg-[#00bef7] text-white rounded-full font-semibold hover:bg-[#00bef7] transition-colors duration-300"
               onClick={() => scrollToTarget("#services")}
             >
               Get Started

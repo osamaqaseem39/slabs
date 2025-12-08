@@ -179,7 +179,7 @@ export default function ScrollWheelIndicator() {
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
       >
         <motion.span
-          className="absolute left-1 top-[18px] h-8 w-[2px] rounded-full bg-[#00BDFF] shadow-[0_0_12px_rgba(0,189,255,0.8)]"
+          className="absolute left-1 top-[18px] h-8 w-[2px] rounded-full bg-[#00bef7] shadow-[0_0_12px_rgba(0,190,247,0.8)]"
           initial={false}
           animate={{ top: 18 + activeIndex * 40 }}
           transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
