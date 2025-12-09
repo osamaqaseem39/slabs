@@ -72,6 +72,7 @@ export default function HowItWorksSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flippedCard, setFlippedCard] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? PROCESS_STEPS.length - 1 : prev - 1));
@@ -91,11 +92,22 @@ export default function HowItWorksSection() {
     }
   };
 
-
   useEffect(() => {
     const newProgress = ((currentIndex + 1) / PROCESS_STEPS.length) * 100;
     setProgress(newProgress);
   }, [currentIndex]);
+
+  // Auto carousel effect
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === PROCESS_STEPS.length - 1 ? 0 : prev + 1));
+      setFlippedCard(null);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
 
   return (
     <section
@@ -139,6 +151,9 @@ export default function HowItWorksSection() {
                 onClick={() => {
                   setCurrentIndex(index);
                   setFlippedCard(null);
+                  setIsPaused(true);
+                  // Resume after 8 seconds of inactivity
+                  setTimeout(() => setIsPaused(false), 8000);
                 }}
                 className="flex flex-col items-center flex-1 relative cursor-pointer group z-[10]"
               >
@@ -169,10 +184,18 @@ export default function HowItWorksSection() {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative max-w-6xl mx-auto">
+        <div 
+          className="relative max-w-6xl mx-auto"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           {/* Navigation Arrows */}
           <button
-            onClick={handlePrev}
+            onClick={() => {
+              handlePrev();
+              setIsPaused(true);
+              setTimeout(() => setIsPaused(false), 8000);
+            }}
             className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.05] border border-white/10 hover:border-[#00bef7]/50 hover:bg-[#00bef7]/10 transition-all duration-300 group"
             aria-label="Previous step"
           >
@@ -192,7 +215,11 @@ export default function HowItWorksSection() {
           </button>
 
           <button
-            onClick={handleNext}
+            onClick={() => {
+              handleNext();
+              setIsPaused(true);
+              setTimeout(() => setIsPaused(false), 8000);
+            }}
             className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-10 flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.05] border border-white/10 hover:border-[#00bef7]/50 hover:bg-[#00bef7]/10 transition-all duration-300 group"
             aria-label="Next step"
           >
@@ -360,6 +387,8 @@ export default function HowItWorksSection() {
                 onClick={() => {
                   setCurrentIndex(index);
                   setFlippedCard(null);
+                  setIsPaused(true);
+                  setTimeout(() => setIsPaused(false), 8000);
                 }}
                 className={`h-2 rounded-full transition-all duration-300 ${
                   currentIndex === index
