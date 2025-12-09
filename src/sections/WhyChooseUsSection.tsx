@@ -166,7 +166,8 @@ export default function WhyChooseUsSection() {
                 cardsRef.current[index] = el as HTMLDivElement | null;
               }}
               className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/90 p-8"
-              whileHover={{ y: -8 }}
+              whileHover={{ y: -8, scale: 1.05 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex flex-col h-full">
                 <div className="mb-6">
