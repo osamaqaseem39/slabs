@@ -132,6 +132,7 @@ function TechnologyAccordionItem({
   index, 
   isOpen, 
   onToggle, 
+  onHover,
   isFirst, 
   isLast 
 }: { 
@@ -139,11 +140,15 @@ function TechnologyAccordionItem({
   index: number; 
   isOpen: boolean; 
   onToggle: () => void;
+  onHover: () => void;
   isFirst: boolean;
   isLast: boolean;
 }) {
   return (
-    <div className="relative flex flex-col flex-1 w-full">
+    <div 
+      className="relative flex flex-col flex-1 w-full"
+      onMouseEnter={onHover}
+    >
       {/* Header - Always Visible */}
       <button
         onClick={onToggle}
@@ -457,6 +462,7 @@ export default function TechnologySection() {
                     index={index}
                     isOpen={openAccordion === index}
                     onToggle={() => handleAccordionToggle(index)}
+                    onHover={() => setOpenAccordion(index)}
                     isFirst={index === 0}
                     isLast={index === technologies.length - 1}
                   />
