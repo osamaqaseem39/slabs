@@ -188,7 +188,6 @@ export default function WhyChooseUsSection() {
                   ))}
                 </ul>
               </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00bef7]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </motion.div>
           ))}
         </div>
