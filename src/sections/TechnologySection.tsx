@@ -348,7 +348,7 @@ export default function TechnologySection() {
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#1040c6] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#141b38] py-20 flex items-center"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}

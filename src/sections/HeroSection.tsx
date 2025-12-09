@@ -251,7 +251,7 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       id={HERO_SECTION_ID}
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#141b38] to-[#00bdff]"
+      className="relative h-screen flex items-center justify-center overflow-hidden bg-[#141b38]"
     >
       {/* Background Video */}
       <div
