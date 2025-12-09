@@ -229,22 +229,63 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     const headingEl = headingRef.current;
     const descriptionEl = descriptionRef.current;
     const cardEls = cardsRef.current.filter((el): el is HTMLDivElement => Boolean(el));
-    const elements = [eyebrowEl, headingEl, descriptionEl, ...cardEls].filter(Boolean);
+    const elements = [eyebrowEl, headingEl, descriptionEl].filter(Boolean);
 
     if (!elements.length) return;
 
+    // Set initial states for header elements
     gsap.set(elements, { opacity: 0, y: 40 });
+
+    // Set initial shuffle positions for cards
+    cardEls.forEach((card, index) => {
+      if (card) {
+        // Create random shuffle positions
+        const shuffleX = (Math.random() - 0.5) * 200; // Random X offset between -100 and 100
+        const shuffleY = (Math.random() - 0.5) * 300; // Random Y offset between -150 and 150
+        const shuffleRotation = (Math.random() - 0.5) * 20; // Random rotation between -10 and 10 degrees
+        const shuffleScale = 0.7 + Math.random() * 0.3; // Random scale between 0.7 and 1.0
+        
+        gsap.set(card, {
+          opacity: 0,
+          x: shuffleX,
+          y: shuffleY + 100,
+          rotation: shuffleRotation,
+          scale: shuffleScale,
+        });
+      }
+    });
 
     const timeline = gsap.timeline({
       defaults: { ease: "power3.out" },
       paused: true,
     });
 
+    // Animate header elements
     if (eyebrowEl) timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.5 });
     if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+    
+    // Animate cards with shuffle effect
     if (cardEls.length) {
-      timeline.to(cardEls, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 }, "-=0.3");
+      // First, shuffle cards into view with random delays
+      cardEls.forEach((card, index) => {
+        if (card) {
+          const delay = index * 0.1 + 0.2; // Stagger the shuffle animation
+          timeline.to(
+            card,
+            {
+              opacity: 1,
+              x: 0,
+              y: 0,
+              rotation: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "back.out(1.7)",
+            },
+            delay
+          );
+        }
+      });
     }
 
     timelineRef.current = timeline;
