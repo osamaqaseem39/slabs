@@ -280,6 +280,7 @@ export default function TechnologySection() {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
@@ -336,6 +337,74 @@ export default function TechnologySection() {
     return () => {
       observer.disconnect();
       timelineRef.current?.kill();
+    };
+  }, []);
+
+  // Scroll-based accordion opening
+  useEffect(() => {
+    const sectionEl = sectionRef.current;
+    if (!sectionEl) return;
+
+    const accordionEls = accordionsRef.current.filter((el): el is HTMLDivElement => Boolean(el));
+    if (!accordionEls.length) return;
+
+    const handleScroll = () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+
+      scrollTimeoutRef.current = setTimeout(() => {
+        const rect = sectionEl.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const viewportCenter = window.innerHeight / 2;
+
+        // Check if section is in viewport
+        if (rect.bottom < 0 || rect.top > viewportHeight) {
+          return;
+        }
+
+        // Find which accordion header is closest to viewport center
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        accordionEls.forEach((accordionEl, index) => {
+          if (!accordionEl) return;
+          
+          const accordionRect = accordionEl.getBoundingClientRect();
+          // Get the header button element (first button in the accordion)
+          const headerButton = accordionEl.querySelector('button');
+          if (!headerButton) return;
+          
+          const headerRect = headerButton.getBoundingClientRect();
+          const headerCenter = headerRect.top + headerRect.height / 2;
+          const distance = Math.abs(viewportCenter - headerCenter);
+
+          // Prefer accordions that are above or at the center
+          if (headerCenter <= viewportCenter * 1.3 && distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        // Open the closest accordion if it's within a reasonable distance
+        if (closestDistance < viewportHeight * 0.7) {
+          setOpenAccordion(closestIndex);
+        }
+      }, 150); // Throttle scroll events
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", handleScroll, { passive: true });
+
+    // Initial check
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
   }, []);
 

@@ -236,21 +236,61 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     // Set initial states for header elements
     gsap.set(elements, { opacity: 0, y: 40 });
 
-    // Set initial shuffle positions for cards
+    // Calculate offsets to center all cards, then spread them out
+    const calculateCardOffsets = () => {
+      const isLargeScreen = window.innerWidth >= 1024;
+      
+      if (!isLargeScreen || cardEls.length < 3) {
+        return { initial: [0, 0, 0], final: [0, 0, 0] };
+      }
+      
+      const middleCard = cardEls[1];
+      const leftCard = cardEls[0];
+      const rightCard = cardEls[2];
+      
+      if (middleCard && leftCard && rightCard) {
+        // Get natural grid positions
+        const middleRect = middleCard.getBoundingClientRect();
+        const leftRect = leftCard.getBoundingClientRect();
+        const rightRect = rightCard.getBoundingClientRect();
+        
+        // Calculate offsets from natural positions to center
+        // Left card needs to move RIGHT to reach center (positive offset)
+        // Right card needs to move LEFT to reach center (negative offset)
+        const leftToCenter = middleRect.left - leftRect.left;
+        const rightToCenter = middleRect.right - rightRect.right;
+        
+        return {
+          initial: [leftToCenter, 0, rightToCenter], // Offsets to center
+          final: [0, 0, 0], // Back to natural positions (x: 0 means no transform = natural grid position)
+        };
+      }
+      
+      // Fallback calculation
+      const baseOffset = Math.min(window.innerWidth * 0.15, 450);
+      return {
+        initial: [baseOffset, 0, -baseOffset],
+        final: [0, 0, 0],
+      };
+    };
+
+    const offsets = calculateCardOffsets();
+
+    // Set initial positions: all cards stacked in center
     cardEls.forEach((card, index) => {
       if (card) {
-        // Create random shuffle positions
-        const shuffleX = (Math.random() - 0.5) * 200; // Random X offset between -100 and 100
-        const shuffleY = (Math.random() - 0.5) * 300; // Random Y offset between -150 and 150
-        const shuffleRotation = (Math.random() - 0.5) * 20; // Random rotation between -10 and 10 degrees
-        const shuffleScale = 0.7 + Math.random() * 0.3; // Random scale between 0.7 and 1.0
+        // All cards start stacked in center with slight offset for stacking effect
+        const stackOffset = index * 5; // Small offset to show stacking
+        const stackRotation = (index - 1) * 3; // Slight rotation for stacking effect
+        const centerX = offsets.initial[index] || 0;
         
         gsap.set(card, {
           opacity: 0,
-          x: shuffleX,
-          y: shuffleY + 100,
-          rotation: shuffleRotation,
-          scale: shuffleScale,
+          x: centerX + stackOffset,
+          y: 50,
+          rotation: stackRotation,
+          scale: 0.9,
+          zIndex: cardEls.length - index, // Stack order
         });
       }
     });
@@ -267,22 +307,38 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     
     // Animate cards with shuffle effect
     if (cardEls.length) {
-      // First, shuffle cards into view with random delays
+      // Phase 1: All cards stack in center and fade in
       cardEls.forEach((card, index) => {
         if (card) {
-          const delay = index * 0.1 + 0.2; // Stagger the shuffle animation
+          const centerX = offsets.initial[index] || 0;
           timeline.to(
             card,
             {
               opacity: 1,
-              x: 0,
+              x: centerX, // Move to center (removing stack offset)
               y: 0,
               rotation: 0,
               scale: 1,
-              duration: 0.8,
-              ease: "back.out(1.7)",
+              duration: 0.6,
+              ease: "power2.out",
             },
-            delay
+            0.3 + index * 0.1 // Slight stagger for stacking effect
+          );
+        }
+      });
+
+      // Phase 2: Outer cards move left and right to their natural positions
+      cardEls.forEach((card, index) => {
+        if (card && (index === 0 || index === 2)) {
+          const finalX = offsets.final[index] || 0;
+          timeline.to(
+            card,
+            {
+              x: finalX, // Move to natural grid position
+              duration: 0.8,
+              ease: "back.out(1.4)",
+            },
+            ">0.2" // Start after stacking is complete
           );
         }
       });
