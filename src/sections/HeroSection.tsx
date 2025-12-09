@@ -279,7 +279,7 @@ export default function HeroSection() {
 
       {/* Overlay */}
       <div
-        className="absolute inset-0 z-[1] bg-[#1040c6]/80"
+        className="absolute inset-0 z-[1] bg-gradient-to-b from-[#141b38]/60 via-[#1a2342]/70 to-[#141b38]/80"
       />
 
       {/* Content */}

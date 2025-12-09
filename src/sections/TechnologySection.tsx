@@ -147,10 +147,10 @@ function TechnologyAccordionItem({
       {/* Header - Always Visible */}
       <button
         onClick={onToggle}
-        className={`group relative flex-shrink-0 flex items-center justify-center p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 w-full border-b border-white/10 ${
+        className={`group relative flex-shrink-0 flex items-center justify-center p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 w-full border-b border-gray-200 ${
           isOpen 
-            ? "bg-[#00bdff] border-[#00bef7]/30" 
-            : "bg-[#00bdff] hover:bg-[#00bef7] hover:border-[#00bef7]/50"
+            ? "bg-white border-[#00bef7]/30" 
+            : "bg-white hover:bg-gray-50 hover:border-[#00bef7]/50"
         } ${
           isFirst ? "rounded-t-[30px]" : ""
         } ${
@@ -160,8 +160,8 @@ function TechnologyAccordionItem({
         <h3 
           className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight text-center ${
             isOpen 
-              ? "text-white" 
-              : "text-white group-hover:text-white"
+              ? "text-gray-900" 
+              : "text-gray-900 group-hover:text-[#00bef7]"
           }`}
         >
           {tech.name}
@@ -181,7 +181,7 @@ function TechnologyAccordionItem({
             strokeLinecap="round"
             strokeLinejoin="round"
             className={`transition-colors duration-300 ${
-              isOpen ? "text-white" : "text-white/70"
+              isOpen ? "text-gray-900" : "text-gray-600"
             }`}
           >
             <path d="m6 9 6 6 6-6" />
@@ -370,7 +370,7 @@ export default function TechnologySection() {
         {/* Landscape Accordion */}
         <div className="w-full max-w-6xl mx-auto">
           <motion.div
-            className="relative rounded-[30px] bg-[#00bdff] shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-hidden"
+            className="relative rounded-[30px] bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-hidden"
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
           >
