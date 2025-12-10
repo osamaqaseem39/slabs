@@ -273,12 +273,6 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     if (!isDragging) return;
     setIsDragging(false);
     
-    // Don't allow drag navigation during cooldown
-    if (isCooldown) {
-      setVelocity(0);
-      return;
-    }
-    
     const deltaX = currentX - startX;
     const threshold = 50; // Minimum drag distance
     
@@ -296,7 +290,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
         goToNext();
       }
     } else {
-      // Snap back to current slide (no cooldown for snap back)
+      // Snap back to current slide
       setCurrentIndex(currentIndex);
       setOffset(0);
     }
