@@ -156,7 +156,7 @@ export default function ContactSection() {
         <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div className="space-y-12">
             <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.4em] text-white" ref={eyebrowRef}>
+              <p className="text-sm uppercase tracking-[0.4em] text-[#00bef7]" ref={eyebrowRef}>
                 Contact
               </p>
               <h2

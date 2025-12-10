@@ -6,7 +6,6 @@ type Model3DProps = {
   type?: "cube" | "pyramid" | "cylinder" | "sphere" | "torus";
   size?: number;
   color?: string;
-  glowColor?: string;
   rotationSpeed?: number;
   autoRotate?: boolean;
   className?: string;
@@ -17,7 +16,6 @@ export default function Model3D({
   type = "cube",
   size = 120,
   color = "#00bef7",
-  glowColor = "#00bef7",
   rotationSpeed = 0.5,
   autoRotate = true,
   className = "",
@@ -282,7 +280,6 @@ export default function Model3D({
                 width: `${size}px`,
                 height: `${size}px`,
                 border: `3px solid ${color}60`,
-                boxShadow: `0 0 20px ${glowColor}40, inset 0 0 20px ${glowColor}20`,
               }}
             />
             {/* Inner ring */}
@@ -295,20 +292,6 @@ export default function Model3D({
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 border: `2px solid ${color}40`,
-                boxShadow: `0 0 15px ${glowColor}30`,
-              }}
-            />
-            {/* Glow effect */}
-            <div
-              className="absolute rounded-full"
-              style={{
-                width: `${size * 1.2}px`,
-                height: `${size * 1.2}px`,
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                background: `radial-gradient(circle, ${glowColor}20, transparent 70%)`,
-                filter: "blur(10px)",
               }}
             />
           </div>

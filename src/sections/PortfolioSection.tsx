@@ -117,7 +117,7 @@ export default function PortfolioSection() {
         <div className="max-w-4xl mx-auto text-center mb-20">
           <p
             ref={eyebrowRef}
-            className="mb-6 text-sm uppercase tracking-[0.4em] text-white"
+            className="mb-6 text-sm uppercase tracking-[0.4em] text-[#00bef7]"
           >
             Portfolio
           </p>

@@ -81,7 +81,7 @@ const services: Service[] = [
 function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; index: number; isFlipped: boolean; onFlip: () => void }) {
   return (
     <motion.article
-      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-500 hover:border-[#00bef7]/50"
+      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-300 hover:border-[#00bef7]/50"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
@@ -90,25 +90,13 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
       <motion.div
         className="relative h-full w-full [transform-style:preserve-3d]"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       >
         {/* Front Side */}
         <CardFront service={service} />
         {/* Back Side */}
         <CardBack service={service} />
       </motion.div>
-
-      {/* Glow Effect */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 rounded-[32px]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isFlipped ? 0.25 : 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        style={{
-          background: "radial-gradient(circle at 50% 50%, rgba(0,190,247,0.25), transparent 65%)",
-        }}
-      />
     </motion.article>
   );
 }
@@ -129,7 +117,7 @@ function CardFront({ service }: { service: Service }) {
       </div>
 
       <div className="space-y-2 flex-shrink-0 mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-300 leading-tight">
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-200 leading-tight">
           {service.title}
         </h3>
         <p className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/80 leading-tight p-0 m-0">
@@ -137,12 +125,12 @@ function CardFront({ service }: { service: Service }) {
         </p>
       </div>
 
-      <p className="text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-300 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-6">
+      <p className="text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-6">
         {service.description}
       </p>
 
       <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.4em] pt-4 border-t border-gray-200 flex-shrink-0">
-        <span className="inline-flex h-1 w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-500" />
+        <span className="inline-flex h-1 w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-300" />
         <span className="text-gray-600">Click to Explore</span>
       </div>
     </div>
@@ -301,9 +289,9 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     });
 
     // Animate header elements
-    if (eyebrowEl) timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.5 });
-    if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
-    if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+    if (eyebrowEl) timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.3 });
+    if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.4 }, "-=0.15");
+    if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.4 }, "-=0.15");
     
     // Animate cards in parallel
     if (cardEls.length) {
@@ -319,10 +307,10 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
               y: 0,
               rotation: 0,
               scale: 1,
-              duration: 0.6,
+              duration: 0.4,
               ease: "power2.out",
             },
-            0.3 // All cards start at the same time (parallel)
+            0.15 // All cards start at the same time (parallel)
           );
         }
       });
@@ -335,10 +323,10 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
             card,
             {
               x: finalX, // Move to natural grid position
-              duration: 0.8,
+              duration: 0.5,
               ease: "back.out(1.4)",
             },
-            ">0.2" // Start after stacking is complete (parallel for both outer cards)
+            ">0.1" // Start after stacking is complete (parallel for both outer cards)
           );
         }
       });
@@ -397,7 +385,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
           </h2>
           <p
             ref={descriptionRef}
-            className="text-sm md:text-base text-white/70 leading-normal max-w-3xl mx-auto"
+            className="text-sm md:text-base text-[#00bef7] leading-normal max-w-3xl mx-auto"
           >
             We deliver end-to-end solutions that combine strategy, design, and development to help your business thrive in the digital landscape.
           </p>

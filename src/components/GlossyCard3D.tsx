@@ -143,11 +143,6 @@ const GlossyCard3D = forwardRef<HTMLDivElement, GlossyCard3DProps>(
       transition: "opacity 0.4s ease, background 0.1s ease",
     };
 
-    const glowStyle: CSSProperties = {
-      background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, rgba(0, 190, 247, ${isHovered ? 0.3 : 0.1}) 0%, transparent 60%)`,
-      opacity: isHovered ? 1 : 0,
-      transition: "opacity 0.4s ease",
-    };
 
     return (
       <div
@@ -162,27 +157,11 @@ const GlossyCard3D = forwardRef<HTMLDivElement, GlossyCard3DProps>(
           {/* Front Face */}
           <div className="relative h-full w-full [backface-visibility:hidden]">
             <div className="relative h-full w-full overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-white/[0.1] via-white/[0.05] to-transparent shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.1),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl">
-              {/* Animated glow effect */}
-              <div
-                className="pointer-events-none absolute -inset-[2px] rounded-3xl blur-xl"
-                style={glowStyle}
-              />
-
               {/* Glossy shine overlay */}
               <div
                 className="pointer-events-none absolute inset-0 rounded-3xl"
                 style={shineStyle}
               />
-
-              {/* Animated gradient border glow */}
-              <div
-                className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#00bef7]/30 via-[#00bef7]/15 to-transparent transition-opacity duration-500 ${
-                  isHovered ? "opacity-100" : "opacity-0"
-                }`}
-              />
-
-              {/* Inner glow effect */}
-              <div className="absolute inset-[1px] rounded-[23px] bg-gradient-to-br from-white/[0.12] via-transparent to-transparent opacity-60" />
 
               {/* Subtle reflection lines */}
               <div
@@ -203,27 +182,11 @@ const GlossyCard3D = forwardRef<HTMLDivElement, GlossyCard3DProps>(
           {flipOnHover && backContent && (
             <div className="absolute inset-0 h-full w-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
               <div className="relative h-full w-full overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-white/[0.1] via-white/[0.05] to-transparent shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6),0_0_0_1px_rgba(255,255,255,0.1),inset_0_1px_0_0_rgba(255,255,255,0.1)] backdrop-blur-xl">
-                {/* Animated glow effect for back */}
-                <div
-                  className="pointer-events-none absolute -inset-[2px] rounded-3xl blur-xl"
-                  style={glowStyle}
-                />
-
                 {/* Glossy shine overlay for back */}
                 <div
                   className="pointer-events-none absolute inset-0 rounded-3xl"
                   style={shineStyle}
                 />
-
-                {/* Animated gradient border glow */}
-                <div
-                  className={`absolute -inset-[1px] rounded-3xl bg-gradient-to-r from-[#00bef7]/30 via-[#00bef7]/15 to-transparent transition-opacity duration-500 ${
-                    isHovered ? "opacity-100" : "opacity-0"
-                  }`}
-                />
-
-                {/* Inner glow effect */}
-                <div className="absolute inset-[1px] rounded-[23px] bg-gradient-to-br from-white/[0.12] via-transparent to-transparent opacity-60" />
 
                 {/* Subtle reflection lines */}
                 <div
