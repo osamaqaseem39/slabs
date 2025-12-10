@@ -134,13 +134,13 @@ export default function AboutSection() {
               </p>
               <h2
                 ref={headingRef}
-                className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight"
+                className="text-6xl md:text-7xl lg:text-8xl font-extrabold text-white leading-tight"
               >
-                Crafting digital solutions that drive results.
+                Digital solutions that drive results.
               </h2>
               <p
                 ref={descriptionRef}
-                className="text-lg md:text-xl text-white/70 leading-relaxed max-w-3xl"
+                className="text-sm md:text-base text-white/70 leading-relaxed max-w-3xl"
               >
                 Passionate developers, designers, and strategists solving real problems. We turn complex challenges into elegant solutions that drive growth.
               </p>

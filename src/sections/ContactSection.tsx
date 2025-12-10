@@ -161,11 +161,11 @@ export default function ContactSection() {
               </p>
               <h2
                 ref={titleRef}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight"
+                className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight"
               >
-                Let's build something great together.
+                Let's build together.
               </h2>
-              <p className="text-lg md:text-xl text-white/70 max-w-3xl leading-relaxed" ref={descriptionRef}>
+              <p className="text-sm md:text-base text-white/70 max-w-3xl leading-relaxed" ref={descriptionRef}>
                 Share your vision and we'll deliver the plan to make it happen.
               </p>
             </div>
@@ -199,7 +199,7 @@ export default function ContactSection() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="rounded-[32px] border border-white/10 bg-white p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur"
+            className="rounded-[32px] border border-white/10 bg-white p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur lg:sticky lg:top-28"
           >
             <div className="grid gap-6">
               <div>
