@@ -198,6 +198,18 @@ body::-webkit-scrollbar {
   animation: rotateClockwise 20s linear infinite;
 }
 
+/* Simple Glow Pulse Animation (optimized for performance) */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
 /* Glow Pulse and Rotate Animation */
 @keyframes glowPulseRotate {
   0% {
