@@ -286,6 +286,33 @@ export default function TechnologySection() {
   const hasAnimatedRef = useRef(false);
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [glowPositions, setGlowPositions] = useState<Array<{ x: number; y: number; size: number; color: string; delay: number }>>([]);
+
+  // Generate random glow positions
+  useEffect(() => {
+    const generateGlowPositions = () => {
+      const numGlows = 8 + Math.floor(Math.random() * 5); // 8-12 glows
+      const colors = [
+        "rgba(0, 190, 247, 0.3)", // #00bef7
+        "rgba(0, 190, 247, 0.2)",
+        "rgba(147, 51, 234, 0.25)", // purple
+        "rgba(59, 130, 246, 0.2)", // blue
+        "rgba(236, 72, 153, 0.2)", // pink
+      ];
+      
+      const positions = Array.from({ length: numGlows }, () => ({
+        x: Math.random() * 100, // 0-100%
+        y: Math.random() * 100, // 0-100%
+        size: 200 + Math.random() * 300, // 200-500px
+        color: colors[Math.floor(Math.random() * colors.length)],
+        delay: Math.random() * 2, // 0-2s delay for animation
+      }));
+      
+      setGlowPositions(positions);
+    };
+
+    generateGlowPositions();
+  }, []);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
@@ -422,9 +449,40 @@ export default function TechnologySection() {
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#141b38] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#141b38] py-20 flex items-center overflow-hidden"
     >
-      <div className="container mx-auto px-6 md:px-10 lg:px-14">
+      {/* Random Glow Effects */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        {glowPositions.map((glow, index) => (
+          <motion.div
+            key={index}
+            className="absolute rounded-full blur-3xl"
+            style={{
+              left: `${glow.x}%`,
+              top: `${glow.y}%`,
+              width: `${glow.size}px`,
+              height: `${glow.size}px`,
+              backgroundColor: glow.color,
+              transform: 'translate(-50%, -50%)',
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ 
+              opacity: [0.3, 0.6, 0.3],
+              scale: [1, 1.2, 1],
+              x: [0, Math.random() * 50 - 25, 0],
+              y: [0, Math.random() * 50 - 25, 0],
+            }}
+            transition={{
+              duration: 8 + Math.random() * 4,
+              repeat: Infinity,
+              delay: glow.delay,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+      
+      <div className="container mx-auto px-6 md:px-10 lg:px-14 relative z-10">
         {/* Section Header */}
         <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
           <p
