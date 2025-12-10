@@ -92,7 +92,7 @@ export default function WhyChooseUsSection() {
     if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     if (cardEls.length) {
-      timeline.to(cardEls, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05 }, "-=0.3");
+      timeline.to(cardEls, { opacity: 1, y: 0, duration: 0.3, stagger: 0.02 }, "-=0.3");
     }
     if (statEls.length) {
       timeline.to(statEls, { opacity: 1, y: 0, duration: 0.6, stagger: 0.05 }, "-=0.2");

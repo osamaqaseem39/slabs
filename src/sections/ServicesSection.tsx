@@ -305,9 +305,9 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     
-    // Animate cards with shuffle effect
+    // Animate cards in parallel
     if (cardEls.length) {
-      // Phase 1: All cards stack in center and fade in
+      // Phase 1: All cards stack in center and fade in (parallel)
       cardEls.forEach((card, index) => {
         if (card) {
           const centerX = offsets.initial[index] || 0;
@@ -322,12 +322,12 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
               duration: 0.6,
               ease: "power2.out",
             },
-            0.3 + index * 0.1 // Slight stagger for stacking effect
+            0.3 // All cards start at the same time (parallel)
           );
         }
       });
 
-      // Phase 2: Outer cards move left and right to their natural positions
+      // Phase 2: Outer cards move left and right to their natural positions (parallel)
       cardEls.forEach((card, index) => {
         if (card && (index === 0 || index === 2)) {
           const finalX = offsets.final[index] || 0;
@@ -338,7 +338,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
               duration: 0.8,
               ease: "back.out(1.4)",
             },
-            ">0.2" // Start after stacking is complete
+            ">0.2" // Start after stacking is complete (parallel for both outer cards)
           );
         }
       });

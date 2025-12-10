@@ -81,21 +81,21 @@ export default function Navbar() {
             <a
               href="#services"
               onClick={(event) => scrollToTarget("#services", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
+              className="text-[#00bef7] transition-colors duration-300 hover:text-[#00bef7]"
             >
               Services
             </a>
             <a
               href="#portfolio"
               onClick={(event) => scrollToTarget("#portfolio", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
+              className="text-[#00bef7] transition-colors duration-300 hover:text-[#00bef7]"
             >
               Portfolio
             </a>
             <a
               href="#contact"
               onClick={(event) => scrollToTarget("#contact", event)}
-              className="text-white transition-colors duration-300 hover:text-[#00bef7]"
+              className="text-[#00bef7] transition-colors duration-300 hover:text-[#00bef7]"
             >
               Contact
             </a>

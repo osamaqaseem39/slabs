@@ -2,8 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-import { motion, AnimatePresence } from "framer-motion";
-import Model3D from "@/components/Model3D";
 
 type Technology = {
   name: string;
@@ -127,152 +125,445 @@ const technologies: Technology[] = [
   },
 ];
 
-function TechnologyAccordionItem({ 
-  tech, 
-  index, 
-  isOpen, 
-  onToggle, 
-  onHover,
-  isFirst, 
-  isLast 
-}: { 
-  tech: Technology; 
-  index: number; 
-  isOpen: boolean; 
-  onToggle: () => void;
-  onHover: () => void;
-  isFirst: boolean;
-  isLast: boolean;
-}) {
+function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [currentX, setCurrentX] = useState(0);
+  const [velocity, setVelocity] = useState(0);
+  const lastXRef = useRef(0);
+  const lastTimeRef = useRef(0);
+  const [isCooldown, setIsCooldown] = useState(false);
+  const cooldownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const autoAdvanceIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const slides = technologies;
+  const slideWidth = 100; // Percentage width of each slide (full width)
+  const gap = 0; // No gap between slides since they're full width
+
+  // Initialize offset on mount
+  useEffect(() => {
+    // For 3-slide layout, offset starts at 0
+    setOffset(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    // Clear any existing timeout/interval
+    if (autoAdvanceIntervalRef.current) {
+      clearTimeout(autoAdvanceIntervalRef.current);
+      autoAdvanceIntervalRef.current = null;
+    }
+
+    // Don't auto-advance if dragging or in cooldown
+    if (isDragging || isCooldown) {
+      return;
+    }
+
+    // Auto-advance to next slide after 3 seconds
+    autoAdvanceIntervalRef.current = setTimeout(() => {
+      if (!isDragging && !isCooldown) {
+        setCurrentIndex((prevIndex) => {
+          const nextIndex = prevIndex + 1 >= slides.length ? 0 : prevIndex + 1;
+          // Trigger cooldown
+          setIsCooldown(true);
+          if (cooldownTimeoutRef.current) {
+            clearTimeout(cooldownTimeoutRef.current);
+          }
+          cooldownTimeoutRef.current = setTimeout(() => {
+            setIsCooldown(false);
+          }, 3000);
+          setOffset(0);
+          return nextIndex;
+        });
+      }
+    }, 3000);
+
+    // Cleanup on unmount or when dependencies change
+    return () => {
+      if (autoAdvanceIntervalRef.current) {
+        clearTimeout(autoAdvanceIntervalRef.current);
+        autoAdvanceIntervalRef.current = null;
+      }
+    };
+  }, [currentIndex, isDragging, isCooldown, slides.length]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (cooldownTimeoutRef.current) {
+        clearTimeout(cooldownTimeoutRef.current);
+      }
+      if (autoAdvanceIntervalRef.current) {
+        clearInterval(autoAdvanceIntervalRef.current);
+      }
+    };
+  }, []);
+
+  // Navigate to specific slide with infinite loop
+  const goToSlide = (index: number, smooth = true) => {
+    // Wrap around for infinite loop
+    let newIndex = index;
+    if (index < 0) {
+      newIndex = slides.length - 1; // Wrap to last slide
+    } else if (index >= slides.length) {
+      newIndex = 0; // Wrap to first slide
+    }
+    setCurrentIndex(newIndex);
+    // Reset offset to 0 for new position
+    setOffset(0);
+    
+    // Start cooldown after swipe
+    setIsCooldown(true);
+    if (cooldownTimeoutRef.current) {
+      clearTimeout(cooldownTimeoutRef.current);
+    }
+    cooldownTimeoutRef.current = setTimeout(() => {
+      setIsCooldown(false);
+    }, 3000); // 3 second cooldown
+  };
+
+  // Next/Previous navigation with infinite loop
+  const goToNext = () => goToSlide(currentIndex + 1);
+  const goToPrev = () => goToSlide(currentIndex - 1);
+
+  // Handle drag start
+  const handleDragStart = (clientX: number) => {
+    setIsDragging(true);
+    setStartX(clientX);
+    setCurrentX(clientX);
+    lastXRef.current = clientX;
+    lastTimeRef.current = Date.now();
+    setVelocity(0);
+    // Pause auto-advance when dragging
+    if (autoAdvanceIntervalRef.current) {
+      clearInterval(autoAdvanceIntervalRef.current);
+    }
+  };
+
+  // Handle drag move
+  const handleDragMove = (clientX: number) => {
+    if (!isDragging) return;
+    
+    const now = Date.now();
+    const timeDelta = now - lastTimeRef.current;
+    const xDelta = clientX - lastXRef.current;
+    
+    if (timeDelta > 0) {
+      setVelocity(xDelta / timeDelta);
+    }
+    
+    setCurrentX(clientX);
+    lastXRef.current = clientX;
+    lastTimeRef.current = now;
+    
+    const deltaX = clientX - startX;
+    const sensitivity = 0.3;
+    const dragOffset = (deltaX / window.innerWidth) * 100 * sensitivity;
+    // For 3-slide layout, offset is just the drag offset (no base offset needed)
+    setOffset(dragOffset);
+  };
+
+  // Handle drag end
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    
+    // Don't allow drag navigation during cooldown
+    if (isCooldown) {
+      setVelocity(0);
+      return;
+    }
+    
+    const deltaX = currentX - startX;
+    const threshold = 50; // Minimum drag distance
+    
+    // Use velocity to determine swipe direction if drag is small
+    if (Math.abs(deltaX) < threshold && Math.abs(velocity) > 0.5) {
+      if (velocity > 0) {
+        goToPrev();
+      } else {
+        goToNext();
+      }
+    } else if (Math.abs(deltaX) > threshold) {
+      if (deltaX > 0) {
+        goToPrev();
+      } else {
+        goToNext();
+      }
+    } else {
+      // Snap back to current slide (no cooldown for snap back)
+      setCurrentIndex(currentIndex);
+      setOffset(0);
+    }
+    
+    setVelocity(0);
+  };
+
+  // Mouse events
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleDragStart(e.clientX);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      handleDragMove(e.clientX);
+    }
+  };
+
+  const handleMouseUp = () => {
+    handleDragEnd();
+  };
+
+  const handleMouseLeave = () => {
+    handleMouseUp(); // Handle drag end if dragging
+  };
+
+  // Touch events
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    handleDragStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault();
+    if (isDragging) {
+      handleDragMove(e.touches[0].clientX);
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    handleDragEnd();
+  };
+
+  // Calculate 3D transform for each slide
+  const getSlideTransform = (slideIndex: number) => {
+    // Calculate relative position to current index
+    let relativeIndex = slideIndex - currentIndex;
+    
+    // Handle wrap-around for infinite loop
+    // If we're at the last slide, the first slide should be the "next" slide (relativeIndex = 1)
+    // If we're at the first slide, the last slide should be the "previous" slide (relativeIndex = -1)
+    if (relativeIndex > slides.length / 2) {
+      relativeIndex = relativeIndex - slides.length;
+    } else if (relativeIndex < -slides.length / 2) {
+      relativeIndex = relativeIndex + slides.length;
+    }
+    
+    // Determine if this is previous, current, or next slide (with wrap-around)
+    const isPrevious = relativeIndex === -1;
+    const isCurrent = relativeIndex === 0;
+    const isNext = relativeIndex === 1;
+    const isVisible = isPrevious || isCurrent || isNext;
+    
+    // Hide slides that are not previous, current, or next
+    if (!isVisible) {
+      return {
+        left: '50%',
+        transform: `translateY(-50%) translateZ(-500px)`,
+        opacity: 0,
+        filter: 'none',
+        pointerEvents: 'none' as const,
+      };
+    }
+    
+    // Apply drag offset for smooth dragging
+    // Offset is already in percentage terms from drag calculation
+    const dragOffsetPercent = offset;
+    
+    // Calculate positions for 3-slide layout
+    // Slide width is 75%, so half width is 37.5%
+    // Current slide: centered at 50% (left edge at 12.5%, right edge at 87.5%)
+    // Previous slide: right half visible (right edge at 12.5%, so left edge at -62.5%)
+    // Next slide: left half visible (left edge at 87.5%, so right edge at 162.5%)
+    let baseLeftPosition = 12.5; // Default: current slide centered
+    let rotationY = 0;
+    let scale = 1;
+    let translateZ = 0;
+    let opacity = 1;
+    
+    if (isCurrent) {
+      // Current slide: fully visible, centered
+      baseLeftPosition = 12.5; // 50% - 37.5% (half of 75% width)
+      rotationY = 0;
+      scale = 1;
+      translateZ = 0;
+      opacity = 1;
+    } else if (isPrevious) {
+      // Previous slide: half visible on left, tilted left
+      // Right edge should be at 12.5% (where current starts), so left edge at -62.5%
+      baseLeftPosition = -62.5; // Position so right half is visible
+      rotationY = -25; // Tilt left
+      scale = 0.9;
+      translateZ = -200;
+      opacity = 0.4; // Semi-transparent
+    } else if (isNext) {
+      // Next slide: half visible on right, tilted right
+      // Left edge should be at 87.5% (where current ends), so left edge at 87.5%
+      baseLeftPosition = 87.5; // Position so left half is visible
+      rotationY = 25; // Tilt right
+      scale = 0.9;
+      translateZ = -200;
+      opacity = 0.4; // Semi-transparent
+    }
+    
+    // Apply drag offset to all visible slides for smooth dragging
+    const leftPosition = baseLeftPosition + dragOffsetPercent;
+    
+    return {
+      left: `${leftPosition}%`,
+      transform: `translateY(-50%) translateZ(${translateZ}px) rotateY(${rotationY}deg) scale(${scale})`,
+      opacity: opacity,
+      filter: 'none',
+      pointerEvents: isCurrent ? 'auto' as const : 'none' as const,
+    };
+  };
+
+
   return (
     <div 
-      className="relative flex flex-col flex-1 w-full"
-      onMouseEnter={onHover}
+      ref={containerRef}
+      className="relative w-full h-[450px] md:h-[500px] lg:h-[550px] overflow-visible"
+      style={{ 
+        perspective: '1500px',
+        perspectiveOrigin: 'center center',
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
-      {/* Header - Always Visible */}
-      <button
-        onClick={onToggle}
-        className={`group relative flex-shrink-0 flex items-center justify-center p-6 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#00bef7]/50 transition-all duration-300 w-full border-b border-gray-200 ${
-          isOpen 
-            ? "bg-white border-[#00bef7]/30" 
-            : "bg-white hover:bg-gray-50 hover:border-[#00bef7]/50"
-        } ${
-          isFirst ? "rounded-t-[30px]" : ""
-        } ${
-          isLast && !isOpen ? "rounded-b-[30px] border-b-0" : ""
-        }`}
+      {/* 3D Gallery Container */}
+      <div
+        ref={carouselRef}
+        className="relative w-full h-full"
+        style={{
+          transformStyle: 'preserve-3d',
+        }}
       >
-        <h3 
-          className={`text-xl md:text-2xl font-bold transition-colors duration-300 leading-tight text-center ${
-            isOpen 
-              ? "text-gray-900" 
-              : "text-gray-900 group-hover:text-[#00bef7]"
-          }`}
-        >
-          {tech.name}
-        </h3>
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute right-6 flex-shrink-0"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={`transition-colors duration-300 ${
-              isOpen ? "text-gray-900" : "text-gray-600"
-            }`}
-          >
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </motion.div>
-      </button>
-
-      {/* Accordion Content - Expands Down */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className={`overflow-hidden bg-white w-full border-b border-gray-200 ${
-              isLast ? "rounded-b-[30px] border-b-0" : ""
-            }`}
-          >
-            <div className="px-8 pt-8 pb-12 w-full overflow-y-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Technology Stack */}
-                <div className="flex flex-col items-center text-center">
-                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3">
-                    Technology Stack
+        {/* Render all slides */}
+        {slides.map((tech, slideIndex) => {
+          const slideTransform = getSlideTransform(slideIndex);
+          const isActive = slideIndex === currentIndex;
+          
+          return (
+            <div
+              key={tech.name}
+              className="absolute top-1/2"
+              style={{
+                width: '75%',
+                maxWidth: '1280px',
+                left: slideTransform.left || '50%',
+                transform: slideTransform.transform,
+                opacity: slideTransform.opacity,
+                filter: slideTransform.filter,
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                transformStyle: 'preserve-3d',
+                transition: isDragging ? 'none' : 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                pointerEvents: (slideTransform.pointerEvents !== undefined) ? slideTransform.pointerEvents : (isActive ? 'auto' : 'none'),
+                willChange: 'transform, opacity, filter',
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale',
+                transformOrigin: 'center center',
+              }}
+            >
+              {/* White Slide Card */}
+              <div
+                className="w-full"
+                style={{
+                  transformOrigin: 'center center',
+                  imageRendering: 'crisp-edges',
+                }}
+              >
+                <div
+                  className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 lg:p-10 cursor-grab active:cursor-grabbing w-full"
+                  style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    textRendering: 'optimizeLegibility',
+                  }}
+                >
+                  {/* Technology Name */}
+                  <h4 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
+                    {tech.name}
+                  </h4>
+                  
+                  {/* Description */}
+                  <p className="text-center text-gray-600 mb-6 text-base md:text-lg max-w-3xl mx-auto">
+                    {tech.description}
                   </p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {tech.stack.map((item) => (
-                      <motion.span
-                        key={item}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: tech.stack.indexOf(item) * 0.03 }}
-                        className="px-3 py-1.5 text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors duration-300"
-                      >
-                        {item}
-                      </motion.span>
-                    ))}
-                  </div>
-                </div>
 
-                {/* Key Features */}
-                <div className="flex flex-col items-center text-center">
-                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3">
-                    Key Features
-                  </p>
-                  <ul className="space-y-2 flex flex-col items-center">
-                    {tech.features.map((feature) => (
-                      <motion.li
-                        key={feature}
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3, delay: tech.features.indexOf(feature) * 0.05 }}
-                        className="flex items-center gap-2 text-xs text-gray-800 leading-relaxed"
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
-                        <span>{feature}</span>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </div>
+                  {/* Three Column Layout */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                    {/* Technology Stack */}
+                    <div className="flex flex-col">
+                      <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 font-semibold">
+                        Technology Stack
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {tech.stack.map((item, itemIndex) => (
+                          <span
+                            key={item}
+                            className="px-3 py-1.5 text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
 
-                {/* Use Cases */}
-                <div className="flex flex-col items-center text-center">
-                  <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3">
-                    Use Cases
-                  </p>
-                  <div className="flex flex-wrap gap-2 justify-center">
-                    {tech.useCases.map((useCase) => (
-                      <motion.span
-                        key={useCase}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.3, delay: tech.useCases.indexOf(useCase) * 0.03 }}
-                        className="px-2.5 py-1 text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium"
-                      >
-                        {useCase}
-                      </motion.span>
-                    ))}
+                    {/* Key Features */}
+                    <div className="flex flex-col">
+                      <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 font-semibold">
+                        Key Features
+                      </p>
+                      <ul className="space-y-2">
+                        {tech.features.map((feature) => (
+                          <li
+                            key={feature}
+                            className="flex items-start gap-2 text-sm text-gray-800 leading-relaxed"
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0 mt-2" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Use Cases */}
+                    <div className="flex flex-col">
+                      <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 font-semibold">
+                        Use Cases
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {tech.useCases.map((useCase) => (
+                          <span
+                            key={useCase}
+                            className="px-3 py-1.5 text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                          >
+                            {useCase}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          );
+        })}
+      </div>
+      
     </div>
   );
 }
@@ -281,38 +572,9 @@ export default function TechnologySection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-  const accordionsRef = useRef<Array<HTMLDivElement | null>>([]);
+  const carouselRef = useRef<HTMLDivElement | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasAnimatedRef = useRef(false);
-  const [openAccordion, setOpenAccordion] = useState<number | null>(0);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [glowPositions, setGlowPositions] = useState<Array<{ x: number; y: number; size: number; color: string; delay: number }>>([]);
-
-  // Generate random glow positions
-  useEffect(() => {
-    const generateGlowPositions = () => {
-      const numGlows = 8 + Math.floor(Math.random() * 5); // 8-12 glows
-      const colors = [
-        "rgba(0, 190, 247, 0.3)", // #00bef7
-        "rgba(0, 190, 247, 0.2)",
-        "rgba(147, 51, 234, 0.25)", // purple
-        "rgba(59, 130, 246, 0.2)", // blue
-        "rgba(236, 72, 153, 0.2)", // pink
-      ];
-      
-      const positions = Array.from({ length: numGlows }, () => ({
-        x: Math.random() * 100, // 0-100%
-        y: Math.random() * 100, // 0-100%
-        size: 200 + Math.random() * 300, // 200-500px
-        color: colors[Math.floor(Math.random() * colors.length)],
-        delay: Math.random() * 2, // 0-2s delay for animation
-      }));
-      
-      setGlowPositions(positions);
-    };
-
-    generateGlowPositions();
-  }, []);
 
   useEffect(() => {
     const sectionEl = sectionRef.current;
@@ -320,9 +582,9 @@ export default function TechnologySection() {
 
     const eyebrowEl = eyebrowRef.current;
     const headingEl = headingRef.current;
-    const accordionEls = accordionsRef.current.filter((el): el is HTMLDivElement => Boolean(el));
+    const carouselEl = carouselRef.current;
 
-    const elements = [eyebrowEl, headingEl, ...accordionEls].filter(Boolean);
+    const elements = [eyebrowEl, headingEl, carouselEl].filter(Boolean);
 
     if (!elements.length) return;
 
@@ -339,12 +601,8 @@ export default function TechnologySection() {
     if (headingEl) {
       timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
     }
-    if (accordionEls.length) {
-      timeline.to(
-        accordionEls,
-        { opacity: 1, y: 0, duration: 0.8, stagger: 0.15 },
-        "-=0.3"
-      );
+    if (carouselEl) {
+      timeline.to(carouselEl, { opacity: 1, y: 0, duration: 0.8 }, "-=0.3");
     }
 
     timelineRef.current = timeline;
@@ -372,162 +630,36 @@ export default function TechnologySection() {
     };
   }, []);
 
-  // Scroll-based accordion opening
-  useEffect(() => {
-    const sectionEl = sectionRef.current;
-    if (!sectionEl) return;
-
-    const accordionEls = accordionsRef.current.filter((el): el is HTMLDivElement => Boolean(el));
-    if (!accordionEls.length) return;
-
-    const handleScroll = () => {
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-
-      scrollTimeoutRef.current = setTimeout(() => {
-        const rect = sectionEl.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const viewportCenter = window.innerHeight / 2;
-
-        // Check if section is in viewport
-        if (rect.bottom < 0 || rect.top > viewportHeight) {
-          return;
-        }
-
-        // Find which accordion header is closest to viewport center
-        let closestIndex = 0;
-        let closestDistance = Infinity;
-
-        accordionEls.forEach((accordionEl, index) => {
-          if (!accordionEl) return;
-          
-          const accordionRect = accordionEl.getBoundingClientRect();
-          // Get the header button element (first button in the accordion)
-          const headerButton = accordionEl.querySelector('button');
-          if (!headerButton) return;
-          
-          const headerRect = headerButton.getBoundingClientRect();
-          const headerCenter = headerRect.top + headerRect.height / 2;
-          const distance = Math.abs(viewportCenter - headerCenter);
-
-          // Prefer accordions that are above or at the center
-          if (headerCenter <= viewportCenter * 1.3 && distance < closestDistance) {
-            closestDistance = distance;
-            closestIndex = index;
-          }
-        });
-
-        // Open the closest accordion if it's within a reasonable distance
-        if (closestDistance < viewportHeight * 0.7) {
-          setOpenAccordion(closestIndex);
-        }
-      }, 150); // Throttle scroll events
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("wheel", handleScroll, { passive: true });
-
-    // Initial check
-    handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("wheel", handleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
-    };
-  }, []);
-
-  const handleAccordionToggle = (index: number) => {
-    setOpenAccordion((current) => (current === index ? null : index));
-  };
-
   return (
     <section
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#141b38] py-20 flex items-center overflow-hidden"
+      className="relative min-h-[100vh] bg-[#141b38] py-12 flex items-center overflow-x-hidden overflow-y-hidden"
     >
-      {/* Random Glow Effects */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        {glowPositions.map((glow, index) => (
-          <motion.div
-            key={index}
-            className="absolute rounded-full blur-3xl"
-            style={{
-              left: `${glow.x}%`,
-              top: `${glow.y}%`,
-              width: `${glow.size}px`,
-              height: `${glow.size}px`,
-              backgroundColor: glow.color,
-              transform: 'translate(-50%, -50%)',
-            }}
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ 
-              opacity: [0.3, 0.6, 0.3],
-              scale: [1, 1.2, 1],
-              x: [0, Math.random() * 50 - 25, 0],
-              y: [0, Math.random() * 50 - 25, 0],
-            }}
-            transition={{
-              duration: 8 + Math.random() * 4,
-              repeat: Infinity,
-              delay: glow.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-      
       <div className="container mx-auto px-6 md:px-10 lg:px-14 relative z-10">
         {/* Section Header */}
-        <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
+        <div className="max-w-4xl mx-auto text-center mb-4 md:mb-6">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-4"
+            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-2"
           >
             Technologies
           </p>
           <h2
             ref={headingRef}
-            className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-4"
+            className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-2"
           >
             Our stack
           </h2>
         </div>
 
-        {/* Landscape Accordion */}
-        <div className="w-full max-w-6xl mx-auto">
-          <motion.div
-            className="relative rounded-[30px] bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm overflow-hidden"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="flex flex-col">
-              {technologies.map((tech, index) => (
-                <div
-                  key={tech.name}
-                  ref={(el) => {
-                    accordionsRef.current[index] = el as HTMLDivElement | null;
-                  }}
-                  className="relative"
-                >
-                  <TechnologyAccordionItem
-                    tech={tech}
-                    index={index}
-                    isOpen={openAccordion === index}
-                    onToggle={() => handleAccordionToggle(index)}
-                    onHover={() => setOpenAccordion(index)}
-                    isFirst={index === 0}
-                    isLast={index === technologies.length - 1}
-                  />
-                </div>
-              ))}
-            </div>
-          </motion.div>
+        {/* 3D Gallery Carousel - Full Width */}
+        <div 
+          ref={carouselRef}
+          className="w-full mx-auto"
+        >
+          <TechnologyGalleryCarousel technologies={technologies} />
         </div>
       </div>
     </section>

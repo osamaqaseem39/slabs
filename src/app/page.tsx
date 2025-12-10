@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Navbar from "@/components/layout/Navbar";
 import Preloader from "@/components/Preloader";
+import GlowEffects from "@/components/GlowEffects";
 import HeroSection from "@/sections/HeroSection";
 import ServicesSection from "@/sections/ServicesSection";
 import TechnologySection from "@/sections/TechnologySection";
@@ -61,7 +62,8 @@ export default function Home() {
   }, []);
 
   return (
-    <main ref={containerRef} className="min-h-screen">
+    <main ref={containerRef} className="min-h-screen relative">
+      <GlowEffects />
       <Preloader />
       <Navbar />
       <HeroSection />
