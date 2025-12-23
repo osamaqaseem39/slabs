@@ -150,47 +150,47 @@ export default function ContactSection() {
       id="contact"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#141b38] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#141b38] py-8 sm:py-12 md:py-16 lg:py-20 flex items-center"
     >
-      <div className="container mx-auto px-6 md:px-10 lg:px-14">
-        <div className="grid gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-          <div className="space-y-12">
-            <div className="space-y-6">
-              <p className="text-sm uppercase tracking-[0.4em] text-[#00bef7]" ref={eyebrowRef}>
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-14">
+        <div className="grid gap-6 sm:gap-8 md:gap-12 lg:gap-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div className="space-y-6 sm:space-y-8 md:space-y-10 lg:space-y-12">
+            <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-6">
+              <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] md:tracking-[0.4em] text-[#00bef7]" ref={eyebrowRef}>
                 Contact
               </p>
               <h2
                 ref={titleRef}
-                className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white leading-tight"
               >
                 Let's build together.
               </h2>
-              <p className="text-sm md:text-base text-white/70 max-w-3xl leading-relaxed" ref={descriptionRef}>
+              <p className="text-xs sm:text-sm md:text-base text-white/70 max-w-3xl leading-relaxed" ref={descriptionRef}>
                 Share your vision and we'll deliver the plan to make it happen.
               </p>
             </div>
 
-            <div className="grid gap-6">
+            <div className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6">
               {CONTACT_POINTS.map((point, index) => (
                 <div
                   key={point.label}
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  className="group flex flex-col gap-4 rounded-3xl border border-white/10 bg-white p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/90"
+                  className="group flex flex-col gap-2.5 sm:gap-3 md:gap-4 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/10 bg-white p-4 sm:p-5 md:p-6 lg:p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/90 touch-manipulation"
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-2xl font-semibold text-gray-900">{point.label}</h3>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-3 md:gap-4">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900">{point.label}</h3>
                     <a
                       href={point.href}
                       target={point.href.startsWith("http") ? "_blank" : undefined}
                       rel={point.href.startsWith("http") ? "noreferrer" : undefined}
-                      className="inline-flex items-center gap-2 rounded-full bg-[#00bef7]/10 px-4 py-2 text-sm font-medium text-[#00bef7] transition-colors duration-300 group-hover:bg-[#00bef7]/20"
+                      className="inline-flex items-center justify-center sm:justify-start gap-2 rounded-full bg-[#00bef7]/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-[#00bef7] transition-colors duration-300 group-hover:bg-[#00bef7]/20 w-full sm:w-auto touch-manipulation"
                     >
                       {point.action}
                     </a>
                   </div>
-                  <p className="text-gray-700 leading-relaxed">{point.description}</p>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">{point.description}</p>
                 </div>
               ))}
             </div>
@@ -199,11 +199,11 @@ export default function ContactSection() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="rounded-[32px] border border-white/10 bg-white p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur lg:sticky lg:top-28"
+            className="rounded-xl sm:rounded-2xl md:rounded-3xl lg:rounded-[32px] border border-white/10 bg-white p-4 sm:p-6 md:p-8 lg:p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur lg:sticky lg:top-28"
           >
-            <div className="grid gap-6">
+            <div className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6">
               <div>
-                <label htmlFor="name" className="text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="text-xs sm:text-sm font-medium text-gray-700">
                   Name
                 </label>
                 <input
@@ -214,11 +214,11 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Your name"
                   required
-                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="text-xs sm:text-sm font-medium text-gray-700">
                   Email
                 </label>
                 <input
@@ -229,11 +229,11 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="your@email.com"
                   required
-                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="company" className="text-sm font-medium text-gray-700">
+                <label htmlFor="company" className="text-xs sm:text-sm font-medium text-gray-700">
                   Company
                 </label>
                 <input
@@ -243,11 +243,11 @@ export default function ContactSection() {
                   value={formData.company}
                   onChange={handleInputChange}
                   placeholder="Company name"
-                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="text-sm font-medium text-gray-700">
+                <label htmlFor="message" className="text-xs sm:text-sm font-medium text-gray-700">
                   Message
                 </label>
                 <textarea
@@ -258,17 +258,17 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Tell us about your project..."
                   required
-                  className="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00bef7] px-6 py-3 text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#00bef7] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00bef7] px-4 sm:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#00bef7] disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
-              <p className="text-xs text-gray-500">
+              <p className="text-[10px] sm:text-xs text-gray-500 text-center sm:text-left">
                 We'll never share your information.
               </p>
             </div>

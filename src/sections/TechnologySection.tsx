@@ -423,7 +423,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-[450px] md:h-[500px] lg:h-[550px] overflow-visible"
+      className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-visible"
       style={{ 
         perspective: '1500px',
         perspectiveOrigin: 'center center',
@@ -480,7 +480,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                 }}
               >
                 <div
-                  className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 lg:p-10 cursor-grab active:cursor-grabbing w-full"
+                  className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 cursor-grab active:cursor-grabbing w-full touch-manipulation"
                   style={{
                     WebkitFontSmoothing: 'antialiased',
                     MozOsxFontSmoothing: 'grayscale',
@@ -488,27 +488,27 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                   }}
                 >
                   {/* Technology Name */}
-                  <h4 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
+                  <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 text-center">
                     {tech.name}
                   </h4>
                   
                   {/* Description */}
-                  <p className="text-center text-gray-600 mb-6 text-base md:text-lg max-w-3xl mx-auto">
+                  <p className="text-center text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base md:text-lg max-w-3xl mx-auto">
                     {tech.description}
                   </p>
 
                   {/* Three Column Layout */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                     {/* Technology Stack */}
                     <div className="flex flex-col">
-                      <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 font-semibold">
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 mb-2 sm:mb-3 font-semibold">
                         Technology Stack
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {tech.stack.map((item, itemIndex) => (
                           <span
                             key={item}
-                            className="px-3 py-1.5 text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                            className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
                           >
                             {item}
                           </span>
@@ -518,16 +518,16 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
 
                     {/* Key Features */}
                     <div className="flex flex-col">
-                      <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 font-semibold">
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 mb-2 sm:mb-3 font-semibold">
                         Key Features
                       </p>
-                      <ul className="space-y-2">
+                      <ul className="space-y-1.5 sm:space-y-2">
                         {tech.features.map((feature) => (
                           <li
                             key={feature}
-                            className="flex items-start gap-2 text-sm text-gray-800 leading-relaxed"
+                            className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-800 leading-relaxed"
                           >
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0 mt-2" />
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0 mt-1.5 sm:mt-2" />
                             <span>{feature}</span>
                           </li>
                         ))}
@@ -536,14 +536,14 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
 
                     {/* Use Cases */}
                     <div className="flex flex-col">
-                      <p className="text-xs uppercase tracking-[0.3em] text-gray-700 mb-3 font-semibold">
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 mb-2 sm:mb-3 font-semibold">
                         Use Cases
                       </p>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5 sm:gap-2">
                         {tech.useCases.map((useCase) => (
                           <span
                             key={useCase}
-                            className="px-3 py-1.5 text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                            className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
                           >
                             {useCase}
                           </span>
@@ -633,16 +633,16 @@ export default function TechnologySection() {
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14 relative z-10">
         {/* Section Header */}
-        <div className="max-w-4xl mx-auto text-center mb-4 md:mb-6">
+        <div className="max-w-4xl mx-auto text-center mb-4 sm:mb-5 md:mb-6">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-2"
+            className="text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[#00bef7] mb-2"
           >
             Technologies
           </p>
           <h2
             ref={headingRef}
-            className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-2"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight mb-2"
           >
             Our stack
           </h2>

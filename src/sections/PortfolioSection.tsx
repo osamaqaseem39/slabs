@@ -113,83 +113,83 @@ export default function PortfolioSection() {
       data-universal-scroll-ignore
       className="relative min-h-[100vh] bg-[#1a2342] py-20 flex items-center"
     >
-      <div className="container mx-auto px-6 md:px-10 lg:px-14">
-        <div className="max-w-4xl mx-auto text-center mb-20">
+      <div className="container mx-auto px-4 sm:px-6 md:px-10 lg:px-14">
+        <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16 md:mb-20">
           <p
             ref={eyebrowRef}
-            className="mb-6 text-sm uppercase tracking-[0.4em] text-[#00bef7]"
+            className="mb-4 sm:mb-6 text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[#00bef7]"
           >
             Portfolio
           </p>
           <h2
             ref={headingRef}
-            className="mb-6 text-6xl md:text-7xl lg:text-8xl font-bold leading-tight text-white"
+            className="mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white"
           >
             Our work
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 xl:gap-12 max-w-7xl mx-auto">
           {projects.map((project, index) => (
             <div
               key={project.name}
               ref={(el) => {
                 modelsRef.current[index] = el;
               }}
-              className="group relative flex flex-col h-[500px] rounded-3xl overflow-hidden cursor-pointer bg-white"
+              className="group relative flex flex-col h-[400px] sm:h-[450px] md:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer bg-white touch-manipulation"
             >
               {/* Image Container - Contained */}
-              <div className="relative flex-1 p-6 flex items-center justify-center bg-white">
+              <div className="relative flex-1 p-4 sm:p-6 flex items-center justify-center bg-white">
                 <div className="relative w-full h-full">
                   <Image
                     src={project.image}
                     alt={project.name}
                     fill
                     className="object-contain transition-transform duration-700 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                 </div>
               </div>
 
               {/* Gradient Overlay with Title - Opens from Bottom on Hover */}
-              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-[#141b38] via-[#141b38]/90 to-transparent transform translate-y-[calc(100%-80px)] group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                <div className="p-6 md:p-8">
+              <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-[#141b38] via-[#141b38]/90 to-transparent transform translate-y-[calc(100%-70px)] sm:translate-y-[calc(100%-80px)] group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                <div className="p-4 sm:p-6 md:p-8">
                   {/* Title - Always Visible */}
-                  <div className="mb-4">
-                    <h3 className="text-xl md:text-2xl font-bold text-white drop-shadow-lg">
+                  <div className="mb-3 sm:mb-4">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white drop-shadow-lg">
                       {project.name}
                     </h3>
                   </div>
                   
                   {/* Additional Content - Visible on Hover */}
-                  <div className="flex flex-col gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out" style={{ transitionDelay: '100ms' }}>
-                    <div className="flex flex-col gap-2">
-                      <span className="text-xs uppercase tracking-[0.3em] text-[#00bef7] font-medium">
+                  <div className="flex flex-col gap-3 sm:gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out" style={{ transitionDelay: '100ms' }}>
+                    <div className="flex flex-col gap-1.5 sm:gap-2">
+                      <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7] font-medium">
                         {project.category}
                       </span>
                     </div>
                     
-                    <p className="text-sm text-white/90 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
                       {project.description}
                     </p>
                     
                     {project.client && (
-                      <div className="text-xs text-white/70 italic">
+                      <div className="text-[10px] sm:text-xs text-white/70 italic">
                         Client: {project.client}
                       </div>
                     )}
                     
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-1 sm:mt-2">
                       {project.technologies.slice(0, 3).map((tech) => (
                         <span
                           key={tech}
-                          className="px-3 py-1.5 text-xs rounded-full border border-[#00bef7]/50 bg-[#00bef7]/20 text-white backdrop-blur-sm"
+                          className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-[#00bef7]/50 bg-[#00bef7]/20 text-white backdrop-blur-sm"
                         >
                           {tech}
                         </span>
                       ))}
                       {project.technologies.length > 3 && (
-                        <span className="px-3 py-1.5 text-xs rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm">
+                        <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-white/30 bg-white/10 text-white backdrop-blur-sm">
                           +{project.technologies.length - 3} more
                         </span>
                       )}

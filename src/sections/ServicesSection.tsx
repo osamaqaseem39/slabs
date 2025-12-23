@@ -81,7 +81,7 @@ const services: Service[] = [
 function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; index: number; isFlipped: boolean; onFlip: () => void }) {
   return (
     <motion.article
-      className="group relative flex h-[500px] md:h-[520px] flex-col overflow-hidden rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-300 hover:border-[#00bef7]/50"
+      className="group relative flex h-[450px] sm:h-[500px] md:h-[520px] flex-col overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
@@ -103,34 +103,34 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
 
 function CardFront({ service }: { service: Service }) {
   return (
-    <div className="absolute inset-0 flex h-full flex-col rounded-[30px] bg-transparent p-6 [backface-visibility:hidden] overflow-hidden">
-      <div className="flex justify-center flex-shrink-0 mb-6">
-        <div className="relative w-[120px] h-[120px]">
+    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-transparent p-4 sm:p-6 [backface-visibility:hidden] overflow-hidden">
+      <div className="flex justify-center flex-shrink-0 mb-4 sm:mb-6">
+        <div className="relative w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px]">
           <Image
             src={service.image}
             alt={service.title}
             fill
             className="object-contain"
-            sizes="120px"
+            sizes="(max-width: 640px) 80px, (max-width: 768px) 100px, 120px"
           />
         </div>
       </div>
 
-      <div className="space-y-2 flex-shrink-0 mb-6">
-        <h3 className="text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-200 leading-tight">
+      <div className="space-y-1.5 sm:space-y-2 flex-shrink-0 mb-4 sm:mb-6">
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-200 leading-tight">
           {service.title}
         </h3>
-        <p className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/80 leading-tight p-0 m-0">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/80 leading-tight p-0 m-0">
           {service.summary}
         </p>
       </div>
 
-      <p className="text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-6">
+      <p className="text-xs sm:text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-4 sm:mb-6">
         {service.description}
       </p>
 
-      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.4em] pt-4 border-t border-gray-200 flex-shrink-0">
-        <span className="inline-flex h-1 w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-300" />
+      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] pt-3 sm:pt-4 border-t border-gray-200 flex-shrink-0">
+        <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-300" />
         <span className="text-gray-600">Click to Explore</span>
       </div>
     </div>
@@ -139,33 +139,33 @@ function CardFront({ service }: { service: Service }) {
 
 function CardBack({ service }: { service: Service }) {
   return (
-    <div className="absolute inset-0 flex h-full flex-col rounded-[30px] bg-white p-6 text-left text-gray-900 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-white p-4 sm:p-6 text-left text-gray-900 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
       {/* Header Section - Compact */}
-      <div className="space-y-2 flex-shrink-0 mb-4">
+      <div className="space-y-1.5 sm:space-y-2 flex-shrink-0 mb-3 sm:mb-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm uppercase tracking-[0.3em] text-[#00bef7]/80">
+          <span className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/80">
             Service Details
           </span>
-          <span className="text-xs text-gray-500 truncate ml-1">
+          <span className="text-[10px] sm:text-xs text-gray-500 truncate ml-1">
             {service.title}
           </span>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 leading-tight">
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">
           {service.title}
         </h3>
-        <p className="text-xs leading-normal text-gray-700 line-clamp-2 p-0 m-0">
+        <p className="text-[10px] sm:text-xs leading-normal text-gray-700 line-clamp-2 p-0 m-0">
           {service.description}
         </p>
       </div>
 
       {/* Features List - Scrollable */}
-      <div className="flex-1 min-h-0 overflow-y-auto mb-3">
-        <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 flex-shrink-0 mb-2 p-0 m-0">
+      <div className="flex-1 min-h-0 overflow-y-auto mb-2 sm:mb-3">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/70 flex-shrink-0 mb-1.5 sm:mb-2 p-0 m-0">
           Core Services
         </p>
-        <ul className="space-y-1.5 pr-1">
+        <ul className="space-y-1 sm:space-y-1.5 pr-1">
           {service.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-2 text-xs text-gray-700 leading-relaxed">
+            <li key={feature} className="flex items-start gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-700 leading-relaxed">
               <span className="mt-1 h-1 w-1 rounded-full bg-[#00bef7] flex-shrink-0" />
               <span className="flex-1">{feature}</span>
             </li>
@@ -174,15 +174,15 @@ function CardBack({ service }: { service: Service }) {
       </div>
 
       {/* Highlights Section - Compact */}
-      <div className="space-y-2 pt-3 border-t border-white/10 flex-shrink-0 mb-3">
-        <p className="text-xs uppercase tracking-[0.3em] text-[#00bef7]/70 p-0 m-0">
+      <div className="space-y-1.5 sm:space-y-2 pt-2 sm:pt-3 border-t border-white/10 flex-shrink-0 mb-2 sm:mb-3">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/70 p-0 m-0">
           Key Highlights
         </p>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap gap-1 sm:gap-1.5">
           {service.highlights.map((highlight) => (
             <span
               key={highlight}
-              className="px-2.5 py-0.5 text-xs rounded-full border border-[#00bef7]/40 bg-[#00bef7]/15 text-[#00bef7] leading-tight"
+              className="px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-xs rounded-full border border-[#00bef7]/40 bg-[#00bef7]/15 text-[#00bef7] leading-tight"
             >
               {highlight}
             </span>
@@ -191,9 +191,9 @@ function CardBack({ service }: { service: Service }) {
       </div>
 
       {/* Footer - Compact */}
-      <div className="flex items-center gap-1 text-xs font-medium uppercase tracking-[0.3em] pt-3 border-t border-white/10 flex-shrink-0">
-        <span className="inline-flex h-1 w-8 rounded-full bg-[#00bef7]" />
-        <span className="text-gray-600 text-[10px]">Click to flip back</span>
+      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] pt-2 sm:pt-3 border-t border-white/10 flex-shrink-0">
+        <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-[#00bef7]" />
+        <span className="text-gray-600 text-[9px] sm:text-[10px]">Click to flip back</span>
       </div>
     </div>
   );
@@ -370,29 +370,29 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
-        <div className="max-w-4xl mx-auto text-center mb-8 md:mb-10">
+        <div className="max-w-4xl mx-auto text-center mb-8 sm:mb-10 md:mb-12">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-white mb-4"
+            className="text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] sm:tracking-[0.4em] text-white mb-3 sm:mb-4"
           >
             Services
           </p>
           <h2
             ref={headingRef}
-            className="text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mb-4"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight mb-3 sm:mb-4"
           >
             What we do
           </h2>
           <p
             ref={descriptionRef}
-            className="text-sm md:text-base text-[#00bef7] leading-normal max-w-3xl mx-auto"
+            className="text-xs sm:text-sm md:text-base text-[#00bef7] leading-normal max-w-3xl mx-auto px-4"
           >
             We deliver end-to-end solutions that combine strategy, design, and development to help your business thrive in the digital landscape.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
           {services.map((service, index) => (
             <div
               key={service.title}

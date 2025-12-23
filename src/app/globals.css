@@ -101,6 +101,14 @@ body {
   background: var(--background);
   font-family: 'Aventa', sans-serif;
   font-weight: 300;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Mobile touch optimizations */
+button, a, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Apply Orlean font to all headings */

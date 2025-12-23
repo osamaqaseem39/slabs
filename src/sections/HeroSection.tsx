@@ -251,7 +251,7 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       id={HERO_SECTION_ID}
-      className="relative h-screen flex items-center justify-center overflow-hidden bg-[#141b38]"
+      className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-[#141b38]"
     >
       {/* Background Video */}
       <div
@@ -284,29 +284,29 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="absolute inset-x-0 bottom-0 z-[2]">
-        <div className="container pb-8 md:pb-12">
+        <div className="container px-4 sm:px-6 pb-8 md:pb-12">
           <h1
             ref={headingRef}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 max-w-layout-xl"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
           >
             Transform Your Digital Presence
           </h1>
           <p
             ref={descriptionRef}
-            className="text-lg md:text-xl text-white/80 max-w-2xl mb-6"
+            className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mb-4 sm:mb-6 leading-relaxed"
           >
             Synovo Labs specializes in WordPress development, SEO, social
             media marketing, and web design. Grow your online presence with our expert team.
           </p>
-          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4">
+          <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
-              className="px-8 py-3 bg-[#00bef7] text-white rounded-full font-semibold hover:bg-[#00bef7] transition-colors duration-300"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-[#00bef7] text-white rounded-full font-semibold hover:bg-[#00bef7] transition-colors duration-300 text-sm sm:text-base touch-manipulation"
               onClick={() => scrollToTarget("#services")}
             >
               Get Started
             </button>
             <button
-              className="px-8 py-3 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition-colors duration-300"
+              className="px-6 sm:px-8 py-2.5 sm:py-3 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-black transition-colors duration-300 text-sm sm:text-base touch-manipulation"
               onClick={() => scrollToTarget("#technology")}
             >
               Learn More

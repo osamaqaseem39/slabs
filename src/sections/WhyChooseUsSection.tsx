@@ -135,22 +135,22 @@ export default function WhyChooseUsSection() {
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
-        <div className="max-w-4xl mx-auto text-center mb-16 md:mb-20">
+        <div className="max-w-4xl mx-auto text-center mb-12 sm:mb-16 md:mb-20">
           <p
             ref={eyebrowRef}
-            className="text-base uppercase tracking-[0.4em] text-[#00bef7] mb-4"
+            className="text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[#00bef7] mb-3 sm:mb-4"
           >
             Why Choose Us
           </p>
           <h2
             ref={headingRef}
-            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight mb-4 whitespace-nowrap"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white leading-tight mb-3 sm:mb-4"
           >
             Built to scale with you
           </h2>
           <p
             ref={descriptionRef}
-            className="text-sm md:text-base text-white/70 leading-normal max-w-3xl mx-auto"
+            className="text-xs sm:text-sm md:text-base text-white/70 leading-normal max-w-3xl mx-auto px-4"
           >
             We combine expertise, speed, and quality to deliver solutions that grow with your business. 
             Our team is committed to your success, from initial concept to long-term support.
@@ -158,30 +158,30 @@ export default function WhyChooseUsSection() {
         </div>
 
         {/* Benefits Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-16 md:mb-20 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16 md:mb-20 max-w-7xl mx-auto">
           {BENEFITS.map((benefit, index) => (
             <motion.div
               key={benefit.title}
               ref={(el) => {
                 cardsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="group relative overflow-hidden rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/90 p-8"
+              className="group relative overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/90 p-5 sm:p-6 md:p-8 touch-manipulation"
               whileHover={{ y: -8, scale: 1.05 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex flex-col h-full">
-                <div className="mb-6">
-                  <div className="text-5xl mb-4">{benefit.icon}</div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
+                <div className="mb-4 sm:mb-6">
+                  <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{benefit.icon}</div>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
                     {benefit.title}
                   </h3>
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>
-                <ul className="mt-auto space-y-2 pt-6 border-t border-gray-200">
+                <ul className="mt-auto space-y-1.5 sm:space-y-2 pt-4 sm:pt-6 border-t border-gray-200">
                   {benefit.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-2 text-xs text-gray-700">
+                    <li key={feature} className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-700">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
@@ -193,19 +193,19 @@ export default function WhyChooseUsSection() {
         </div>
 
         {/* Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 max-w-5xl mx-auto">
           {STATS.map((stat, index) => (
             <motion.div
               key={stat.label}
               ref={(el) => {
                 statsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="text-center p-6 rounded-2xl border border-white/10 bg-white backdrop-blur-sm"
+              className="text-center p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-white/10 bg-white backdrop-blur-sm"
             >
-              <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-1 sm:mb-2">
                 {stat.value}
               </div>
-              <div className="text-xs md:text-sm text-gray-700 uppercase tracking-wider">
+              <div className="text-[10px] sm:text-xs md:text-sm text-gray-700 uppercase tracking-wider">
                 {stat.label}
               </div>
             </motion.div>
