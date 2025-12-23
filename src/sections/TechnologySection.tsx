@@ -139,15 +139,26 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   const [isCooldown, setIsCooldown] = useState(false);
   const cooldownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const autoAdvanceIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   const slides = technologies;
   const slideWidth = 100; // Percentage width of each slide (full width)
   const gap = 0; // No gap between slides since they're full width
 
-  // Initialize offset on mount
+  // Initialize offset on mount and check mobile
   useEffect(() => {
     // For 3-slide layout, offset starts at 0
     setOffset(0);
+    
+    // Check if mobile on mount and resize
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -337,7 +348,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   };
 
   // Calculate 3D transform for each slide
-  const getSlideTransform = (slideIndex: number) => {
+  const getSlideTransform = (slideIndex: number, mobile: boolean) => {
     // Calculate relative position to current index
     let relativeIndex = slideIndex - currentIndex;
     
@@ -396,7 +407,8 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
       rotationY = -25; // Tilt left
       scale = 0.9;
       translateZ = -200;
-      opacity = 0.4; // Semi-transparent
+      // More faded and blurred on mobile
+      opacity = mobile ? 0.2 : 0.4;
     } else if (isNext) {
       // Next slide: half visible on right, tilted right
       // Left edge should be at 87.5% (where current ends), so left edge at 87.5%
@@ -404,17 +416,21 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
       rotationY = 25; // Tilt right
       scale = 0.9;
       translateZ = -200;
-      opacity = 0.4; // Semi-transparent
+      // More faded and blurred on mobile
+      opacity = mobile ? 0.2 : 0.4;
     }
     
     // Apply drag offset to all visible slides for smooth dragging
     const leftPosition = baseLeftPosition + dragOffsetPercent;
     
+    // Add blur filter for side cards on mobile
+    const filter = (!isCurrent && mobile) ? 'blur(8px)' : 'none';
+    
     return {
       left: `${leftPosition}%`,
       transform: `translateY(-50%) translateZ(${translateZ}px) rotateY(${rotationY}deg) scale(${scale})`,
       opacity: opacity,
-      filter: 'none',
+      filter: filter,
       pointerEvents: isCurrent ? 'auto' as const : 'none' as const,
     };
   };
@@ -446,7 +462,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
       >
         {/* Render all slides */}
         {slides.map((tech, slideIndex) => {
-          const slideTransform = getSlideTransform(slideIndex);
+          const slideTransform = getSlideTransform(slideIndex, isMobile);
           const isActive = slideIndex === currentIndex;
           
           return (
@@ -505,7 +521,8 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                         Technology Stack
                       </p>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {tech.stack.map((item, itemIndex) => (
+                        {/* Show only first 4 items on mobile, all on desktop */}
+                        {(isMobile ? tech.stack.slice(0, 4) : tech.stack).map((item, itemIndex) => (
                           <span
                             key={item}
                             className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
@@ -513,6 +530,11 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                             {item}
                           </span>
                         ))}
+                        {isMobile && tech.stack.length > 4 && (
+                          <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-500 font-medium">
+                            +{tech.stack.length - 4}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -522,7 +544,8 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                         Key Features
                       </p>
                       <ul className="space-y-1.5 sm:space-y-2">
-                        {tech.features.map((feature) => (
+                        {/* Show only first 3 features on mobile, all on desktop */}
+                        {(isMobile ? tech.features.slice(0, 3) : tech.features).map((feature) => (
                           <li
                             key={feature}
                             className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-800 leading-relaxed"
@@ -531,6 +554,11 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                             <span>{feature}</span>
                           </li>
                         ))}
+                        {isMobile && tech.features.length > 3 && (
+                          <li className="text-[10px] text-gray-500 italic">
+                            +{tech.features.length - 3} more
+                          </li>
+                        )}
                       </ul>
                     </div>
 
@@ -540,7 +568,8 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                         Use Cases
                       </p>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                        {tech.useCases.map((useCase) => (
+                        {/* Show only first 3 use cases on mobile, all on desktop */}
+                        {(isMobile ? tech.useCases.slice(0, 3) : tech.useCases).map((useCase) => (
                           <span
                             key={useCase}
                             className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
@@ -548,6 +577,11 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                             {useCase}
                           </span>
                         ))}
+                        {isMobile && tech.useCases.length > 3 && (
+                          <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-500 font-medium">
+                            +{tech.useCases.length - 3}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
