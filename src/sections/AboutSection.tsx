@@ -136,13 +136,13 @@ export default function AboutSection() {
                 ref={headingRef}
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white leading-tight"
               >
-                Digital solutions that drive results.
+                AI-powered solutions that transform businesses.
               </h2>
               <p
                 ref={descriptionRef}
                 className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-3xl"
               >
-                Passionate developers, designers, and strategists solving real problems. We turn complex challenges into elegant solutions that drive growth.
+                Expert AI developers, full-stack engineers, and digital strategists building intelligent solutions. From AI automation to web development, we create cutting-edge solutions that drive growth.
               </p>
             </div>
 

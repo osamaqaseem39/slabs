@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Synovo Labs | WordPress Development Services",
-  description: "Synovo Labs specializes in WordPress development, SEO, social media marketing, and web design. Grow your online presence with our expert team.",
+  title: "Synovo Labs | AI Development & Web Solutions",
+  description: "Synovo Labs specializes in AI development, automation, web & mobile apps (MERN, React, Next.js), CMS development, video editing, graphics design, SEO, and game development. Build intelligent solutions with our expert team.",
 };
 
 export default function RootLayout({

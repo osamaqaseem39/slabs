@@ -20,60 +20,98 @@ type ServicesSectionProps = {
 
 const services: Service[] = [
   {
-    title: "Web Development",
+    title: "AI Development & Automation",
     image: "/service1.png",
-    description: "Crafting high-performance, scalable web applications that deliver exceptional user experiences and drive business growth.",
-    summary: "From concept to deployment, we build web applications that perform.",
+    description: "Harness the power of artificial intelligence to automate workflows, create intelligent agents, and build AI-powered solutions that transform your business operations.",
+    summary: "AI-powered solutions that automate and enhance your business.",
     features: [
-      "Custom web applications",
-      "Full-stack development",
-      "API integration & development",
-      "Performance optimization",
-      "Responsive design",
-      "Progressive Web Apps (PWA)",
+      "AI agents & chatbots",
+      "AI automation workflows",
+      "AI video generation",
+      "AI image creation",
+      "Machine learning integration",
+      "Natural language processing",
     ],
     highlights: [
-      "Modern frameworks (Next.js, React, Node.js)",
-      "Cloud-native architecture",
-      "SEO-optimized solutions",
+      "Custom AI solutions",
+      "Voice AI agents (call handling)",
+      "AI content generation",
     ],
   },
   {
-    title: "UI/UX Design",
+    title: "Web & Mobile Development",
     image: "/service2.png",
-    description: "Creating intuitive, beautiful interfaces that users love. We combine user research, design thinking, and modern aesthetics to craft experiences that convert.",
-    summary: "Design that bridges user needs with business objectives.",
+    description: "Building high-performance web and mobile applications using modern frameworks. From MERN stack to Next.js, we create scalable solutions that drive growth.",
+    summary: "Modern development stack for web and mobile applications.",
     features: [
-      "User interface design",
-      "User experience research",
-      "Interactive prototypes",
-      "Design systems",
-      "Brand identity",
-      "Accessibility compliance",
+      "MERN stack development",
+      "React & Next.js applications",
+      "Mobile app development",
+      "CMS development (WordPress, Shopify)",
+      "Custom WordPress plugins & themes",
+      "Shopify Plus & custom apps",
     ],
     highlights: [
-      "User-centered approach",
-      "Design-to-code handoff",
-      "Continuous design iteration",
+      "Full-stack expertise",
+      "E-commerce solutions",
+      "API development & integration",
     ],
   },
   {
-    title: "Digital Strategy",
+    title: "Video & Graphics Production",
     image: "/service3.png",
-    description: "Strategic consulting to align your digital presence with business goals. We analyze, plan, and execute data-driven strategies that deliver measurable results.",
-    summary: "Strategic planning that transforms vision into action.",
+    description: "Professional video editing and graphic design services. From YouTube content to AI-generated videos, we create compelling visual content that engages audiences.",
+    summary: "Creative video and graphics that captivate and convert.",
     features: [
-      "Digital transformation",
-      "Technical consulting",
-      "Product strategy",
-      "Growth planning",
-      "Analytics & insights",
-      "Roadmap development",
+      "YouTube video editing (long & short form)",
+      "Reels & social media videos",
+      "Animations & motion graphics",
+      "UGC & VSL content",
+      "Logo & brand design",
+      "Thumbnails & book covers",
     ],
     highlights: [
-      "Data-driven decisions",
-      "Scalable solutions",
-      "Long-term partnerships",
+      "AI video generation",
+      "AI image creation",
+      "Professional quality output",
+    ],
+  },
+  {
+    title: "SEO & Digital Marketing",
+    image: "/service1.png",
+    description: "Comprehensive SEO optimization and social media marketing strategies. From GBM optimization to technical SEO, we boost your online visibility and engagement.",
+    summary: "Data-driven SEO and marketing that drives results.",
+    features: [
+      "GBM optimization",
+      "On-page & off-page SEO",
+      "Technical SEO audits",
+      "Geo-fencing strategies",
+      "Social media marketing",
+      "Content marketing",
+    ],
+    highlights: [
+      "Full-service SEO",
+      "Local & global optimization",
+      "Measurable ROI",
+    ],
+  },
+  {
+    title: "Game Development",
+    image: "/service2.png",
+    description: "Creating engaging games and interactive experiences. From concept to launch, we develop games that captivate players and drive engagement.",
+    summary: "Interactive game experiences that engage and entertain.",
+    features: [
+      "2D & 3D game development",
+      "Mobile game development",
+      "Game mechanics & design",
+      "Multiplayer integration",
+      "Game optimization",
+      "Publishing & distribution",
+    ],
+    highlights: [
+      "Cross-platform games",
+      "Modern game engines",
+      "End-to-end development",
     ],
   },
 ];
@@ -103,8 +141,8 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
 
 function CardFront({ service }: { service: Service }) {
   return (
-    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-transparent p-4 sm:p-6 [backface-visibility:hidden] overflow-hidden">
-      <div className="flex justify-center flex-shrink-0 mb-4 sm:mb-6">
+    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-transparent p-3 sm:p-4 md:p-6 [backface-visibility:hidden] overflow-hidden">
+      <div className="flex justify-center flex-shrink-0 mb-2 sm:mb-4 md:mb-6">
         <div className="relative w-[80px] h-[80px] sm:w-[100px] sm:h-[100px] md:w-[120px] md:h-[120px]">
           <Image
             src={service.image}
@@ -116,7 +154,7 @@ function CardFront({ service }: { service: Service }) {
         </div>
       </div>
 
-      <div className="space-y-1.5 sm:space-y-2 flex-shrink-0 mb-4 sm:mb-6">
+      <div className="space-y-1 sm:space-y-1.5 md:space-y-2 flex-shrink-0 mb-2 sm:mb-4 md:mb-6">
         <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-200 leading-tight">
           {service.title}
         </h3>
@@ -125,11 +163,11 @@ function CardFront({ service }: { service: Service }) {
         </p>
       </div>
 
-      <p className="text-xs sm:text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-4 sm:mb-6">
+      <p className="text-xs sm:text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-2 sm:mb-4 md:mb-6">
         {service.description}
       </p>
 
-      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] pt-3 sm:pt-4 border-t border-gray-200 flex-shrink-0">
+      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] pt-2 sm:pt-3 md:pt-4 border-t border-gray-200 flex-shrink-0">
         <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-300" />
         <span className="text-gray-600">Click to Explore</span>
       </div>
@@ -139,9 +177,9 @@ function CardFront({ service }: { service: Service }) {
 
 function CardBack({ service }: { service: Service }) {
   return (
-    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-white p-4 sm:p-6 text-left text-gray-900 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-white p-3 sm:p-4 md:p-6 text-left text-gray-900 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
       {/* Header Section - Compact */}
-      <div className="space-y-1.5 sm:space-y-2 flex-shrink-0 mb-3 sm:mb-4">
+      <div className="space-y-1 sm:space-y-1.5 md:space-y-2 flex-shrink-0 mb-2 sm:mb-3 md:mb-4">
         <div className="flex items-center justify-between">
           <span className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/80">
             Service Details
@@ -159,13 +197,13 @@ function CardBack({ service }: { service: Service }) {
       </div>
 
       {/* Features List - Scrollable */}
-      <div className="flex-1 min-h-0 overflow-y-auto mb-2 sm:mb-3">
-        <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/70 flex-shrink-0 mb-1.5 sm:mb-2 p-0 m-0">
+      <div className="flex-1 min-h-0 overflow-y-auto mb-1.5 sm:mb-2 md:mb-3">
+        <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/70 flex-shrink-0 mb-1 sm:mb-1.5 md:mb-2 p-0 m-0">
           Core Services
         </p>
-        <ul className="space-y-1 sm:space-y-1.5 pr-1">
+        <ul className="space-y-0.5 sm:space-y-1 md:space-y-1.5 pr-1">
           {service.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-700 leading-relaxed">
+            <li key={feature} className="flex items-start gap-1 sm:gap-1.5 md:gap-2 text-[10px] sm:text-xs text-gray-700 leading-relaxed">
               <span className="mt-1 h-1 w-1 rounded-full bg-[#00bef7] flex-shrink-0" />
               <span className="flex-1">{feature}</span>
             </li>
@@ -174,7 +212,7 @@ function CardBack({ service }: { service: Service }) {
       </div>
 
       {/* Highlights Section - Compact */}
-      <div className="space-y-1.5 sm:space-y-2 pt-2 sm:pt-3 border-t border-white/10 flex-shrink-0 mb-2 sm:mb-3">
+      <div className="space-y-1 sm:space-y-1.5 md:space-y-2 pt-1.5 sm:pt-2 md:pt-3 border-t border-white/10 flex-shrink-0 mb-1.5 sm:mb-2 md:mb-3">
         <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/70 p-0 m-0">
           Key Highlights
         </p>
@@ -191,7 +229,7 @@ function CardBack({ service }: { service: Service }) {
       </div>
 
       {/* Footer - Compact */}
-      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] pt-2 sm:pt-3 border-t border-white/10 flex-shrink-0">
+      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] pt-1.5 sm:pt-2 md:pt-3 border-t border-white/10 flex-shrink-0">
         <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-[#00bef7]" />
         <span className="text-gray-600 text-[9px] sm:text-[10px]">Click to flip back</span>
       </div>
@@ -387,12 +425,12 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
             ref={descriptionRef}
             className="text-xs sm:text-sm md:text-base text-[#00bef7] leading-normal max-w-3xl mx-auto px-4"
           >
-            We deliver end-to-end solutions that combine strategy, design, and development to help your business thrive in the digital landscape.
+            From AI development and automation to web & mobile apps, we deliver cutting-edge solutions powered by artificial intelligence and modern development frameworks.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10 max-w-7xl mx-auto">
           {services.map((service, index) => (
             <div
               key={service.title}

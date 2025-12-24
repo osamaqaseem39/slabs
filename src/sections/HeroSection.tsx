@@ -295,8 +295,8 @@ export default function HeroSection() {
             ref={descriptionRef}
             className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mb-4 sm:mb-6 leading-relaxed"
           >
-            Synovo Labs specializes in WordPress development, SEO, social
-            media marketing, and web design. Grow your online presence with our expert team.
+            Synovo Labs specializes in AI development, automation, web & mobile apps, and digital solutions. 
+            From AI agents to MERN stack development, we build intelligent solutions that drive growth.
           </p>
           <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button

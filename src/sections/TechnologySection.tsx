@@ -14,113 +14,135 @@ type Technology = {
 
 const technologies: Technology[] = [
   {
-    name: "Frontend",
+    name: "AI & Machine Learning",
     modelType: "cube",
-    description: "Modern frontend technologies for building responsive, interactive user interfaces that deliver exceptional user experiences.",
-    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion", "GSAP", "Three.js", "WebGL"],
+    description: "Cutting-edge AI technologies for automation, intelligent agents, and AI-powered solutions. From AI video generation to voice agents, we leverage the latest AI tools.",
+    stack: ["OpenAI GPT", "Claude AI", "LangChain", "TensorFlow", "PyTorch", "AI Agents", "AI Video Tools", "AI Image Generation"],
     features: [
+      "AI agent development",
+      "AI automation workflows",
+      "AI video generation",
+      "AI image creation",
+      "Natural language processing",
+      "Machine learning models",
+    ],
+    useCases: [
+      "AI chatbots & agents",
+      "Voice AI (call handling)",
+      "AI content generation",
+      "Automated workflows",
+      "AI video production",
+      "AI image design",
+    ],
+  },
+  {
+    name: "Web Development",
+    modelType: "pyramid",
+    description: "Modern web development using MERN stack, React, and Next.js. Building scalable, high-performance applications with cutting-edge frameworks.",
+    stack: ["MERN Stack", "Next.js", "React", "Node.js", "TypeScript", "Express", "MongoDB", "PostgreSQL"],
+    features: [
+      "Full-stack development",
       "Server-side rendering (SSR)",
-      "Static site generation (SSG)",
-      "Component-based architecture",
-      "Responsive design systems",
-      "Advanced animations",
+      "API development",
+      "Real-time applications",
+      "E-commerce solutions",
       "Performance optimization",
     ],
     useCases: [
+      "Web applications",
       "E-commerce platforms",
       "SaaS applications",
-      "Marketing websites",
       "Progressive web apps",
-      "Interactive dashboards",
-      "Real-time applications",
+      "Real-time dashboards",
+      "API integrations",
     ],
   },
   {
-    name: "Backend",
-    modelType: "pyramid",
-    description: "Robust backend solutions for scalable applications and seamless API integrations with enterprise-grade security.",
-    stack: ["Node.js", "Express", "GraphQL", "REST APIs", "Serverless", "PostgreSQL", "MongoDB", "Redis"],
-    features: [
-      "RESTful & GraphQL APIs",
-      "Microservices architecture",
-      "Real-time communication",
-      "Database optimization",
-      "Authentication & authorization",
-      "Caching strategies",
-    ],
-    useCases: [
-      "API development",
-      "Microservices",
-      "Real-time systems",
-      "Data processing",
-      "Authentication services",
-      "Third-party integrations",
-    ],
-  },
-  {
-    name: "DevOps",
+    name: "CMS & E-commerce",
     modelType: "torus",
-    description: "Streamlined deployment pipelines and infrastructure management for reliable, scalable operations.",
-    stack: ["Docker", "Kubernetes", "AWS", "CI/CD", "GitHub Actions", "Terraform", "Monitoring", "Security"],
+    description: "Custom CMS development and e-commerce solutions. WordPress plugins, Shopify apps, and custom themes that power your business.",
+    stack: ["WordPress", "Shopify", "WooCommerce", "Custom Plugins", "Shopify Plus", "Shopify Apps", "API Development", "Headless CMS"],
     features: [
-      "Automated deployments",
-      "Container orchestration",
-      "Infrastructure as code",
-      "Continuous integration",
-      "Performance monitoring",
-      "Security scanning",
+      "WordPress custom development",
+      "Shopify theme & app development",
+      "E-commerce optimization",
+      "Custom plugin development",
+      "API integrations",
+      "Headless architecture",
     ],
     useCases: [
-      "Cloud infrastructure",
-      "CI/CD pipelines",
-      "Container management",
-      "Monitoring & logging",
-      "Security compliance",
-      "Scalable deployments",
+      "WordPress websites",
+      "E-commerce stores",
+      "Custom CMS solutions",
+      "Shopify Plus stores",
+      "WooCommerce stores",
+      "API-driven platforms",
     ],
   },
   {
-    name: "UI/UX",
+    name: "Mobile Development",
     modelType: "cube",
-    description: "Creating intuitive, beautiful interfaces that users love. We combine user research, design thinking, and modern aesthetics.",
-    stack: ["Figma", "Adobe XD", "Sketch", "Prototyping", "User Research", "Design Systems", "Accessibility", "Usability Testing"],
+    description: "Native and cross-platform mobile app development. Building mobile experiences that engage users and drive business growth.",
+    stack: ["React Native", "Flutter", "iOS Development", "Android Development", "Mobile APIs", "App Store Optimization", "Push Notifications", "Mobile Analytics"],
     features: [
-      "User interface design",
-      "User experience research",
-      "Interactive prototypes",
-      "Design systems",
-      "Brand identity",
-      "Accessibility compliance",
+      "Cross-platform apps",
+      "Native mobile development",
+      "Mobile UI/UX design",
+      "App store optimization",
+      "Push notifications",
+      "Mobile analytics",
     ],
     useCases: [
-      "Web applications",
-      "Mobile apps",
-      "Design systems",
-      "Brand identity",
-      "User research",
-      "Prototyping",
+      "Mobile applications",
+      "Cross-platform apps",
+      "Mobile games",
+      "E-commerce apps",
+      "Social media apps",
+      "Enterprise mobile solutions",
     ],
   },
   {
-    name: "Digital Marketing",
+    name: "Game Development",
     modelType: "pyramid",
-    description: "Strategic digital marketing solutions that drive growth, engagement, and measurable results across all channels.",
-    stack: ["SEO", "SEM", "Social Media", "Content Marketing", "Email Marketing", "Analytics", "PPC", "Conversion Optimization"],
+    description: "Creating engaging games and interactive experiences. From 2D to 3D, we develop games that captivate players across all platforms.",
+    stack: ["Unity", "Unreal Engine", "Game Design", "3D Modeling", "Game Physics", "Multiplayer", "Game Analytics", "Publishing"],
     features: [
-      "Search engine optimization",
-      "Pay-per-click advertising",
+      "2D & 3D game development",
+      "Game mechanics design",
+      "Multiplayer integration",
+      "Game optimization",
+      "Cross-platform games",
+      "Game publishing",
+    ],
+    useCases: [
+      "Mobile games",
+      "Web games",
+      "Console games",
+      "Indie game development",
+      "Game prototypes",
+      "Game remastering",
+    ],
+  },
+  {
+    name: "SEO & Marketing",
+    modelType: "torus",
+    description: "Comprehensive SEO optimization and digital marketing strategies. From GBM optimization to technical SEO, we boost your online presence.",
+    stack: ["GBM Optimization", "On-Page SEO", "Off-Page SEO", "Technical SEO", "Geo-Fencing", "Social Media Marketing", "Content Marketing", "Analytics"],
+    features: [
+      "GBM optimization",
+      "On-page & off-page SEO",
+      "Technical SEO audits",
+      "Local SEO & geo-fencing",
       "Social media management",
       "Content strategy",
-      "Email campaigns",
-      "Analytics & reporting",
     ],
     useCases: [
-      "Brand awareness",
-      "Lead generation",
-      "E-commerce growth",
-      "Content marketing",
+      "Search engine optimization",
+      "Local business optimization",
+      "E-commerce SEO",
       "Social media campaigns",
-      "SEO optimization",
+      "Content marketing",
+      "Analytics & reporting",
     ],
   },
 ];
@@ -353,15 +375,36 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     let relativeIndex = slideIndex - currentIndex;
     
     // Handle wrap-around for infinite loop
-    // If we're at the last slide, the first slide should be the "next" slide (relativeIndex = 1)
-    // If we're at the first slide, the last slide should be the "previous" slide (relativeIndex = -1)
     if (relativeIndex > slides.length / 2) {
       relativeIndex = relativeIndex - slides.length;
     } else if (relativeIndex < -slides.length / 2) {
       relativeIndex = relativeIndex + slides.length;
     }
     
-    // Determine if this is previous, current, or next slide (with wrap-around)
+    // On mobile: only show current slide, hide all others
+    if (mobile) {
+      const isCurrent = relativeIndex === 0;
+      if (!isCurrent) {
+        return {
+          left: '50%',
+          transform: 'translateY(-50%) translateX(-50%)',
+          opacity: 0,
+          filter: 'none',
+          pointerEvents: 'none' as const,
+        };
+      }
+      // Current slide on mobile: simple centered, full width
+      const dragOffsetPercent = offset;
+      return {
+        left: '50%',
+        transform: `translateY(-50%) translateX(calc(-50% + ${dragOffsetPercent}%))`,
+        opacity: 1,
+        filter: 'none',
+        pointerEvents: 'auto' as const,
+      };
+    }
+    
+    // Desktop: 3D carousel with side cards
     const isPrevious = relativeIndex === -1;
     const isCurrent = relativeIndex === 0;
     const isNext = relativeIndex === 1;
@@ -379,58 +422,42 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     }
     
     // Apply drag offset for smooth dragging
-    // Offset is already in percentage terms from drag calculation
     const dragOffsetPercent = offset;
     
     // Calculate positions for 3-slide layout
-    // Slide width is 75%, so half width is 37.5%
-    // Current slide: centered at 50% (left edge at 12.5%, right edge at 87.5%)
-    // Previous slide: right half visible (right edge at 12.5%, so left edge at -62.5%)
-    // Next slide: left half visible (left edge at 87.5%, so right edge at 162.5%)
-    let baseLeftPosition = 12.5; // Default: current slide centered
+    let baseLeftPosition = 12.5;
     let rotationY = 0;
     let scale = 1;
     let translateZ = 0;
     let opacity = 1;
     
     if (isCurrent) {
-      // Current slide: fully visible, centered
-      baseLeftPosition = 12.5; // 50% - 37.5% (half of 75% width)
+      baseLeftPosition = 12.5;
       rotationY = 0;
       scale = 1;
       translateZ = 0;
       opacity = 1;
     } else if (isPrevious) {
-      // Previous slide: half visible on left, tilted left
-      // Right edge should be at 12.5% (where current starts), so left edge at -62.5%
-      baseLeftPosition = -62.5; // Position so right half is visible
-      rotationY = -25; // Tilt left
+      baseLeftPosition = -62.5;
+      rotationY = -25;
       scale = 0.9;
       translateZ = -200;
-      // More faded and blurred on mobile
-      opacity = mobile ? 0.2 : 0.4;
+      opacity = 0.4;
     } else if (isNext) {
-      // Next slide: half visible on right, tilted right
-      // Left edge should be at 87.5% (where current ends), so left edge at 87.5%
-      baseLeftPosition = 87.5; // Position so left half is visible
-      rotationY = 25; // Tilt right
+      baseLeftPosition = 87.5;
+      rotationY = 25;
       scale = 0.9;
       translateZ = -200;
-      // More faded and blurred on mobile
-      opacity = mobile ? 0.2 : 0.4;
+      opacity = 0.4;
     }
     
-    // Apply drag offset to all visible slides for smooth dragging
     const leftPosition = baseLeftPosition + dragOffsetPercent;
-    
-    // Add blur filter for side cards on mobile
-    const filter = (!isCurrent && mobile) ? 'blur(8px)' : 'none';
     
     return {
       left: `${leftPosition}%`,
       transform: `translateY(-50%) translateZ(${translateZ}px) rotateY(${rotationY}deg) scale(${scale})`,
       opacity: opacity,
-      filter: filter,
+      filter: 'none',
       pointerEvents: isCurrent ? 'auto' as const : 'none' as const,
     };
   };
@@ -439,9 +466,9 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-visible"
+      className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden sm:overflow-visible"
       style={{ 
-        perspective: '1500px',
+        perspective: isMobile ? 'none' : '1500px',
         perspectiveOrigin: 'center center',
       }}
       onMouseDown={handleMouseDown}
@@ -470,7 +497,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
               key={tech.name}
               className="absolute top-1/2"
               style={{
-                width: '75%',
+                width: isMobile ? '90%' : '75%',
                 maxWidth: '1280px',
                 left: slideTransform.left || '50%',
                 transform: slideTransform.transform,
@@ -478,7 +505,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                 filter: slideTransform.filter,
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
-                transformStyle: 'preserve-3d',
+                transformStyle: isMobile ? 'flat' : 'preserve-3d',
                 transition: isDragging ? 'none' : 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 pointerEvents: (slideTransform.pointerEvents !== undefined) ? slideTransform.pointerEvents : (isActive ? 'auto' : 'none'),
                 willChange: 'transform, opacity, filter',
@@ -592,6 +619,19 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
         })}
       </div>
       
+      {/* Simple navigation dots for mobile */}
+      <div className="flex items-center justify-center gap-2 mt-4 sm:hidden">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              currentIndex === index ? 'w-8 bg-[#00bef7]' : 'w-2 bg-white/30'
+            }`}
+            aria-label={`Go to ${slides[index].name}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
