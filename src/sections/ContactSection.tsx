@@ -7,18 +7,21 @@ const CONTACT_POINTS = [
   {
     label: "Start a project",
     description: "Share your goals and we'll create a launch-ready plan.",
+    descriptionMobile: "Share goals, get a plan.",
     action: "hello@synovolabs.com",
     href: "mailto:hello@synovolabs.com",
   },
   {
     label: "Book a workshop",
     description: "Align your team in a focused session.",
+    descriptionMobile: "Team alignment session.",
     action: "Pick a time",
     href: "https://cal.com/",
   },
   {
     label: "Join the team",
     description: "We're always looking for talented builders.",
+    descriptionMobile: "Talented builders wanted.",
     action: "View openings",
     href: "#",
   },
@@ -166,7 +169,8 @@ export default function ContactSection() {
                 Let's build together.
               </h2>
               <p className="text-xs sm:text-sm md:text-base text-white/70 max-w-3xl leading-relaxed" ref={descriptionRef}>
-                Share your vision and we'll deliver the plan to make it happen.
+                <span className="sm:hidden">Share your vision, get a plan.</span>
+                <span className="hidden sm:inline">Share your vision and we'll deliver the plan to make it happen.</span>
               </p>
             </div>
 
@@ -190,7 +194,10 @@ export default function ContactSection() {
                       {point.action}
                     </a>
                   </div>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">{point.description}</p>
+                  <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">
+                    <span className="sm:hidden">{point.descriptionMobile}</span>
+                    <span className="hidden sm:inline">{point.description}</span>
+                  </p>
                 </div>
               ))}
             </div>

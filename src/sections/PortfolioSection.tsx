@@ -170,7 +170,8 @@ export default function PortfolioSection() {
                     </div>
                     
                     <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
-                      {project.description}
+                      <span className="sm:hidden">{project.description.split('.')[0]}.</span>
+                      <span className="hidden sm:inline">{project.description}</span>
                     </p>
                     
                     {project.client && (

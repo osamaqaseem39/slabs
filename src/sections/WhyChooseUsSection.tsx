@@ -152,8 +152,8 @@ export default function WhyChooseUsSection() {
             ref={descriptionRef}
             className="text-xs sm:text-sm md:text-base text-white/70 leading-normal max-w-3xl mx-auto px-4"
           >
-            We combine expertise, speed, and quality to deliver solutions that grow with your business. 
-            Our team is committed to your success, from initial concept to long-term support.
+            <span className="sm:hidden">Expertise, speed, and quality solutions.</span>
+            <span className="hidden sm:inline">We combine expertise, speed, and quality to deliver solutions that grow with your business. Our team is committed to your success, from initial concept to long-term support.</span>
           </p>
         </div>
 
@@ -176,7 +176,8 @@ export default function WhyChooseUsSection() {
                     {benefit.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
-                    {benefit.description}
+                    <span className="sm:hidden">{benefit.description.split('.')[0]}.</span>
+                    <span className="hidden sm:inline">{benefit.description}</span>
                   </p>
                 </div>
                 <ul className="mt-auto space-y-1.5 sm:space-y-2 pt-4 sm:pt-6 border-t border-gray-200">

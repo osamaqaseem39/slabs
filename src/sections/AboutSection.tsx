@@ -142,7 +142,8 @@ export default function AboutSection() {
                 ref={descriptionRef}
                 className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-3xl"
               >
-                Expert AI developers, full-stack engineers, and digital strategists building intelligent solutions. From AI automation to web development, we create cutting-edge solutions that drive growth.
+                <span className="sm:hidden">AI developers and engineers building intelligent solutions.</span>
+                <span className="hidden sm:inline">Expert AI developers, full-stack engineers, and digital strategists building intelligent solutions. From AI automation to web development, we create cutting-edge solutions that drive growth.</span>
               </p>
             </div>
 
@@ -163,7 +164,10 @@ export default function AboutSection() {
                       {value.title}
                     </h3>
                   </div>
-                  <p className="text-sm sm:text-base text-gray-700 leading-relaxed">{value.description}</p>
+                  <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                    <span className="sm:hidden">{value.description.split('.')[0]}.</span>
+                    <span className="hidden sm:inline">{value.description}</span>
+                  </p>
                 </article>
               ))}
             </div>
@@ -178,7 +182,8 @@ export default function AboutSection() {
                 Passionate experts, united by purpose.
               </h3>
               <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-                Decades of combined experience in engineering, design, and strategy. Constantly learning and pushing the boundaries of digital innovation.
+                <span className="sm:hidden">Decades of combined experience in engineering and design.</span>
+                <span className="hidden sm:inline">Decades of combined experience in engineering, design, and strategy. Constantly learning and pushing the boundaries of digital innovation.</span>
               </p>
             </div>
 

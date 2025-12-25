@@ -9,7 +9,9 @@ type Service = {
   title: string;
   image: string;
   description: string;
+  descriptionMobile: string;
   summary: string;
+  summaryMobile: string;
   features: string[];
   highlights: string[];
 };
@@ -23,7 +25,9 @@ const services: Service[] = [
     title: "AI Development & Automation",
     image: "/service1.png",
     description: "Harness the power of artificial intelligence to automate workflows, create intelligent agents, and build AI-powered solutions that transform your business operations.",
+    descriptionMobile: "AI automation and intelligent agents for your business.",
     summary: "AI-powered solutions that automate and enhance your business.",
+    summaryMobile: "AI automation solutions.",
     features: [
       "AI agents & chatbots",
       "AI automation workflows",
@@ -42,7 +46,9 @@ const services: Service[] = [
     title: "Web & Mobile Development",
     image: "/service2.png",
     description: "Building high-performance web and mobile applications using modern frameworks. From MERN stack to Next.js, we create scalable solutions that drive growth.",
+    descriptionMobile: "Modern web and mobile apps with MERN and Next.js.",
     summary: "Modern development stack for web and mobile applications.",
+    summaryMobile: "Web & mobile apps.",
     features: [
       "MERN stack development",
       "React & Next.js applications",
@@ -61,7 +67,9 @@ const services: Service[] = [
     title: "Video & Graphics Production",
     image: "/service3.png",
     description: "Professional video editing and graphic design services. From YouTube content to AI-generated videos, we create compelling visual content that engages audiences.",
+    descriptionMobile: "Professional video editing and graphic design.",
     summary: "Creative video and graphics that captivate and convert.",
+    summaryMobile: "Video & graphics.",
     features: [
       "YouTube video editing (long & short form)",
       "Reels & social media videos",
@@ -80,7 +88,9 @@ const services: Service[] = [
     title: "SEO & Digital Marketing",
     image: "/service1.png",
     description: "Comprehensive SEO optimization and social media marketing strategies. From GBM optimization to technical SEO, we boost your online visibility and engagement.",
+    descriptionMobile: "SEO and social media marketing strategies.",
     summary: "Data-driven SEO and marketing that drives results.",
+    summaryMobile: "SEO & marketing.",
     features: [
       "GBM optimization",
       "On-page & off-page SEO",
@@ -99,7 +109,9 @@ const services: Service[] = [
     title: "Game Development",
     image: "/service2.png",
     description: "Creating engaging games and interactive experiences. From concept to launch, we develop games that captivate players and drive engagement.",
+    descriptionMobile: "Engaging games and interactive experiences.",
     summary: "Interactive game experiences that engage and entertain.",
+    summaryMobile: "Game development.",
     features: [
       "2D & 3D game development",
       "Mobile game development",
@@ -117,6 +129,68 @@ const services: Service[] = [
 ];
 
 function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; index: number; isFlipped: boolean; onFlip: () => void }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // On mobile, render simple card without flip functionality
+  if (isMobile) {
+    return (
+      <motion.article
+        className="group relative flex h-auto min-h-[350px] flex-col overflow-hidden rounded-2xl border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ scale: 1.01 }}
+      >
+        <div className="flex h-full flex-col rounded-2xl bg-transparent p-4 overflow-hidden">
+          <div className="flex justify-center flex-shrink-0 mb-3">
+            <div className="relative w-[60px] h-[60px]">
+              <Image
+                src={service.image}
+                alt={service.title}
+                fill
+                className="object-contain"
+                sizes="60px"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1.5 flex-shrink-0 mb-3">
+            <h3 className="text-lg font-bold text-gray-900 leading-tight">
+              {service.title}
+            </h3>
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#00bef7]/80 leading-tight">
+              {service.summaryMobile}
+            </p>
+          </div>
+
+          <p className="text-xs leading-normal text-gray-700 flex-1 overflow-y-auto min-h-0 mb-3">
+            {service.descriptionMobile}
+          </p>
+
+          <div className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-200 flex-shrink-0">
+            {service.highlights.slice(0, 2).map((highlight) => (
+              <span
+                key={highlight}
+                className="px-2 py-0.5 text-[10px] rounded-full border border-[#00bef7]/40 bg-[#00bef7]/15 text-[#00bef7] leading-tight"
+              >
+                {highlight}
+              </span>
+            ))}
+          </div>
+        </div>
+      </motion.article>
+    );
+  }
+
+  // Desktop: render flip card
   return (
     <motion.article
       className="group relative flex h-[450px] sm:h-[500px] md:h-[520px] flex-col overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
@@ -425,7 +499,8 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
             ref={descriptionRef}
             className="text-xs sm:text-sm md:text-base text-[#00bef7] leading-normal max-w-3xl mx-auto px-4"
           >
-            From AI development and automation to web & mobile apps, we deliver cutting-edge solutions powered by artificial intelligence and modern development frameworks.
+            <span className="sm:hidden">AI, web, mobile, and digital solutions.</span>
+            <span className="hidden sm:inline">From AI development and automation to web & mobile apps, we deliver cutting-edge solutions powered by artificial intelligence and modern development frameworks.</span>
           </p>
         </div>
 

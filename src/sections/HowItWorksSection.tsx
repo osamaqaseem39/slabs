@@ -8,8 +8,10 @@ const PROCESS_STEPS = [
     title: "Discovery & Planning",
     timeline: "Step 1",
     summary: "Understanding your vision and requirements.",
+    summaryMobile: "Understanding vision.",
     details:
       "Deep discovery sessions to understand business goals, target audience, and technical requirements.",
+    detailsMobile: "Discovery sessions to understand goals and requirements.",
     deliverables: [
       "Project brief & roadmap",
       "Technical requirements",
@@ -23,8 +25,10 @@ const PROCESS_STEPS = [
     title: "Design & Prototyping",
     timeline: "Step 2",
     summary: "Creating the visual and interactive experience.",
+    summaryMobile: "Visual and interactive design.",
     details:
       "Wireframes, high-fidelity designs, and interactive prototypes iterated based on feedback.",
+    detailsMobile: "Wireframes and prototypes based on feedback.",
     deliverables: [
       "Wireframes & mockups",
       "Interactive prototype",
@@ -38,8 +42,10 @@ const PROCESS_STEPS = [
     title: "Development & Testing",
     timeline: "Step 3",
     summary: "Building and refining the solution.",
+    summaryMobile: "Building the solution.",
     details:
       "Regular sprints, weekly demos, and continuous testing with real-time updates and monitoring.",
+    detailsMobile: "Sprints, demos, and continuous testing.",
     deliverables: [
       "Sprint demos",
       "QA reports",
@@ -53,8 +59,10 @@ const PROCESS_STEPS = [
     title: "Launch & Support",
     timeline: "Step 4",
     summary: "Going live and ensuring success.",
+    summaryMobile: "Launch and ongoing support.",
     details:
       "Deployment, training, and ongoing support with comprehensive documentation and optimization.",
+    detailsMobile: "Deployment, training, and ongoing support.",
     deliverables: [
       "Launch deployment",
       "Training & docs",
@@ -73,6 +81,16 @@ export default function HowItWorksSection() {
   const [flippedCard, setFlippedCard] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? PROCESS_STEPS.length - 1 : prev - 1));
@@ -121,7 +139,8 @@ export default function HowItWorksSection() {
             How It Works
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight text-white">
-            From concept to launch.
+            <span className="sm:hidden">From concept to launch.</span>
+            <span className="hidden sm:inline">From concept to launch.</span>
           </h2>
         </div>
 
@@ -250,48 +269,87 @@ export default function HowItWorksSection() {
                 className="absolute inset-0 flex items-center justify-center"
               >
                 <motion.article
-                  className="group relative flex h-[380px] sm:h-[430px] md:h-[460px] w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-white backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 perspective-[1600px] cursor-pointer touch-manipulation"
-                  onClick={() => handleCardClick(currentIndex)}
+                  className={`group relative flex ${isMobile ? 'h-auto min-h-[300px]' : 'h-[380px] sm:h-[430px] md:h-[460px]'} w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-white backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 ${isMobile ? '' : 'perspective-[1600px] cursor-pointer'} touch-manipulation`}
+                  onClick={isMobile ? undefined : () => handleCardClick(currentIndex)}
                 >
-                  <div
-                    className={`relative h-full w-full [transform-style:preserve-3d] [transition:transform_0.8s_cubic-bezier(0.22,1,0.36,1)] ${
-                      flippedCard === currentIndex ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"
-                    }`}
-                  >
-                    {/* Front of Card */}
-                    <div className="absolute inset-0 flex h-full flex-col p-5 sm:p-8 md:p-10 lg:p-12 [backface-visibility:hidden]">
-                      <div className="flex items-start justify-between mb-4 sm:mb-6 md:mb-8">
-                        <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
-                          <div className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 items-center justify-center rounded-lg sm:rounded-xl bg-[#00bef7]/10 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                  {isMobile ? (
+                    // Mobile: Simple card without flip
+                    <div className="flex h-full flex-col p-5 sm:p-8">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#00bef7]/10 text-2xl">
                             {PROCESS_STEPS[currentIndex].icon}
                           </div>
-                          <div className="text-xs sm:text-sm font-medium text-[#00bef7]">
+                          <div className="text-xs font-medium text-[#00bef7]">
                             {PROCESS_STEPS[currentIndex].timeline}
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex-1 space-y-3 sm:space-y-4 md:space-y-5">
-                        <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                      <div className="flex-1 space-y-2">
+                        <h3 className="text-xl font-bold text-gray-900 leading-tight">
                           {PROCESS_STEPS[currentIndex].title}
                         </h3>
-                        <p className="text-sm sm:text-base md:text-lg font-medium text-[#00bef7]/90 uppercase tracking-wider">
-                          {PROCESS_STEPS[currentIndex].summary}
+                        <p className="text-xs font-medium text-[#00bef7]/90 uppercase tracking-wider">
+                          {PROCESS_STEPS[currentIndex].summaryMobile}
                         </p>
-                        <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-700 max-w-2xl">
-                          {PROCESS_STEPS[currentIndex].details}
+                        <p className="text-xs leading-relaxed text-gray-700">
+                          {PROCESS_STEPS[currentIndex].detailsMobile}
                         </p>
                       </div>
 
-                      <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
-                        <p className="text-[10px] sm:text-xs text-gray-500 text-center">
-                          Click to see deliverables
-                        </p>
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <div className="text-[10px] text-gray-500 space-y-1">
+                          {PROCESS_STEPS[currentIndex].deliverables.slice(0, 2).map((item) => (
+                            <div key={item} className="flex items-center gap-2">
+                              <span className="h-1 w-1 rounded-full bg-[#00bef7]" />
+                              <span>{item}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     </div>
+                  ) : (
+                    // Desktop: Flip card
+                    <div
+                      className={`relative h-full w-full [transform-style:preserve-3d] [transition:transform_0.8s_cubic-bezier(0.22,1,0.36,1)] ${
+                        flippedCard === currentIndex ? "[transform:rotateY(180deg)]" : "[transform:rotateY(0deg)]"
+                      }`}
+                    >
+                      {/* Front of Card */}
+                      <div className="absolute inset-0 flex h-full flex-col p-5 sm:p-8 md:p-10 lg:p-12 [backface-visibility:hidden]">
+                        <div className="flex items-start justify-between mb-4 sm:mb-6 md:mb-8">
+                          <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+                            <div className="flex h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 lg:h-20 lg:w-20 items-center justify-center rounded-lg sm:rounded-xl bg-[#00bef7]/10 text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
+                              {PROCESS_STEPS[currentIndex].icon}
+                            </div>
+                            <div className="text-xs sm:text-sm font-medium text-[#00bef7]">
+                              {PROCESS_STEPS[currentIndex].timeline}
+                            </div>
+                          </div>
+                        </div>
 
-                    {/* Back of Card */}
-                    <div className="absolute inset-0 flex h-full flex-col p-4 sm:p-6 md:p-8 bg-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+                        <div className="flex-1 space-y-3 sm:space-y-4 md:space-y-5">
+                          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                            {PROCESS_STEPS[currentIndex].title}
+                          </h3>
+                          <p className="text-sm sm:text-base md:text-lg font-medium text-[#00bef7]/90 uppercase tracking-wider">
+                            {PROCESS_STEPS[currentIndex].summary}
+                          </p>
+                          <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-700 max-w-2xl">
+                            {PROCESS_STEPS[currentIndex].details}
+                          </p>
+                        </div>
+
+                        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
+                          <p className="text-[10px] sm:text-xs text-gray-500 text-center">
+                            Click to see deliverables
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Back of Card */}
+                      <div className="absolute inset-0 flex h-full flex-col p-4 sm:p-6 md:p-8 bg-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
                       <div className="mb-3 sm:mb-4 flex-shrink-0">
                         <div className="text-xs sm:text-sm font-medium text-[#00bef7] mb-1.5 sm:mb-2 uppercase tracking-wider">
                           {PROCESS_STEPS[currentIndex].timeline}
@@ -373,7 +431,7 @@ export default function HowItWorksSection() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </motion.article>
               </motion.div>
             </AnimatePresence>
