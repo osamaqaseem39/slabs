@@ -431,6 +431,7 @@ export default function HowItWorksSection() {
                         </div>
                       </div>
                     </div>
+                    </div>
                   )}
                 </motion.article>
               </motion.div>
