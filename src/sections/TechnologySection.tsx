@@ -466,7 +466,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden sm:overflow-visible"
+      className={`relative w-full ${isMobile ? 'min-h-[500px]' : 'h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px]'} overflow-visible`}
       style={{ 
         perspective: isMobile ? 'none' : '1500px',
         perspectiveOrigin: 'center center',
@@ -482,7 +482,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
       {/* 3D Gallery Container */}
       <div
         ref={carouselRef}
-        className="relative w-full h-full"
+        className={`relative w-full ${isMobile ? 'min-h-[500px]' : 'h-full'}`}
         style={{
           transformStyle: 'preserve-3d',
         }}
@@ -523,7 +523,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                 }}
               >
                 <div
-                  className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 cursor-grab active:cursor-grabbing w-full touch-manipulation"
+                  className={`bg-white rounded-xl sm:rounded-2xl shadow-2xl ${isMobile ? 'p-4' : 'p-4 sm:p-6 md:p-8 lg:p-10'} cursor-grab active:cursor-grabbing w-full touch-manipulation`}
                   style={{
                     WebkitFontSmoothing: 'antialiased',
                     MozOsxFontSmoothing: 'grayscale',
@@ -703,7 +703,7 @@ export default function TechnologySection() {
       id="technology"
       ref={sectionRef}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#141b38] py-12 flex items-center overflow-x-hidden overflow-y-hidden"
+      className="relative min-h-[100vh] bg-[#141b38] py-12 flex items-center overflow-x-hidden"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14 relative z-10">
         {/* Section Header */}

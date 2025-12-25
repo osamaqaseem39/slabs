@@ -144,26 +144,26 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
   if (isMobile) {
     return (
       <motion.article
-        className="group relative flex h-auto min-h-[350px] flex-col overflow-hidden rounded-2xl border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         whileHover={{ scale: 1.01 }}
       >
-        <div className="flex h-full flex-col rounded-2xl bg-transparent p-4 overflow-hidden">
-          <div className="flex justify-center flex-shrink-0 mb-3">
-            <div className="relative w-[60px] h-[60px]">
+        <div className="flex flex-col rounded-2xl bg-transparent p-4">
+          <div className="flex justify-center mb-2">
+            <div className="relative w-[50px] h-[50px]">
               <Image
                 src={service.image}
                 alt={service.title}
                 fill
                 className="object-contain"
-                sizes="60px"
+                sizes="50px"
               />
             </div>
           </div>
 
-          <div className="space-y-1.5 flex-shrink-0 mb-3">
-            <h3 className="text-lg font-bold text-gray-900 leading-tight">
+          <div className="space-y-1 mb-2">
+            <h3 className="text-base font-bold text-gray-900 leading-tight">
               {service.title}
             </h3>
             <p className="text-[10px] uppercase tracking-[0.2em] text-[#00bef7]/80 leading-tight">
@@ -171,11 +171,11 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
             </p>
           </div>
 
-          <p className="text-xs leading-normal text-gray-700 flex-1 overflow-y-auto min-h-0 mb-3">
+          <p className="text-xs leading-relaxed text-gray-700 mb-2.5">
             {service.descriptionMobile}
           </p>
 
-          <div className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-200 flex-shrink-0">
+          <div className="flex flex-wrap gap-1.5 pt-2.5 border-t border-gray-200">
             {service.highlights.slice(0, 2).map((highlight) => (
               <span
                 key={highlight}
