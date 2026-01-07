@@ -175,13 +175,13 @@ export default function AboutSection() {
 
           <div
             ref={sidebarRef}
-            className="rounded-2xl sm:rounded-3xl md:rounded-[36px] border border-white/10 bg-white shadow-[0_24px_60px_rgba(15,23,42,0.32)] p-6 sm:p-8 md:p-10 backdrop-blur lg:sticky lg:top-28"
+            className="rounded-2xl sm:rounded-3xl md:rounded-[36px] border border-white/20 bg-white/10 backdrop-blur-lg shadow-[0_18px_42px_rgba(15,23,42,0.22)] p-6 sm:p-8 md:p-10 lg:sticky lg:top-28"
           >
             <div className="space-y-4 sm:space-y-5 md:space-y-6">
-              <h3 className="text-2xl sm:text-3xl font-semibold text-gray-900 leading-snug">
+              <h3 className="text-2xl sm:text-3xl font-semibold text-white leading-snug">
                 Passionate experts, united by purpose.
               </h3>
-              <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+              <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                 <span className="sm:hidden">Decades of combined experience in engineering and design.</span>
                 <span className="hidden sm:inline">Decades of combined experience in engineering, design, and strategy. Constantly learning and pushing the boundaries of digital innovation.</span>
               </p>
@@ -189,12 +189,12 @@ export default function AboutSection() {
 
             <div
               ref={quoteRef}
-              className="mt-6 sm:mt-8 md:mt-10 rounded-2xl sm:rounded-3xl border border-dashed border-[#00bef7]/40 bg-[#00bef7]/10 p-4 sm:p-5 md:p-6 text-xs sm:text-sm text-gray-900"
+              className="mt-6 sm:mt-8 md:mt-10 rounded-2xl sm:rounded-3xl border border-dashed border-[#00bef7]/40 bg-[#00bef7]/10 p-4 sm:p-5 md:p-6 text-xs sm:text-sm text-white/90"
             >
               <p>
                 &ldquo;We build lasting partnerships. Solutions that evolve with your business and deliver value for years to come.&rdquo;
               </p>
-              <p className="mt-3 sm:mt-4 font-semibold text-gray-900">— Our Promise</p>
+              <p className="mt-3 sm:mt-4 font-semibold text-white">— Our Promise</p>
             </div>
           </div>
         </div>
