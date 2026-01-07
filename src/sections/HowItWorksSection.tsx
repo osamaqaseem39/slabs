@@ -138,7 +138,7 @@ export default function HowItWorksSection() {
           <p className="mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-[#00bef7]">
             How It Works
           </p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold leading-tight text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight">
             <span className="sm:hidden">From concept to launch.</span>
             <span className="hidden sm:inline">From concept to launch.</span>
           </h2>
@@ -269,7 +269,7 @@ export default function HowItWorksSection() {
                 className="absolute inset-0 flex items-center justify-center"
               >
                 <motion.article
-                  className={`group relative flex ${isMobile ? 'h-auto min-h-[300px]' : 'h-[380px] sm:h-[430px] md:h-[460px]'} w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-white/10 bg-white backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/30 ${isMobile ? '' : 'perspective-[1600px] cursor-pointer'} touch-manipulation`}
+                  className={`group relative flex ${isMobile ? 'h-auto min-h-[300px]' : 'h-[380px] sm:h-[430px] md:h-[460px]'} w-full max-w-[800px] md:max-w-[900px] lg:max-w-[1000px] flex-col overflow-hidden rounded-xl sm:rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15 ${isMobile ? '' : 'perspective-[1600px] cursor-pointer'} touch-manipulation`}
                   onClick={isMobile ? undefined : () => handleCardClick(currentIndex)}
                 >
                   {isMobile ? (
@@ -287,19 +287,19 @@ export default function HowItWorksSection() {
                       </div>
 
                       <div className="flex-1 space-y-2">
-                        <h3 className="text-xl font-bold text-gray-900 leading-tight">
+                        <h3 className="text-xl font-bold text-white leading-tight">
                           {PROCESS_STEPS[currentIndex].title}
                         </h3>
                         <p className="text-xs font-medium text-[#00bef7]/90 uppercase tracking-wider">
                           {PROCESS_STEPS[currentIndex].summaryMobile}
                         </p>
-                        <p className="text-xs leading-relaxed text-gray-700">
+                        <p className="text-xs leading-relaxed text-white/80">
                           {PROCESS_STEPS[currentIndex].detailsMobile}
                         </p>
                       </div>
 
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <div className="text-[10px] text-gray-500 space-y-1">
+                      <div className="mt-4 pt-4 border-t border-white/20">
+                        <div className="text-[10px] text-white/70 space-y-1">
                           {PROCESS_STEPS[currentIndex].deliverables.slice(0, 2).map((item) => (
                             <div key={item} className="flex items-center gap-2">
                               <span className="h-1 w-1 rounded-full bg-[#00bef7]" />
@@ -330,31 +330,31 @@ export default function HowItWorksSection() {
                         </div>
 
                         <div className="flex-1 space-y-3 sm:space-y-4 md:space-y-5">
-                          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
+                          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-tight">
                             {PROCESS_STEPS[currentIndex].title}
                           </h3>
                           <p className="text-sm sm:text-base md:text-lg font-medium text-[#00bef7]/90 uppercase tracking-wider">
                             {PROCESS_STEPS[currentIndex].summary}
                           </p>
-                          <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-gray-700 max-w-2xl">
+                          <p className="text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed text-white/80 max-w-2xl">
                             {PROCESS_STEPS[currentIndex].details}
                           </p>
                         </div>
 
-                        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
-                          <p className="text-[10px] sm:text-xs text-gray-500 text-center">
+                        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-white/20">
+                          <p className="text-[10px] sm:text-xs text-white/70 text-center">
                             Click to see deliverables
                           </p>
                         </div>
                       </div>
 
                       {/* Back of Card */}
-                      <div className="absolute inset-0 flex h-full flex-col p-4 sm:p-6 md:p-8 bg-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+                      <div className="absolute inset-0 flex h-full flex-col p-4 sm:p-6 md:p-8 bg-white/10 backdrop-blur-lg border border-white/20 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
                       <div className="mb-3 sm:mb-4 flex-shrink-0">
                         <div className="text-xs sm:text-sm font-medium text-[#00bef7] mb-1.5 sm:mb-2 uppercase tracking-wider">
                           {PROCESS_STEPS[currentIndex].timeline}
                         </div>
-                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
                           {PROCESS_STEPS[currentIndex].title}
                         </h3>
                       </div>
@@ -372,7 +372,7 @@ export default function HowItWorksSection() {
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: idx * 0.08 }}
-                                className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm md:text-base text-gray-800"
+                                className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm md:text-base text-white/80"
                               >
                                 <div className="flex h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#00bef7]/20">
                                   <svg className="h-3 w-3 sm:h-4 sm:w-4 text-[#00bef7]" fill="currentColor" viewBox="0 0 20 20">
@@ -394,18 +394,18 @@ export default function HowItWorksSection() {
                             </div>
                             <div className="space-y-1.5 sm:space-y-2">
                               {PROCESS_STEPS[currentIndex].summary && (
-                                <div className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                                <div className="text-xs sm:text-sm text-white/80 leading-relaxed">
                                   {PROCESS_STEPS[currentIndex].summary}
                                 </div>
                               )}
-                              <div className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                              <div className="text-xs sm:text-sm text-white/80 leading-relaxed">
                                 {PROCESS_STEPS[currentIndex].details}
                               </div>
                             </div>
                           </div>
 
                           {/* Stats Section */}
-                          <div className="pt-2 sm:pt-3 border-t border-gray-200 flex-shrink-0">
+                          <div className="pt-2 sm:pt-3 border-t border-white/20 flex-shrink-0">
                             <div className="text-[10px] sm:text-xs font-semibold text-[#00bef7]/90 mb-1.5 sm:mb-2 uppercase tracking-wider">
                               Process Metrics
                             </div>
@@ -416,12 +416,12 @@ export default function HowItWorksSection() {
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: idx * 0.1 }}
-                                  className="text-center p-1.5 sm:p-2 rounded-lg bg-gray-50 border border-gray-200"
+                                  className="text-center p-1.5 sm:p-2 rounded-lg bg-white/10 border border-white/20 backdrop-blur-sm"
                                 >
                                   <div className="text-sm sm:text-base font-bold text-[#00bef7] mb-0.5">
                                     {value}
                                   </div>
-                                  <div className="text-[10px] sm:text-xs text-gray-600 uppercase tracking-wider leading-tight">
+                                  <div className="text-[10px] sm:text-xs text-white/70 uppercase tracking-wider leading-tight">
                                     {key}
                                   </div>
                                 </motion.div>

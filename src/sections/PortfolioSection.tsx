@@ -123,7 +123,7 @@ export default function PortfolioSection() {
           </p>
           <h2
             ref={headingRef}
-            className="mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
           >
             Our work
           </h2>
@@ -136,10 +136,10 @@ export default function PortfolioSection() {
               ref={(el) => {
                 modelsRef.current[index] = el;
               }}
-              className="group relative flex flex-col h-[400px] sm:h-[450px] md:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer bg-white touch-manipulation"
+              className="group relative flex flex-col h-[400px] sm:h-[450px] md:h-[500px] rounded-2xl sm:rounded-3xl overflow-hidden cursor-pointer bg-white/10 backdrop-blur-lg border border-white/20 touch-manipulation"
             >
               {/* Image Container - Contained */}
-              <div className="relative flex-1 p-4 sm:p-6 flex items-center justify-center bg-white">
+              <div className="relative flex-1 p-4 sm:p-6 flex items-center justify-center bg-transparent">
                 <div className="relative w-full h-full">
                   <Image
                     src={project.image}

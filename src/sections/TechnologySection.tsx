@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import gsap from "gsap";
 
 type Technology = {
@@ -162,6 +162,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   const cooldownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const autoAdvanceIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [hoveredSlideIndex, setHoveredSlideIndex] = useState<number | null>(null);
 
   const slides = technologies;
   const slideWidth = 100; // Percentage width of each slide (full width)
@@ -209,7 +210,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
           }
           cooldownTimeoutRef.current = setTimeout(() => {
             setIsCooldown(false);
-          }, 3000);
+          }, 1000); // Reduced cooldown to 1 second
           setOffset(0);
           return nextIndex;
         });
@@ -257,7 +258,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     }
     cooldownTimeoutRef.current = setTimeout(() => {
       setIsCooldown(false);
-    }, 3000); // 3 second cooldown
+    }, 500); // Reduced cooldown to 0.5 seconds for faster navigation
   };
 
   // Next/Previous navigation with infinite loop
@@ -295,7 +296,8 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     lastTimeRef.current = now;
     
     const deltaX = clientX - startX;
-    const sensitivity = 0.3;
+    // Higher sensitivity on mobile for better swipe feel
+    const sensitivity = isMobile ? 0.5 : 0.3;
     const dragOffset = (deltaX / window.innerWidth) * 100 * sensitivity;
     // For 3-slide layout, offset is just the drag offset (no base offset needed)
     setOffset(dragOffset);
@@ -307,7 +309,8 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     setIsDragging(false);
     
     const deltaX = currentX - startX;
-    const threshold = 50; // Minimum drag distance
+    // Lower threshold on mobile for easier swiping
+    const threshold = isMobile ? 30 : 50; // Minimum drag distance
     
     // Use velocity to determine swipe direction if drag is small
     if (Math.abs(deltaX) < threshold && Math.abs(velocity) > 0.5) {
@@ -370,7 +373,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
   };
 
   // Calculate 3D transform for each slide
-  const getSlideTransform = (slideIndex: number, mobile: boolean) => {
+  const getSlideTransform = (slideIndex: number, mobile: boolean, hoveredIndex: number | null = null) => {
     // Calculate relative position to current index
     let relativeIndex = slideIndex - currentIndex;
     
@@ -381,27 +384,66 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
       relativeIndex = relativeIndex + slides.length;
     }
     
-    // On mobile: only show current slide, hide all others
+    // On mobile: smooth slide animation
     if (mobile) {
       const isCurrent = relativeIndex === 0;
-      if (!isCurrent) {
+      const isNext = relativeIndex === 1;
+      const isPrevious = relativeIndex === -1;
+      
+      // Hide slides that are far away
+      if (!isCurrent && !isNext && !isPrevious) {
         return {
           left: '50%',
-          transform: 'translateY(-50%) translateX(-50%)',
+          transform: 'translate3d(-50%, -50%, 0)',
           opacity: 0,
           filter: 'none',
           pointerEvents: 'none' as const,
         };
       }
-      // Current slide on mobile: simple centered, full width
+      
+      // Apply drag offset for smooth dragging (convert to percentage of screen width)
       const dragOffsetPercent = offset;
-      return {
-        left: '50%',
-        transform: `translateY(-50%) translateX(calc(-50% + ${dragOffsetPercent}%))`,
-        opacity: 1,
-        filter: 'none',
-        pointerEvents: 'auto' as const,
-      };
+      
+      // Current slide: centered, moves with drag
+      if (isCurrent) {
+        return {
+          left: '50%',
+          transform: `translate3d(calc(-50% + ${dragOffsetPercent}%), -50%, 0)`,
+          opacity: 1,
+          filter: 'none',
+          pointerEvents: 'auto' as const,
+        };
+      }
+      
+      // Next slide: starts off-screen right, slides in with drag
+      if (isNext) {
+        // When not dragging, next slide is off-screen to the right
+        // When dragging left (negative offset), it slides in
+        const slidePosition = 100 + dragOffsetPercent;
+        const opacity = Math.max(0, Math.min(1, (50 - dragOffsetPercent) / 50));
+        return {
+          left: '50%',
+          transform: `translate3d(calc(-50% + ${slidePosition}%), -50%, 0)`,
+          opacity: opacity,
+          filter: 'none',
+          pointerEvents: 'none' as const,
+        };
+      }
+      
+      // Previous slide: starts off-screen left, slides in with drag
+      if (isPrevious) {
+        // When not dragging, previous slide is off-screen to the left
+        // When dragging right (positive offset), it slides in
+        const slidePosition = -100 + dragOffsetPercent;
+        const opacity = Math.max(0, Math.min(1, (50 + dragOffsetPercent) / 50));
+        return {
+          left: '50%',
+          transform: `translate3d(calc(-50% + ${slidePosition}%), -50%, 0)`,
+          opacity: opacity,
+          filter: 'none',
+          pointerEvents: 'none' as const,
+        };
+      }
     }
     
     // Desktop: 3D carousel with side cards
@@ -414,7 +456,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     if (!isVisible) {
       return {
         left: '50%',
-        transform: `translateY(-50%) translateZ(-500px)`,
+        transform: 'translate3d(0, -50%, -500px)',
         opacity: 0,
         filter: 'none',
         pointerEvents: 'none' as const,
@@ -430,6 +472,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     let scale = 1;
     let translateZ = 0;
     let opacity = 1;
+    const isHovered = hoveredIndex === slideIndex;
     
     if (isCurrent) {
       baseLeftPosition = 12.5;
@@ -440,25 +483,27 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
     } else if (isPrevious) {
       baseLeftPosition = -62.5;
       rotationY = -25;
-      scale = 0.9;
-      translateZ = -200;
-      opacity = 0.4;
+      // Pop up effect on hover
+      scale = isHovered ? 0.95 : 0.9;
+      translateZ = isHovered ? -100 : -200;
+      opacity = isHovered ? 0.6 : 0.4;
     } else if (isNext) {
       baseLeftPosition = 87.5;
       rotationY = 25;
-      scale = 0.9;
-      translateZ = -200;
-      opacity = 0.4;
+      // Pop up effect on hover
+      scale = isHovered ? 0.95 : 0.9;
+      translateZ = isHovered ? -100 : -200;
+      opacity = isHovered ? 0.6 : 0.4;
     }
     
     const leftPosition = baseLeftPosition + dragOffsetPercent;
     
     return {
       left: `${leftPosition}%`,
-      transform: `translateY(-50%) translateZ(${translateZ}px) rotateY(${rotationY}deg) scale(${scale})`,
+      transform: `translate3d(0, -50%, ${translateZ}px) rotateY(${rotationY}deg) scale(${scale})`,
       opacity: opacity,
       filter: 'none',
-      pointerEvents: isCurrent ? 'auto' as const : 'none' as const,
+      pointerEvents: (isCurrent || isPrevious || isNext) ? 'auto' as const : 'none' as const,
     };
   };
 
@@ -489,8 +534,16 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
       >
         {/* Render all slides */}
         {slides.map((tech, slideIndex) => {
-          const slideTransform = getSlideTransform(slideIndex, isMobile);
+          const slideTransform = getSlideTransform(slideIndex, isMobile, hoveredSlideIndex);
           const isActive = slideIndex === currentIndex;
+          // Calculate relative position to determine if it's a side card
+          let relativeIndex = slideIndex - currentIndex;
+          if (relativeIndex > slides.length / 2) {
+            relativeIndex = relativeIndex - slides.length;
+          } else if (relativeIndex < -slides.length / 2) {
+            relativeIndex = relativeIndex + slides.length;
+          }
+          const isSideCard = !isMobile && (relativeIndex === -1 || relativeIndex === 1);
           
           return (
             <div
@@ -506,12 +559,20 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                 backfaceVisibility: 'hidden',
                 WebkitBackfaceVisibility: 'hidden',
                 transformStyle: isMobile ? 'flat' : 'preserve-3d',
-                transition: isDragging ? 'none' : 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: isDragging ? 'none' : `all ${isMobile ? '0.7s' : '0.6s'} cubic-bezier(0.4, 0, 0.2, 1)`,
                 pointerEvents: (slideTransform.pointerEvents !== undefined) ? slideTransform.pointerEvents : (isActive ? 'auto' : 'none'),
-                willChange: 'transform, opacity, filter',
+                willChange: isDragging ? 'transform, opacity' : 'auto',
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
                 transformOrigin: 'center center',
+                cursor: isSideCard ? 'pointer' : isActive ? 'grab' : 'default',
+              }}
+              onMouseEnter={() => !isMobile && !isActive && setHoveredSlideIndex(slideIndex)}
+              onMouseLeave={() => setHoveredSlideIndex(null)}
+              onClick={() => {
+                if (isSideCard && !isDragging) {
+                  goToSlide(slideIndex);
+                }
               }}
             >
               {/* White Slide Card */}
@@ -523,7 +584,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                 }}
               >
                 <div
-                  className={`bg-white rounded-xl sm:rounded-2xl shadow-2xl ${isMobile ? 'p-4' : 'p-4 sm:p-6 md:p-8 lg:p-10'} cursor-grab active:cursor-grabbing w-full touch-manipulation`}
+                  className={`bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl sm:rounded-2xl shadow-2xl ${isMobile ? 'p-4' : 'p-4 sm:p-6 md:p-8 lg:p-10'} ${isSideCard ? 'cursor-pointer' : 'cursor-grab active:cursor-grabbing'} w-full touch-manipulation`}
                   style={{
                     WebkitFontSmoothing: 'antialiased',
                     MozOsxFontSmoothing: 'grayscale',
@@ -531,12 +592,12 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                   }}
                 >
                   {/* Technology Name */}
-                  <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 text-center">
+                  <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4 text-center">
                     {tech.name}
                   </h4>
                   
                   {/* Description */}
-                  <p className="text-center text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base md:text-lg max-w-3xl mx-auto">
+                  <p className="text-center text-white/80 mb-4 sm:mb-6 text-sm sm:text-base md:text-lg max-w-3xl mx-auto">
                     {tech.description}
                   </p>
 
@@ -544,7 +605,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                     {/* Technology Stack */}
                     <div className="flex flex-col">
-                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 mb-2 sm:mb-3 font-semibold">
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white/80 mb-2 sm:mb-3 font-semibold">
                         Technology Stack
                       </p>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -552,13 +613,13 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                         {(isMobile ? tech.stack.slice(0, 4) : tech.stack).map((item, itemIndex) => (
                           <span
                             key={item}
-                            className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                            className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-white/30 bg-white/10 backdrop-blur-sm text-white font-medium hover:bg-white/20 hover:border-white/40 transition-colors"
                           >
                             {item}
                           </span>
                         ))}
                         {isMobile && tech.stack.length > 4 && (
-                          <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-gray-300 bg-gray-50 text-gray-500 font-medium">
+                          <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-full border border-white/30 bg-white/10 backdrop-blur-sm text-white/70 font-medium">
                             +{tech.stack.length - 4}
                           </span>
                         )}
@@ -567,7 +628,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
 
                     {/* Key Features */}
                     <div className="flex flex-col">
-                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 mb-2 sm:mb-3 font-semibold">
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white/80 mb-2 sm:mb-3 font-semibold">
                         Key Features
                       </p>
                       <ul className="space-y-1.5 sm:space-y-2">
@@ -575,14 +636,14 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                         {(isMobile ? tech.features.slice(0, 3) : tech.features).map((feature) => (
                           <li
                             key={feature}
-                            className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-800 leading-relaxed"
+                            className="flex items-start gap-1.5 sm:gap-2 text-xs sm:text-sm text-white/80 leading-relaxed"
                           >
                             <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0 mt-1.5 sm:mt-2" />
                             <span>{feature}</span>
                           </li>
                         ))}
                         {isMobile && tech.features.length > 3 && (
-                          <li className="text-[10px] text-gray-500 italic">
+                          <li className="text-[10px] text-white/60 italic">
                             +{tech.features.length - 3} more
                           </li>
                         )}
@@ -591,7 +652,7 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
 
                     {/* Use Cases */}
                     <div className="flex flex-col">
-                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-gray-700 mb-2 sm:mb-3 font-semibold">
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-white/80 mb-2 sm:mb-3 font-semibold">
                         Use Cases
                       </p>
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -599,13 +660,13 @@ function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[
                         {(isMobile ? tech.useCases.slice(0, 3) : tech.useCases).map((useCase) => (
                           <span
                             key={useCase}
-                            className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-900 font-medium hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                            className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-white/30 bg-white/10 backdrop-blur-sm text-white font-medium hover:bg-white/20 hover:border-white/40 transition-colors"
                           >
                             {useCase}
                           </span>
                         ))}
                         {isMobile && tech.useCases.length > 3 && (
-                          <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-gray-300 bg-gray-50 text-gray-500 font-medium">
+                          <span className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs rounded-lg border border-white/30 bg-white/10 backdrop-blur-sm text-white/70 font-medium">
                             +{tech.useCases.length - 3}
                           </span>
                         )}
@@ -659,18 +720,18 @@ export default function TechnologySection() {
     gsap.set(elements, { opacity: 0, y: 40 });
 
     const timeline = gsap.timeline({
-      defaults: { ease: "power3.out" },
+      defaults: { ease: "power2.out" },
       paused: true,
     });
 
     if (eyebrowEl) {
-      timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.5 });
+      timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.8 });
     }
     if (headingEl) {
-      timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.65 }, "-=0.3");
+      timeline.to(headingEl, { opacity: 1, y: 0, duration: 1.0 }, "-=0.4");
     }
     if (carouselEl) {
-      timeline.to(carouselEl, { opacity: 1, y: 0, duration: 0.8 }, "-=0.3");
+      timeline.to(carouselEl, { opacity: 1, y: 0, duration: 1.2 }, "-=0.4");
     }
 
     timelineRef.current = timeline;
@@ -716,7 +777,7 @@ export default function TechnologySection() {
           </p>
           <h2
             ref={headingRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight mb-2"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
           >
             Our stack
           </h2>

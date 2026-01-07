@@ -144,9 +144,15 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
   if (isMobile) {
     return (
       <motion.article
-        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
-        initial={{ opacity: 0, y: 40 }}
+        className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg shadow-[0_18px_42px_rgba(15,23,42,0.22)] transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15 touch-manipulation"
+        style={{ willChange: 'transform, opacity' }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ 
+          duration: 0.4, 
+          ease: [0.25, 0.1, 0.25, 1],
+          delay: index * 0.1 
+        }}
         whileHover={{ scale: 1.01 }}
       >
         <div className="flex flex-col rounded-2xl bg-transparent p-4">
@@ -163,19 +169,19 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
           </div>
 
           <div className="space-y-1 mb-2">
-            <h3 className="text-base font-bold text-gray-900 leading-tight">
+            <h3 className="text-base font-bold text-white leading-tight">
               {service.title}
             </h3>
-            <p className="text-[10px] uppercase tracking-[0.2em] text-[#00bef7]/80 leading-tight">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#00bef7]/90 leading-tight">
               {service.summaryMobile}
             </p>
           </div>
 
-          <p className="text-xs leading-relaxed text-gray-700 mb-2.5">
+          <p className="text-xs leading-relaxed text-white/80 mb-2.5">
             {service.descriptionMobile}
           </p>
 
-          <div className="flex flex-wrap gap-1.5 pt-2.5 border-t border-gray-200">
+          <div className="flex flex-wrap gap-1.5 pt-2.5 border-t border-white/20">
             {service.highlights.slice(0, 2).map((highlight) => (
               <span
                 key={highlight}
@@ -193,7 +199,8 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
   // Desktop: render flip card
   return (
     <motion.article
-      className="group relative flex h-[450px] sm:h-[500px] md:h-[520px] flex-col overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm perspective-[1600px] cursor-pointer transition-all duration-300 hover:border-[#00bef7]/50 touch-manipulation"
+      className="group relative flex h-[450px] sm:h-[500px] md:h-[520px] flex-col overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/20 bg-white/10 backdrop-blur-lg shadow-[0_18px_42px_rgba(15,23,42,0.22)] perspective-[1600px] cursor-pointer transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15 touch-manipulation"
+      style={{ willChange: 'transform' }}
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
@@ -201,6 +208,7 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
     >
       <motion.div
         className="relative h-full w-full [transform-style:preserve-3d]"
+        style={{ willChange: 'transform' }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       >
@@ -229,21 +237,21 @@ function CardFront({ service }: { service: Service }) {
       </div>
 
       <div className="space-y-1 sm:space-y-1.5 md:space-y-2 flex-shrink-0 mb-2 sm:mb-4 md:mb-6">
-        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-200 leading-tight">
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white group-hover:text-[#00bef7] transition-colors duration-200 leading-tight">
           {service.title}
         </h3>
-        <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/80 leading-tight p-0 m-0">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/90 leading-tight p-0 m-0">
           {service.summary}
         </p>
       </div>
 
-      <p className="text-xs sm:text-sm leading-normal text-gray-700 group-hover:text-gray-900 transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-2 sm:mb-4 md:mb-6">
+      <p className="text-xs sm:text-sm leading-normal text-white/80 group-hover:text-white transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-2 sm:mb-4 md:mb-6">
         {service.description}
       </p>
 
-      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] pt-2 sm:pt-3 md:pt-4 border-t border-gray-200 flex-shrink-0">
-        <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-gray-300 group-hover:bg-[#00bef7] transition-colors duration-300" />
-        <span className="text-gray-600">Click to Explore</span>
+      <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] pt-2 sm:pt-3 md:pt-4 border-t border-white/20 flex-shrink-0">
+        <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-white/30 group-hover:bg-[#00bef7] transition-colors duration-300" />
+        <span className="text-white/70">Click to Explore</span>
       </div>
     </div>
   );
@@ -251,21 +259,21 @@ function CardFront({ service }: { service: Service }) {
 
 function CardBack({ service }: { service: Service }) {
   return (
-    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-white p-3 sm:p-4 md:p-6 text-left text-gray-900 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
+    <div className="absolute inset-0 flex h-full flex-col rounded-2xl sm:rounded-[30px] bg-white/10 backdrop-blur-lg border border-white/20 p-3 sm:p-4 md:p-6 text-left text-white [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-hidden">
       {/* Header Section - Compact */}
       <div className="space-y-1 sm:space-y-1.5 md:space-y-2 flex-shrink-0 mb-2 sm:mb-3 md:mb-4">
         <div className="flex items-center justify-between">
           <span className="text-xs sm:text-sm uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/80">
             Service Details
           </span>
-          <span className="text-[10px] sm:text-xs text-gray-500 truncate ml-1">
+          <span className="text-[10px] sm:text-xs text-white/60 truncate ml-1">
             {service.title}
           </span>
         </div>
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900 leading-tight">
+        <h3 className="text-base sm:text-lg font-semibold text-white leading-tight">
           {service.title}
         </h3>
-        <p className="text-[10px] sm:text-xs leading-normal text-gray-700 line-clamp-2 p-0 m-0">
+        <p className="text-[10px] sm:text-xs leading-normal text-white/80 line-clamp-2 p-0 m-0">
           {service.description}
         </p>
       </div>
@@ -277,7 +285,7 @@ function CardBack({ service }: { service: Service }) {
         </p>
         <ul className="space-y-0.5 sm:space-y-1 md:space-y-1.5 pr-1">
           {service.features.map((feature) => (
-            <li key={feature} className="flex items-start gap-1 sm:gap-1.5 md:gap-2 text-[10px] sm:text-xs text-gray-700 leading-relaxed">
+            <li key={feature} className="flex items-start gap-1 sm:gap-1.5 md:gap-2 text-[10px] sm:text-xs text-white/80 leading-relaxed">
               <span className="mt-1 h-1 w-1 rounded-full bg-[#00bef7] flex-shrink-0" />
               <span className="flex-1">{feature}</span>
             </li>
@@ -305,7 +313,7 @@ function CardBack({ service }: { service: Service }) {
       {/* Footer - Compact */}
       <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] pt-1.5 sm:pt-2 md:pt-3 border-t border-white/10 flex-shrink-0">
         <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-[#00bef7]" />
-        <span className="text-gray-600 text-[9px] sm:text-[10px]">Click to flip back</span>
+        <span className="text-white/70 text-[9px] sm:text-[10px]">Click to flip back</span>
       </div>
     </div>
   );
@@ -317,8 +325,6 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const cardsRef = useRef<Array<HTMLDivElement | null>>([]);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const hasAnimatedRef = useRef(false);
   const [flippedCard, setFlippedCard] = useState<number | null>(null);
 
   useEffect(() => {
@@ -336,136 +342,100 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
     // Set initial states for header elements
     gsap.set(elements, { opacity: 0, y: 40 });
 
-    // Calculate offsets to center all cards, then spread them out
-    const calculateCardOffsets = () => {
-      const isLargeScreen = window.innerWidth >= 1024;
-      
-      if (!isLargeScreen || cardEls.length < 3) {
-        return { initial: [0, 0, 0], final: [0, 0, 0] };
-      }
-      
-      const middleCard = cardEls[1];
-      const leftCard = cardEls[0];
-      const rightCard = cardEls[2];
-      
-      if (middleCard && leftCard && rightCard) {
-        // Get natural grid positions
-        const middleRect = middleCard.getBoundingClientRect();
-        const leftRect = leftCard.getBoundingClientRect();
-        const rightRect = rightCard.getBoundingClientRect();
-        
-        // Calculate offsets from natural positions to center
-        // Left card needs to move RIGHT to reach center (positive offset)
-        // Right card needs to move LEFT to reach center (negative offset)
-        const leftToCenter = middleRect.left - leftRect.left;
-        const rightToCenter = middleRect.right - rightRect.right;
-        
-        return {
-          initial: [leftToCenter, 0, rightToCenter], // Offsets to center
-          final: [0, 0, 0], // Back to natural positions (x: 0 means no transform = natural grid position)
-        };
-      }
-      
-      // Fallback calculation
-      const baseOffset = Math.min(window.innerWidth * 0.15, 450);
-      return {
-        initial: [baseOffset, 0, -baseOffset],
-        final: [0, 0, 0],
-      };
-    };
-
-    const offsets = calculateCardOffsets();
-
-    // Set initial positions: all cards stacked in center
-    cardEls.forEach((card, index) => {
+    // Set initial states for cards: scale from 50% (0.5) to 100% (1.0)
+    cardEls.forEach((card) => {
       if (card) {
-        // All cards start stacked in center with slight offset for stacking effect
-        const stackOffset = index * 5; // Small offset to show stacking
-        const stackRotation = (index - 1) * 3; // Slight rotation for stacking effect
-        const centerX = offsets.initial[index] || 0;
-        
         gsap.set(card, {
           opacity: 0,
-          x: centerX + stackOffset,
-          y: 50,
-          rotation: stackRotation,
-          scale: 0.9,
-          zIndex: cardEls.length - index, // Stack order
+          scale: 0.5, // Start at 50%
+          force3D: true, // Enable hardware acceleration
         });
       }
     });
 
-    const timeline = gsap.timeline({
+    // Animate header elements on initial intersection
+    const headerTimeline = gsap.timeline({
       defaults: { ease: "power3.out" },
       paused: true,
     });
 
-    // Animate header elements
-    if (eyebrowEl) timeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.3 });
-    if (headingEl) timeline.to(headingEl, { opacity: 1, y: 0, duration: 0.4 }, "-=0.15");
-    if (descriptionEl) timeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.4 }, "-=0.15");
-    
-    // Animate cards in parallel
-    if (cardEls.length) {
-      // Phase 1: All cards stack in center and fade in (parallel)
+    if (eyebrowEl) headerTimeline.to(eyebrowEl, { opacity: 1, y: 0, duration: 0.3, force3D: true });
+    if (headingEl) headerTimeline.to(headingEl, { opacity: 1, y: 0, duration: 0.4, force3D: true }, "-=0.15");
+    if (descriptionEl) headerTimeline.to(descriptionEl, { opacity: 1, y: 0, duration: 0.4, force3D: true }, "-=0.15");
+
+    let headerAnimated = false;
+
+    // Scroll-based animation for cards
+    const updateCardScale = () => {
+      if (!sectionEl) return;
+
+      const rect = sectionEl.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // rect.top is relative to viewport (negative when section is above viewport)
+      // Animation starts when section top is at 80% of viewport (just entering)
+      // Animation completes when section top is at 20% of viewport (scrolled up)
+      const animationStart = windowHeight * 0.8;
+      const animationEnd = windowHeight * 0.2;
+      const animationRange = animationStart - animationEnd; // 0.6 * windowHeight
+      
+      // Calculate progress: 0 when rect.top = animationStart, 1 when rect.top = animationEnd
+      // As user scrolls down, rect.top decreases, so we invert: (start - current) / range
+      const rawProgress = (animationStart - rect.top) / animationRange;
+      const scrollProgress = Math.max(0, Math.min(1, rawProgress));
+      
+      // Animate header elements once section starts entering
+      if (!headerAnimated && scrollProgress > 0.1) {
+        headerAnimated = true;
+        headerTimeline.play();
+      }
+
+      // Apply scale and opacity to each card with slight stagger
       cardEls.forEach((card, index) => {
         if (card) {
-          const centerX = offsets.initial[index] || 0;
-          timeline.to(
-            card,
-            {
-              opacity: 1,
-              x: centerX, // Move to center (removing stack offset)
-              y: 0,
-              rotation: 0,
-              scale: 1,
-              duration: 0.4,
-              ease: "power2.out",
-            },
-            0.15 // All cards start at the same time (parallel)
-          );
+          // Add slight stagger delay (each card starts slightly later)
+          const staggerDelay = index * 0.05;
+          const adjustedProgress = Math.max(0, Math.min(1, (scrollProgress - staggerDelay) / (1 - staggerDelay)));
+          
+          // Calculate scale: from 0.5 (50%) to 1.0 (100%) based on scroll progress
+          const cardScale = 0.5 + adjustedProgress * 0.5;
+          const cardOpacity = Math.min(1, adjustedProgress * 1.5);
+          
+          gsap.to(card, {
+            scale: cardScale,
+            opacity: cardOpacity,
+            duration: 0.1,
+            ease: "none",
+            force3D: true,
+          });
         }
       });
-
-      // Phase 2: Outer cards move left and right to their natural positions (parallel)
-      cardEls.forEach((card, index) => {
-        if (card && (index === 0 || index === 2)) {
-          const finalX = offsets.final[index] || 0;
-          timeline.to(
-            card,
-            {
-              x: finalX, // Move to natural grid position
-              duration: 0.5,
-              ease: "back.out(1.4)",
-            },
-            ">0.1" // Start after stacking is complete (parallel for both outer cards)
-          );
-        }
-      });
-    }
-
-    timelineRef.current = timeline;
-
-    const playTimeline = () => {
-      if (hasAnimatedRef.current || !timelineRef.current) return;
-      hasAnimatedRef.current = true;
-      timelineRef.current.play();
     };
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          playTimeline();
-        }
-      },
-      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
-    );
+    // Throttle scroll updates for performance
+    let rafId: number | null = null;
+    const handleScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        updateCardScale();
+        rafId = null;
+      });
+    };
 
-    observer.observe(sectionEl);
+    // Initial update
+    updateCardScale();
+
+    // Listen to scroll events
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
 
     return () => {
-      observer.disconnect();
-      timelineRef.current?.kill();
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      headerTimeline.kill();
     };
   }, []);
 
@@ -478,7 +448,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
       ref={sectionRef}
       id={id}
       data-universal-scroll-ignore
-      className="relative min-h-[100vh] bg-[#1a2342] py-20 flex items-center"
+      className="relative min-h-[100vh] bg-[#1a2342] py-20 flex items-center z-10"
     >
       <div className="container mx-auto px-6 md:px-10 lg:px-14">
         {/* Section Header */}
@@ -491,7 +461,7 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
           </p>
           <h2
             ref={headingRef}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight mb-3 sm:mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
           >
             What we do
           </h2>
@@ -511,6 +481,10 @@ export default function ServicesSection({ id = "services" }: ServicesSectionProp
               key={service.title}
               ref={(el) => {
                 cardsRef.current[index] = el as HTMLDivElement | null;
+              }}
+              style={{ 
+                willChange: 'transform',
+                transform: 'translateZ(0)' // Force hardware acceleration
               }}
             >
               <ServiceCard

@@ -134,7 +134,7 @@ export default function AboutSection() {
               </p>
               <h2
                 ref={headingRef}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold text-white leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
               >
                 AI-powered solutions that transform businesses.
               </h2>
@@ -154,17 +154,17 @@ export default function AboutSection() {
                   ref={(el) => {
                     valuesRef.current[index] = el as HTMLDivElement | null;
                   }}
-                  className="group rounded-2xl sm:rounded-3xl border border-white/10 bg-white p-5 sm:p-6 md:p-8 shadow-[0_22px_45px_rgba(15,23,42,0.32)] backdrop-blur hover:border-[#00bef7]/50 hover:bg-white/90 transition-all duration-500 touch-manipulation"
+                  className="group rounded-2xl sm:rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-5 sm:p-6 md:p-8 shadow-[0_18px_42px_rgba(15,23,42,0.22)] hover:border-[#00bef7]/50 hover:bg-white/15 transition-all duration-500 touch-manipulation"
                 >
                   <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
                     <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl border border-[#00bef7]/30 bg-[#00bef7]/10 flex items-center justify-center group-hover:bg-[#00bef7]/20 group-hover:border-[#00bef7]/50 transition-all duration-500">
                       <value.icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#00bef7]" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900 group-hover:text-[#00bef7] transition-colors duration-300">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white group-hover:text-[#00bef7] transition-colors duration-300">
                       {value.title}
                     </h3>
                   </div>
-                  <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                  <p className="text-sm sm:text-base text-white/80 leading-relaxed">
                     <span className="sm:hidden">{value.description.split('.')[0]}.</span>
                     <span className="hidden sm:inline">{value.description}</span>
                   </p>

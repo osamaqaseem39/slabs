@@ -16,6 +16,7 @@ export default function HeroSection() {
   const buttonsRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
+  const heroContentRef = useRef<HTMLDivElement | null>(null);
   const originalHeadingHTMLRef = useRef<string | null>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasScrolledRef = useRef(false);
@@ -178,12 +179,8 @@ export default function HeroSection() {
         });
       }
 
-      gsap.to(videoEl, {
-        duration: 0.6,
-        ease: "power2.out",
-        filter:
-          "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
-      });
+      // Don't set filter with GSAP - let framer-motion handle it via videoFilter
+      // This prevents conflicts between GSAP and framer-motion filter animations
     }
 
     if (videoContainerRef.current) {
@@ -246,27 +243,31 @@ export default function HeroSection() {
       videoEl.removeEventListener("error", handleError);
     };
   }, []);
-
   return (
     <section
       ref={sectionRef}
       id={HERO_SECTION_ID}
       className="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden bg-[#141b38]"
+      style={{ 
+        zIndex: 1,
+      }}
     >
       {/* Background Video */}
       <div
         ref={videoContainerRef}
-        className="absolute inset-0 w-full h-full z-0"
-        style={{ opacity: 1 }}
+        className="absolute inset-0 w-full h-full z-0 overflow-hidden"
+        style={{ 
+          opacity: 1,
+        }}
       >
         <video
           ref={videoRef}
           className="hero-video w-full h-full object-cover"
           style={{
-            filter:
-              "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
             width: "100%",
             height: "100%",
+            objectPosition: "center center",
+            filter: "brightness(1.1) contrast(1.2) saturate(1.1) hue-rotate(200deg)",
           }}
           src="/videohero.mp4"
           autoPlay
@@ -283,8 +284,13 @@ export default function HeroSection() {
       />
 
       {/* Content */}
-      <div className="absolute inset-x-0 bottom-0 z-[2]">
-        <div className="container px-4 sm:px-6 pb-8 md:pb-12">
+      <div 
+        ref={heroContentRef} 
+        className="absolute inset-x-0 bottom-0 z-[2]"
+      >
+        <div
+          className="container px-4 sm:px-6 pb-8 md:pb-12"
+        >
           <h1
             ref={headingRef}
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"

@@ -164,7 +164,7 @@ export default function ContactSection() {
               </p>
               <h2
                 ref={titleRef}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white leading-tight"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
               >
                 Let's build together.
               </h2>
@@ -181,20 +181,20 @@ export default function ContactSection() {
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  className="group flex flex-col gap-2.5 sm:gap-3 md:gap-4 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/10 bg-white p-4 sm:p-5 md:p-6 lg:p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/90 touch-manipulation"
+                  className="group flex flex-col gap-2.5 sm:gap-3 md:gap-4 rounded-xl sm:rounded-2xl md:rounded-3xl border border-white/20 bg-white/10 backdrop-blur-lg p-4 sm:p-5 md:p-6 lg:p-8 shadow-[0_22px_45px_rgba(15,23,42,0.28)] transition duration-500 hover:border-[#00bef7]/70 hover:bg-white/15 touch-manipulation"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-3 md:gap-4">
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-900">{point.label}</h3>
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-white">{point.label}</h3>
                     <a
                       href={point.href}
                       target={point.href.startsWith("http") ? "_blank" : undefined}
                       rel={point.href.startsWith("http") ? "noreferrer" : undefined}
-                      className="inline-flex items-center justify-center sm:justify-start gap-2 rounded-full bg-[#00bef7]/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-[#00bef7] transition-colors duration-300 group-hover:bg-[#00bef7]/20 w-full sm:w-auto touch-manipulation"
+                      className="inline-flex items-center justify-center sm:justify-start gap-2 rounded-full bg-[#00bef7]/10 backdrop-blur-sm px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-[#00bef7] transition-colors duration-300 group-hover:bg-[#00bef7]/20 w-full sm:w-auto touch-manipulation"
                     >
                       {point.action}
                     </a>
                   </div>
-                  <p className="text-xs sm:text-sm md:text-base text-gray-700 leading-relaxed">
+                  <p className="text-xs sm:text-sm md:text-base text-white/80 leading-relaxed">
                     <span className="sm:hidden">{point.descriptionMobile}</span>
                     <span className="hidden sm:inline">{point.description}</span>
                   </p>
@@ -206,11 +206,11 @@ export default function ContactSection() {
           <form
             ref={formRef}
             onSubmit={handleSubmit}
-            className="rounded-xl sm:rounded-2xl md:rounded-3xl lg:rounded-[32px] border border-white/10 bg-white p-4 sm:p-6 md:p-8 lg:p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] backdrop-blur lg:sticky lg:top-28"
+            className="rounded-xl sm:rounded-2xl md:rounded-3xl lg:rounded-[32px] border border-white/20 bg-white/10 backdrop-blur-lg p-4 sm:p-6 md:p-8 lg:p-10 shadow-[0_24px_60px_rgba(15,23,42,0.32)] lg:sticky lg:top-28"
           >
             <div className="grid gap-3 sm:gap-4 md:gap-5 lg:gap-6">
               <div>
-                <label htmlFor="name" className="text-xs sm:text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="text-xs sm:text-sm font-medium text-white/90">
                   Name
                 </label>
                 <input
@@ -221,11 +221,11 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Your name"
                   required
-                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-white placeholder:text-white/50 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="text-xs sm:text-sm font-medium text-gray-700">
+                <label htmlFor="email" className="text-xs sm:text-sm font-medium text-white/90">
                   Email
                 </label>
                 <input
@@ -236,11 +236,11 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="your@email.com"
                   required
-                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-white placeholder:text-white/50 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="company" className="text-xs sm:text-sm font-medium text-gray-700">
+                <label htmlFor="company" className="text-xs sm:text-sm font-medium text-white/90">
                   Company
                 </label>
                 <input
@@ -250,11 +250,11 @@ export default function ContactSection() {
                   value={formData.company}
                   onChange={handleInputChange}
                   placeholder="Company name"
-                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-white placeholder:text-white/50 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="text-xs sm:text-sm font-medium text-gray-700">
+                <label htmlFor="message" className="text-xs sm:text-sm font-medium text-white/90">
                   Message
                 </label>
                 <textarea
@@ -265,17 +265,17 @@ export default function ContactSection() {
                   onChange={handleInputChange}
                   placeholder="Tell us about your project..."
                   required
-                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-200 bg-gray-50 px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
+                  className="mt-1.5 sm:mt-2 w-full rounded-lg sm:rounded-xl md:rounded-2xl border border-white/20 bg-white/10 backdrop-blur-sm px-3 sm:px-4 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base text-white placeholder:text-white/50 focus:border-[#00bef7] focus:outline-none focus:ring-2 focus:ring-[#00bef7]/40 resize-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00bef7] px-4 sm:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base font-semibold text-gray-950 transition-colors duration-300 hover:bg-[#00bef7] disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+                className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-[#00bef7] px-4 sm:px-6 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base font-semibold text-white transition-colors duration-300 hover:bg-[#00bef7]/90 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               >
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
-              <p className="text-[10px] sm:text-xs text-gray-500 text-center sm:text-left">
+              <p className="text-[10px] sm:text-xs text-white/60 text-center sm:text-left">
                 We'll never share your information.
               </p>
             </div>

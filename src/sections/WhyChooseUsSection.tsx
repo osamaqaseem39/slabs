@@ -144,7 +144,7 @@ export default function WhyChooseUsSection() {
           </p>
           <h2
             ref={headingRef}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white leading-tight mb-3 sm:mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 max-w-layout-xl leading-tight"
           >
             Built to scale with you
           </h2>
@@ -165,24 +165,24 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 cardsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="group relative overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/12 bg-white shadow-[0_18px_42px_rgba(15,23,42,0.22)] backdrop-blur-sm transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/90 p-5 sm:p-6 md:p-8 touch-manipulation"
+              className="group relative overflow-hidden rounded-2xl sm:rounded-[30px] border border-white/20 bg-white/10 backdrop-blur-lg shadow-[0_18px_42px_rgba(15,23,42,0.22)] transition-all duration-500 hover:border-[#00bef7]/50 hover:bg-white/15 p-5 sm:p-6 md:p-8 touch-manipulation"
               whileHover={{ y: -8, scale: 1.05 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex flex-col h-full">
                 <div className="mb-4 sm:mb-6">
                   <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{benefit.icon}</div>
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-3 group-hover:text-[#00bef7] transition-colors duration-300">
                     {benefit.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-white/80 leading-relaxed">
                     <span className="sm:hidden">{benefit.description.split('.')[0]}.</span>
                     <span className="hidden sm:inline">{benefit.description}</span>
                   </p>
                 </div>
-                <ul className="mt-auto space-y-1.5 sm:space-y-2 pt-4 sm:pt-6 border-t border-gray-200">
+                <ul className="mt-auto space-y-1.5 sm:space-y-2 pt-4 sm:pt-6 border-t border-white/20">
                   {benefit.features.map((feature) => (
-                    <li key={feature} className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-gray-700">
+                    <li key={feature} className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-white/80">
                       <span className="h-1.5 w-1.5 rounded-full bg-[#00bef7] flex-shrink-0" />
                       <span>{feature}</span>
                     </li>
@@ -201,12 +201,12 @@ export default function WhyChooseUsSection() {
               ref={(el) => {
                 statsRef.current[index] = el as HTMLDivElement | null;
               }}
-              className="text-center p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-white/10 bg-white backdrop-blur-sm"
+              className="text-center p-4 sm:p-5 md:p-6 rounded-xl sm:rounded-2xl border border-white/20 bg-white/10 backdrop-blur-lg"
             >
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-1 sm:mb-2">
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2">
                 {stat.value}
               </div>
-              <div className="text-[10px] sm:text-xs md:text-sm text-gray-700 uppercase tracking-wider">
+              <div className="text-[10px] sm:text-xs md:text-sm text-white/80 uppercase tracking-wider">
                 {stat.label}
               </div>
             </motion.div>
