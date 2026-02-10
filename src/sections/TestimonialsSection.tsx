@@ -113,7 +113,7 @@ export default function TestimonialsSection() {
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const [filter, setFilter] = useState<string>("All");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [pageIndex, setPageIndex] = useState(0);
   const filtered = filter === "All" ? TESTIMONIALS : TESTIMONIALS.filter((t) => t.serviceTitle === filter);
 
   useEffect(() => {
@@ -145,22 +145,24 @@ export default function TestimonialsSection() {
     };
   }, []);
 
-  // Reset carousel to first item when filter changes
+  // Reset carousel to first page when filter changes
   useEffect(() => {
-    setCurrentIndex(0);
+    setPageIndex(0);
   }, [filter]);
 
   const showCount = filtered.length;
-  const hasMultiple = showCount > 1;
+  const pageSize = 3;
+  const totalPages = showCount === 0 ? 0 : Math.ceil(showCount / pageSize);
+  const hasMultiple = totalPages > 1;
 
   const handlePrev = () => {
-    if (!showCount) return;
-    setCurrentIndex((prev) => (prev - 1 + showCount) % showCount);
+    if (!totalPages) return;
+    setPageIndex((prev) => (prev - 1 + totalPages) % totalPages);
   };
 
   const handleNext = () => {
-    if (!showCount) return;
-    setCurrentIndex((prev) => (prev + 1) % showCount);
+    if (!totalPages) return;
+    setPageIndex((prev) => (prev + 1) % totalPages);
   };
 
   return (
@@ -209,32 +211,43 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           {showCount > 0 && (
-            <motion.article
-              key={`${filtered[currentIndex].serviceTitle}-${filtered[currentIndex].author}-${currentIndex}`}
-              className="relative flex flex-col rounded-2xl sm:rounded-[30px] border border-white/20 bg-white/10 backdrop-blur-lg p-5 sm:p-6 md:p-8 transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15"
+            <motion.div
+              key={`page-${pageIndex}-${filter}`}
+              className="relative"
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#00bef7]/90 mb-2 sm:mb-3">
-                {filtered[currentIndex].serviceTitle}
-              </p>
-              <blockquote className="text-sm sm:text-base text-white/90 leading-relaxed flex-1 mb-4 sm:mb-6">
-                &ldquo;{filtered[currentIndex].quote}&rdquo;
-              </blockquote>
-              <footer className="border-t border-white/20 pt-3 sm:pt-4">
-                <cite className="not-italic text-white font-semibold text-sm sm:text-base">
-                  {filtered[currentIndex].author}
-                </cite>
-                {filtered[currentIndex].role && (
-                  <span className="block text-[10px] sm:text-xs text-white/70 mt-0.5">
-                    {filtered[currentIndex].role}
-                  </span>
-                )}
-              </footer>
-            </motion.article>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                {filtered
+                  .slice(pageIndex * pageSize, pageIndex * pageSize + pageSize)
+                  .map((t, index) => (
+                    <article
+                      key={`${t.serviceTitle}-${t.author}-${index}`}
+                      className="flex h-full flex-col rounded-2xl sm:rounded-[30px] border border-white/20 bg-white/10 backdrop-blur-lg p-5 sm:p-6 md:p-8 transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15"
+                    >
+                      <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#00bef7]/90 mb-2 sm:mb-3">
+                        {t.serviceTitle}
+                      </p>
+                      <blockquote className="text-sm sm:text-base text-white/90 leading-relaxed flex-1 mb-4 sm:mb-6">
+                        &ldquo;{t.quote}&rdquo;
+                      </blockquote>
+                      <footer className="border-t border-white/20 pt-3 sm:pt-4">
+                        <cite className="not-italic text-white font-semibold text-sm sm:text-base">
+                          {t.author}
+                        </cite>
+                        {t.role && (
+                          <span className="block text-[10px] sm:text-xs text-white/70 mt-0.5">
+                            {t.role}
+                          </span>
+                        )}
+                      </footer>
+                    </article>
+                  ))}
+              </div>
+            </motion.div>
           )}
 
           {hasMultiple && (
@@ -247,15 +260,15 @@ export default function TestimonialsSection() {
                 Prev
               </button>
               <div className="flex items-center gap-1.5">
-                {filtered.map((_, idx) => (
+                {Array.from({ length: totalPages }).map((_, idx) => (
                   <button
                     key={idx}
                     type="button"
-                    onClick={() => setCurrentIndex(idx)}
+                    onClick={() => setPageIndex(idx)}
                     className={`h-2 w-2 rounded-full transition-colors ${
-                      idx === currentIndex ? "bg-[#00bef7]" : "bg-white/30"
+                      idx === pageIndex ? "bg-[#00bef7]" : "bg-white/30"
                     }`}
-                    aria-label={`Go to testimonial ${idx + 1}`}
+                    aria-label={`Go to testimonial slide ${idx + 1}`}
                   />
                 ))}
               </div>

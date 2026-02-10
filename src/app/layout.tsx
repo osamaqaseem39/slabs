@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Synovo Labs | AI Development & Web Solutions",
   description: "Synovo Labs specializes in AI development, automation, web & mobile apps (MERN, React, Next.js), CMS development, video editing, graphics design, SEO, and game development. Build intelligent solutions with our expert team.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
