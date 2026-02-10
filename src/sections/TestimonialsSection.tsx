@@ -113,6 +113,7 @@ export default function TestimonialsSection() {
   const headingRef = useRef<HTMLHeadingElement | null>(null);
   const descriptionRef = useRef<HTMLParagraphElement | null>(null);
   const [filter, setFilter] = useState<string>("All");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const filtered = filter === "All" ? TESTIMONIALS : TESTIMONIALS.filter((t) => t.serviceTitle === filter);
 
   useEffect(() => {
@@ -143,6 +144,24 @@ export default function TestimonialsSection() {
       timeline.kill();
     };
   }, []);
+
+  // Reset carousel to first item when filter changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [filter]);
+
+  const showCount = filtered.length;
+  const hasMultiple = showCount > 1;
+
+  const handlePrev = () => {
+    if (!showCount) return;
+    setCurrentIndex((prev) => (prev - 1 + showCount) % showCount);
+  };
+
+  const handleNext = () => {
+    if (!showCount) return;
+    setCurrentIndex((prev) => (prev + 1) % showCount);
+  };
 
   return (
     <section
@@ -190,27 +209,65 @@ export default function TestimonialsSection() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-7xl mx-auto">
-          {filtered.map((t, index) => (
+        <div className="max-w-3xl mx-auto">
+          {showCount > 0 && (
             <motion.article
-              key={`${t.serviceTitle}-${t.author}-${index}`}
+              key={`${filtered[currentIndex].serviceTitle}-${filtered[currentIndex].author}-${currentIndex}`}
               className="relative flex flex-col rounded-2xl sm:rounded-[30px] border border-white/20 bg-white/10 backdrop-blur-lg p-5 sm:p-6 md:p-8 transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
+              initial={{ opacity: 0, x: 40, opacity: 0 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
             >
               <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#00bef7]/90 mb-2 sm:mb-3">
-                {t.serviceTitle}
+                {filtered[currentIndex].serviceTitle}
               </p>
               <blockquote className="text-sm sm:text-base text-white/90 leading-relaxed flex-1 mb-4 sm:mb-6">
-                &ldquo;{t.quote}&rdquo;
+                &ldquo;{filtered[currentIndex].quote}&rdquo;
               </blockquote>
               <footer className="border-t border-white/20 pt-3 sm:pt-4">
-                <cite className="not-italic text-white font-semibold text-sm sm:text-base">{t.author}</cite>
-                {t.role && <span className="block text-[10px] sm:text-xs text-white/70 mt-0.5">{t.role}</span>}
+                <cite className="not-italic text-white font-semibold text-sm sm:text-base">
+                  {filtered[currentIndex].author}
+                </cite>
+                {filtered[currentIndex].role && (
+                  <span className="block text-[10px] sm:text-xs text-white/70 mt-0.5">
+                    {filtered[currentIndex].role}
+                  </span>
+                )}
               </footer>
             </motion.article>
-          ))}
+          )}
+
+          {hasMultiple && (
+            <div className="flex items-center justify-between mt-6">
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="px-3 py-1.5 rounded-full border border-white/30 text-xs sm:text-sm text-white/80 hover:border-[#00bef7]/60 hover:text-white transition-colors"
+              >
+                Prev
+              </button>
+              <div className="flex items-center gap-1.5">
+                {filtered.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-2 w-2 rounded-full transition-colors ${
+                      idx === currentIndex ? "bg-[#00bef7]" : "bg-white/30"
+                    }`}
+                    aria-label={`Go to testimonial ${idx + 1}`}
+                  />
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={handleNext}
+                className="px-3 py-1.5 rounded-full border border-white/30 text-xs sm:text-sm text-white/80 hover:border-[#00bef7]/60 hover:text-white transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>
