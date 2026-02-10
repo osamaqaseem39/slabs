@@ -214,7 +214,7 @@ export default function TestimonialsSection() {
             <motion.article
               key={`${filtered[currentIndex].serviceTitle}-${filtered[currentIndex].author}-${currentIndex}`}
               className="relative flex flex-col rounded-2xl sm:rounded-[30px] border border-white/20 bg-white/10 backdrop-blur-lg p-5 sm:p-6 md:p-8 transition-all duration-300 hover:border-[#00bef7]/50 hover:bg-white/15"
-              initial={{ opacity: 0, x: 40, opacity: 0 }}
+              initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.4 }}
             >
