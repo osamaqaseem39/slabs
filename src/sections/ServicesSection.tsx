@@ -323,10 +323,9 @@ function CardFront({ service }: { service: Service }) {
           {service.summary}
         </p>
       </div>
-
-      <p className="text-xs sm:text-sm leading-normal text-white/80 group-hover:text-white transition-colors duration-200 flex-1 overflow-y-auto min-h-0 p-0 m-0 mb-2 sm:mb-4 md:mb-6">
-        {service.description}
-      </p>
+      
+      {/* Keep front clean; full description is on the back card */}
+      <div className="flex-1" />
 
       <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] pt-2 sm:pt-3 md:pt-4 border-t border-white/20 flex-shrink-0">
         <span className="inline-flex h-1 w-6 sm:w-8 rounded-full bg-white/30 group-hover:bg-[#00bef7] transition-colors duration-300" />
