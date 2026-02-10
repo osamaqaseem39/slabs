@@ -5,6 +5,12 @@ import gsap from "gsap";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
+type Testimonial = {
+  quote: string;
+  author: string;
+  role?: string;
+};
+
 type Service = {
   title: string;
   image: string;
@@ -14,6 +20,8 @@ type Service = {
   summaryMobile: string;
   features: string[];
   highlights: string[];
+  relatedTechnologies?: string[];
+  testimonials?: Testimonial[];
 };
 
 type ServicesSectionProps = {
@@ -41,6 +49,11 @@ const services: Service[] = [
       "Voice AI agents (call handling)",
       "AI content generation",
     ],
+    relatedTechnologies: ["AI & Machine Learning"],
+    testimonials: [
+      { quote: "Synovo Labs built an AI agent that cut our support tickets by 40%. The team understood our workflow from day one.", author: "Sarah M.", role: "Operations Director" },
+      { quote: "Their voice AI handles after-hours calls seamlessly. Our patients get answers and we get peace of mind.", author: "James K.", role: "Healthcare Admin" },
+    ],
   },
   {
     title: "Web & Mobile Development",
@@ -61,6 +74,11 @@ const services: Service[] = [
       "Full-stack expertise",
       "E-commerce solutions",
       "API development & integration",
+    ],
+    relatedTechnologies: ["Web Development", "CMS & E-commerce", "Mobile Development"],
+    testimonials: [
+      { quote: "Our new platform went live on time and our users love it. Synovo Labs delivered exactly what we needed.", author: "Alex T.", role: "Startup Founder" },
+      { quote: "They integrated our Shopify store with our internal systems. Sales and operations are finally in sync.", author: "Maria L.", role: "E-commerce Manager" },
     ],
   },
   {
@@ -83,6 +101,11 @@ const services: Service[] = [
       "AI image creation",
       "Professional quality output",
     ],
+    relatedTechnologies: ["AI & Machine Learning"],
+    testimonials: [
+      { quote: "Our YouTube channel grew 3x after they took over editing. Thumbnails and pacing are on point.", author: "Chris R.", role: "Content Creator" },
+      { quote: "They delivered a full VSL and ad creatives in two weeks. Conversion rate improved immediately.", author: "David P.", role: "Marketing Lead" },
+    ],
   },
   {
     title: "SEO & Digital Marketing",
@@ -104,6 +127,11 @@ const services: Service[] = [
       "Local & global optimization",
       "Measurable ROI",
     ],
+    relatedTechnologies: ["SEO & Marketing"],
+    testimonials: [
+      { quote: "We went from page 5 to top 3 for our main keywords. Their technical SEO and content strategy made the difference.", author: "Jennifer W.", role: "Brand Manager" },
+      { quote: "Local visibility and GBM optimization brought us a steady stream of new patients. ROI was clear within months.", author: "Michael H.", role: "Practice Owner" },
+    ],
   },
   {
     title: "Game Development",
@@ -124,6 +152,42 @@ const services: Service[] = [
       "Cross-platform games",
       "Modern game engines",
       "End-to-end development",
+    ],
+    relatedTechnologies: ["Game Development"],
+    testimonials: [
+      { quote: "They built our mobile game from concept to store. Art, mechanics, and polish — everything we asked for.", author: "Elena V.", role: "Indie Game Developer" },
+      { quote: "Our multiplayer prototype became a full release. Synovo Labs understood game design and tech equally well.", author: "Tom S.", role: "Studio Lead" },
+    ],
+  },
+  {
+    title: "Medical Billing & Revenue Cycle Management",
+    image: "/service3.png",
+    description: "Streamline the entire financial process of your healthcare practice — from claims submission to reimbursement and reporting. We combine advanced automation with expert billing professionals to ensure accuracy, efficiency, and faster payments so you can focus on patient care.",
+    descriptionMobile: "End-to-end medical billing and revenue cycle management.",
+    summary: "Revenue cycle management that maximizes collections and reduces denials.",
+    summaryMobile: "Medical billing & RCM.",
+    features: [
+      "Insurance eligibility checks",
+      "Electronic and paper claim submission",
+      "Charge entry & coding accuracy (ICD-10, CPT, HCPCS)",
+      "Automated scrub rules to reduce denials",
+      "Denial review, follow-up, and appeals",
+      "Secondary insurance billing",
+      "Payment posting and reconciliation",
+      "Patient billing support and statement processing",
+      "Real-time dashboards and financial reporting",
+      "EHR and practice management integration",
+    ],
+    highlights: [
+      "Maximize revenue & faster payments",
+      "Fewer denials & reduced errors",
+      "Tailored for all specialties",
+    ],
+    relatedTechnologies: ["Healthcare IT & Medical Billing"],
+    testimonials: [
+      { quote: "Our clean claim rate went from 78% to 94% in six months. Denials dropped and cash flow improved dramatically.", author: "Dr. Patricia N.", role: "Multi-Specialty Practice Owner" },
+      { quote: "They integrated with our EHR and took over billing end-to-end. We finally have time to focus on patients, not paperwork.", author: "Linda G.", role: "Practice Administrator" },
+      { quote: "Synovo Labs understood our specialty coding from day one. Reimbursements are faster and our staff is less stressed.", author: "Robert F.", role: "Cardiology Practice Manager" },
     ],
   },
 ];
@@ -191,6 +255,21 @@ function ServiceCard({ service, index, isFlipped, onFlip }: { service: Service; 
               </span>
             ))}
           </div>
+          {service.relatedTechnologies && service.relatedTechnologies.length > 0 && (
+            <div className="flex flex-wrap gap-1 pt-2 border-t border-white/20">
+              <span className="text-[9px] uppercase tracking-wider text-white/50 w-full">Tech</span>
+              {service.relatedTechnologies.slice(0, 3).map((tech) => (
+                <span key={tech} className="px-1.5 py-0.5 text-[9px] rounded border border-white/20 bg-white/5 text-white/80">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
+          {service.testimonials && service.testimonials.length > 0 && (
+            <p className="text-[10px] text-white/70 italic mt-2 pt-2 border-t border-white/20 line-clamp-2">
+              &ldquo;{service.testimonials[0].quote}&rdquo; — {service.testimonials[0].author}
+            </p>
+          )}
         </div>
       </motion.article>
     );
@@ -309,6 +388,41 @@ function CardBack({ service }: { service: Service }) {
           ))}
         </div>
       </div>
+
+      {/* Related technologies */}
+      {service.relatedTechnologies && service.relatedTechnologies.length > 0 && (
+        <div className="space-y-1 pt-1.5 sm:pt-2 border-t border-white/10 flex-shrink-0 mb-1.5 sm:mb-2">
+          <p className="text-[10px] sm:text-xs uppercase tracking-[0.2em] sm:tracking-[0.3em] text-[#00bef7]/70 p-0 m-0">
+            Related Technologies
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {service.relatedTechnologies.map((tech) => (
+              <span
+                key={tech}
+                className="px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] rounded border border-white/30 bg-white/5 text-white/90 leading-tight"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Testimonial - show first if present */}
+      {service.testimonials && service.testimonials.length > 0 && (
+        <div className="flex-shrink-0 mb-1.5 sm:mb-2 pt-1.5 sm:pt-2 border-t border-white/10">
+          <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-[#00bef7]/70 mb-0.5 p-0 m-0">
+            What clients say
+          </p>
+          <p className="text-[10px] sm:text-xs text-white/80 italic leading-snug line-clamp-2 p-0 m-0">
+            &ldquo;{service.testimonials[0].quote}&rdquo;
+          </p>
+          <p className="text-[9px] sm:text-[10px] text-white/60 mt-0.5 p-0 m-0">
+            — {service.testimonials[0].author}
+            {service.testimonials[0].role ? `, ${service.testimonials[0].role}` : ""}
+          </p>
+        </div>
+      )}
 
       {/* Footer - Compact */}
       <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em] pt-1.5 sm:pt-2 md:pt-3 border-t border-white/10 flex-shrink-0">

@@ -12,6 +12,7 @@ import TechnologySection from "@/sections/TechnologySection";
 import HowItWorksSection from "@/sections/HowItWorksSection";
 import AboutSection from "@/sections/AboutSection";
 import WhyChooseUsSection from "../sections/WhyChooseUsSection";
+import TestimonialsSection from "../sections/TestimonialsSection";
 import PortfolioSection from "../sections/PortfolioSection";
 import ContactSection from "@/sections/ContactSection";
 import FooterSection from "../sections/FooterSection";
@@ -71,6 +72,7 @@ export default function Home() {
       <TechnologySection />
       <HowItWorksSection />
       <WhyChooseUsSection />
+      <TestimonialsSection />
       <PortfolioSection />
       <AboutSection />
       <ContactSection />

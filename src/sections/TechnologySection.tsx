@@ -145,6 +145,28 @@ const technologies: Technology[] = [
       "Analytics & reporting",
     ],
   },
+  {
+    name: "Healthcare IT & Medical Billing",
+    modelType: "cube",
+    description: "Revenue cycle management and medical billing technology. EHR integration, claim scrubbing, ICD-10/CPT/HCPCS compliance, and RCM platforms that streamline healthcare revenue operations.",
+    stack: ["EHR Integration", "ICD-10 / CPT / HCPCS", "Claim Scrubbing", "RCM Platforms", "EDI 837/835", "Practice Management", "Eligibility & Authorization", "Analytics & Reporting"],
+    features: [
+      "EHR and PM system integration",
+      "Electronic claim submission (837)",
+      "Payment posting and reconciliation (835)",
+      "Denial management and appeals",
+      "Coding accuracy and compliance",
+      "Real-time dashboards and KPIs",
+    ],
+    useCases: [
+      "Medical billing & RCM",
+      "Multi-specialty practices",
+      "Clean claim optimization",
+      "Denial reduction",
+      "Revenue analytics",
+      "Patient billing support",
+    ],
+  },
 ];
 
 function TechnologyGalleryCarousel({ technologies }: { technologies: Technology[] }) {
